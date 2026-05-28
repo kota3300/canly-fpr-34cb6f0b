@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>カンリー プロダクト階層ツリー v0.1（精査用）</title>
+<style>
+  :root {
+    --navy: #1B3A6B;
+    --dark: #1A1A2E;
+    --light-bg: #F5F5F5;
+    --footer: #6B7280;
+    --green: #1B5E20;
+    --blue: #1565C0;
+    --teal: #00796B;
+    --red: #C62828;
+    --orange: #EF6C00;
+    --accent: #1976D2;
+    --light-subtitle: #C9D8EF;
+    --border: #E5E7EB;
+    --soft-bg: #FAFBFD;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Calibri", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+    color: var(--dark);
+    background: #FAFAFA;
+    margin: 0;
+    padding: 28px 0;
+    line-height: 1.55;
+    font-size: 13px;
+  }
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  header.title-strip {
+    background: var(--navy);
+    color: #FFFFFF;
+    padding: 32px 40px 24px;
+    border-left: 8px solid var(--accent);
+  }
+  header.title-strip h1 {
+    font-family: "Calibri Light", "Calibri", sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    margin: 0 0 6px;
+  }
+  header.title-strip .sub { color: var(--light-subtitle); font-size: 14px; margin-bottom: 12px; }
+  header.title-strip .meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px 24px;
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--light-subtitle);
+  }
+  header.title-strip .meta b { color: #FFFFFF; font-size: 12px; display: block; }
+  section.layer {
+    padding: 24px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  section.layer:last-child { border-bottom: none; }
+  h2.layer-title {
+    font-family: "Calibri Light", "Calibri", sans-serif;
+    font-size: 22px;
+    color: var(--navy);
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h2.layer-title .badge {
+    background: var(--navy);
+    color: #FFFFFF;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+  h2.layer-title .sub-h2 { font-size: 12px; color: var(--footer); font-weight: 400; }
+  .lead {
+    color: var(--footer);
+    font-size: 12px;
+    margin: 4px 0 16px;
+  }
+
+  /* Layer 1: 事業区分 横並びカード */
+  .biz-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 0.8fr 0.9fr 0.5fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .biz-card {
+    border: 2px solid var(--navy);
+    border-radius: 6px;
+    padding: 14px;
+    background: var(--soft-bg);
+  }
+  .biz-card.main { background: #EAF2FC; border-color: var(--accent); }
+  .biz-card.smb { background: #FFF8E6; border-color: var(--orange); }
+  .biz-card.welfare { background: #E7F4E9; border-color: var(--green); }
+  .biz-card.recovery { background: #FDECEC; border-color: var(--red); }
+  .biz-card.other { background: var(--light-bg); border-color: var(--footer); }
+  .biz-card .biz-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .biz-card .biz-name .pct { float: right; font-size: 18px; }
+  .biz-card .biz-sub { font-size: 11px; color: var(--dark); margin-bottom: 8px; line-height: 1.35; }
+  .biz-card .biz-detail { font-size: 10.5px; color: var(--footer); }
+  .biz-card .biz-detail div { margin-bottom: 2px; }
+  .biz-card .biz-detail b { color: var(--dark); }
+
+  /* Layer 2: 戦略商材 */
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .strategy-card {
+    border: 1.5px solid var(--accent);
+    border-radius: 6px;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, #EAF2FC 0%, #F5F8FC 100%);
+  }
+  .strategy-card h3 {
+    font-size: 16px;
+    color: var(--navy);
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .strategy-card h3 .tag {
+    background: var(--accent);
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .strategy-card .strategy-sub { color: var(--footer); font-size: 11px; margin-bottom: 10px; }
+  .strategy-card .strategy-detail { font-size: 12px; line-height: 1.55; }
+  .strategy-card .strategy-detail ul { margin: 6px 0 4px; padding-left: 18px; }
+  .strategy-card .strategy-detail li { margin-bottom: 3px; }
+  .strategy-card .roadmap {
+    margin-top: 10px; padding: 8px 10px; background: #FFFFFF; border-radius: 4px;
+    font-size: 11.5px; border-left: 3px solid var(--accent);
+  }
+  .strategy-card .roadmap b { color: var(--navy); }
+
+  /* Layer 3: プロダクト体系 ツリー */
+  .tree-section { margin-top: 20px; }
+  .group-block {
+    background: var(--soft-bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--navy);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+  }
+  .group-block.bg-main   { border-left-color: var(--accent); }
+  .group-block.bg-smb    { border-left-color: var(--orange); }
+  .group-block.bg-welfare{ border-left-color: var(--green); }
+  .group-block.bg-recovery { border-left-color: var(--red); }
+  .group-block.bg-other  { border-left-color: var(--teal); }
+  .group-block.bg-inbound { border-left-color: var(--blue); }
+  .group-block .group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .group-block .group-name { font-size: 15px; font-weight: 700; color: var(--navy); }
+  .group-block .group-tag {
+    font-size: 10.5px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    color: #FFFFFF;
+    font-weight: 700;
+  }
+  .group-block .group-tag.main    { background: var(--accent); }
+  .group-block .group-tag.other   { background: var(--teal); }
+  .group-block .group-tag.inbound { background: var(--blue); }
+  .group-block .group-tag.smb     { background: var(--orange); }
+  .group-block .group-tag.welfare { background: var(--green); }
+  .group-block .group-tag.recovery{ background: var(--red); }
+  .group-block .group-tag.standalone { background: var(--footer); }
+
+  .product-block {
+    margin: 10px 0 6px 12px;
+    padding-left: 14px;
+    border-left: 2px dashed #B6C5DE;
+  }
+  .product-block .product-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+  .product-block .product-name .note {
+    font-weight: 400;
+    color: var(--footer);
+    font-size: 11px;
+    margin-left: 6px;
+  }
+  table.options-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 4px 0 4px;
+    font-size: 11.5px;
+  }
+  table.options-table th, table.options-table td {
+    border: 1px solid var(--border);
+    padding: 5px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.options-table th {
+    background: var(--navy);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 10.5px;
+  }
+  table.options-table tr:nth-child(even) td { background: #FAFAFA; }
+  table.options-table td.col-name { font-weight: 700; color: var(--dark); width: 18%; }
+  table.options-table td.col-formal { font-size: 11px; color: var(--footer); width: 18%; }
+  table.options-table td.col-cat   { width: 9%; }
+  table.options-table td.col-target { width: 8%; font-size: 10.5px; }
+  table.options-table td.col-status { width: 8%; text-align: center; }
+  table.options-table td.col-channel { width: 9%; font-size: 10.5px; }
+  table.options-table td.col-price { width: 12%; font-size: 11px; }
+  table.options-table td.col-note { width: 18%; font-size: 10.5px; color: var(--footer); }
+
+  .pill {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 9px;
+    font-size: 9.5px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+  .pill.live    { background: var(--green); }
+  .pill.prep    { background: var(--orange); }
+  .pill.stopped { background: var(--red); }
+  .pill.target  { background: var(--accent); }
+
+  /* 精査ポイント */
+  .review-points {
+    background: #FFF8E6;
+    border: 1.5px solid var(--orange);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 16px 0 0;
+  }
+  .review-points h3 {
+    color: var(--orange);
+    margin: 0 0 8px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .review-points h3::before { content: "⚠"; font-size: 18px; }
+  .review-points ol { margin: 6px 0 0; padding-left: 22px; }
+  .review-points li { margin-bottom: 6px; font-size: 12px; }
+  .review-points li b { color: var(--navy); }
+
+  footer {
+    padding: 18px 40px;
+    background: var(--light-bg);
+    color: var(--footer);
+    font-size: 11px;
+    text-align: center;
+  }
+  footer code { background: #FFFFFF; padding: 1px 5px; border-radius: 3px; font-size: 10.5px; }
+
+  /* === Cross-GTM Navigation === */
+  .gtm-nav {
+    background: linear-gradient(135deg, #FFF7E5 0%, #FFE9B0 100%);
+    border: 1.5px solid #B8860B;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin: 20px 40px 0;
+    font-size: 12.5px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .gtm-nav-label { font-weight: 700; color: #B8860B; letter-spacing: 0.5px; }
+  .gtm-nav-link {
+    color: #1B3A6B;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 4px 10px;
+    background: white;
+    border-radius: 4px;
+    border: 1.5px solid #1B3A6B;
+    transition: all 0.15s;
+    font-size: 12px;
+  }
+  .gtm-nav-link:hover { background: #1B3A6B; color: white; }
+  .gtm-nav-link.self { background: #00796B; color: white; border-color: #00796B; cursor: default; opacity: 0.9; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="title-strip">
+  <h1>カンリー プロダクト階層ツリー（精査用 v0.1）</h1>
+  <div class="sub">事業軸 × 戦略商材軸 × プロダクト体系軸 の3層レイヤー構造</div>
+  <div class="meta">
+    <div><b>ソース</b>product_catalog.xlsx（2026-02-19最終更新・107行全行精査）</div>
+    <div><b>事業数字根拠</b>中期経営計画20p「事業概要」・8P4Qキックオフ・5年PL</div>
+    <div><b>用途</b>ICPダッシュボード構築の前段、精査確定後に進む</div>
+    <div><b>位置付け</b>5/29(木)18:00 藤林さんMTG事前共有候補</div>
+  </div>
+</header>
+<div class="gtm-nav">
+  <span class="gtm-nav-label">📎 関連GTM Audit / 資料</span>
+  <a href="Canly_StoreMarketing_GTM_Audit_Living_v0.1.html" class="gtm-nav-link">▶ GTM-A：店舗集客事業</a>
+  <a href="Canly_LocalInventory_GTM_Audit_Living_v0.1.html" class="gtm-nav-link">▶ GTM-B：ローカル在庫</a>
+  <a href="Canly_Welfare_GTM_Audit_Living_v0.1.html" class="gtm-nav-link">▶ GTM-C：福利厚生</a>
+  <span class="gtm-nav-link self">● プロダクト階層ツリー（現在）</span>
+</div>
+
+
+<!-- ============== LAYER 1: 事業区分 ============== -->
+<section class="layer">
+  <h2 class="layer-title">
+    <span class="badge">LAYER 1</span>事業区分（売上の柱・組織で分かれる）
+    <span class="sub-h2">中期計画スライド20p「事業概要」を基準</span>
+  </h2>
+  <p class="lead">単月売上 約207百万円（2026/1単体）の構成比。EP/MID事業が主力で売上の3分の2を占め、SMB事業と福利厚生事業が独立。リカバリーは子会社別法人。</p>
+
+  <div class="biz-grid">
+    <div class="biz-card main">
+      <div class="biz-name">① カンリー店舗集客事業 <span class="pct">67%</span></div>
+      <div class="biz-sub">EP/MID 顧客（11店舗〜）向け AI SaaS</div>
+      <div class="biz-detail">
+        <div><b>主管:</b> ENP/MIDユニット（神田大成）</div>
+        <div><b>顧客数:</b> 514社（カンリー店舗集客本体・26/1）</div>
+        <div><b>ARPA:</b> 16.3万→22.5万円</div>
+        <div><b>解約率:</b> 0.52%</div>
+        <div><b>収益モデル:</b> 初期費用＋月額料金</div>
+      </div>
+    </div>
+
+    <div class="biz-card smb">
+      <div class="biz-name">② カンリー丸投げ集客 <span class="pct">26%</span></div>
+      <div class="biz-sub">スモール事業者（1-10店舗）向け AI BPO Agent</div>
+      <div class="biz-detail">
+        <div><b>主管:</b> グロースマーケットユニット（杉原大輔）</div>
+        <div><b>モデル:</b> BPaaS（BPO+SaaS）</div>
+        <div><b>商流:</b> 直販＋販売代理店</div>
+        <div><b>担当:</b> 須佐 / 八代 / 石井</div>
+      </div>
+    </div>
+
+    <div class="biz-card welfare">
+      <div class="biz-name">③ カンリー福利厚生 <span class="pct">5%</span></div>
+      <div class="biz-sub">EP/MID/SMB 横断・別事業部</div>
+      <div class="biz-detail">
+        <div><b>主管:</b> 福利厚生マーケプレ事業部（林佑樹）</div>
+        <div><b>モデル:</b> Media（利用社員ベース）</div>
+        <div><b>従量:</b> 400円/人〜</div>
+        <div><b>備考:</b> 4Qで ENP/MID合流予定</div>
+      </div>
+    </div>
+
+    <div class="biz-card recovery">
+      <div class="biz-name">④ リカバリー子会社 <span class="pct">含</span></div>
+      <div class="biz-sub">Uberall 国内総代理店事業</div>
+      <div class="biz-detail">
+        <div><b>主管:</b> 株式会社リカバリー（原口浩一代表）</div>
+        <div><b>取得:</b> 2025年9月M&A</div>
+        <div><b>カバー:</b> 海外125媒体連携</div>
+      </div>
+    </div>
+
+    <div class="biz-card other">
+      <div class="biz-name">⑤ その他 <span class="pct">2%</span></div>
+      <div class="biz-sub">独立商材群</div>
+      <div class="biz-detail">
+        <div>ローカル在庫・<br>ショート動画・<br>インバウンド系</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== LAYER 2: 戦略商材 ============== -->
+<section class="layer" style="background: linear-gradient(180deg, #F8FBFE 0%, #FFFFFF 100%);">
+  <h2 class="layer-title">
+    <span class="badge">LAYER 2</span>戦略商材レイヤー（事業区分を貫く中長期戦略軸）
+    <span class="sub-h2">中期計画 26/7-30/7期 の重点投資領域</span>
+  </h2>
+  <p class="lead">事業区分とは別軸で、カンリー全社が中長期で賭ける2つの戦略商材。MEOエージェントは Layer 1 ① の進化系として、ローカル在庫は Layer 1 ⑤ から独立して扱う。</p>
+
+  <div class="strategy-grid">
+    <div class="strategy-card">
+      <h3>A. 店舗集客AIエージェント構想<span class="tag">26/7期〜30/7期</span></h3>
+      <div class="strategy-sub">カンリー店舗集客ファミリーの進化系。「集客」のAIエージェント化に対応</div>
+      <div class="strategy-detail">
+        中期計画の最大KGI軸。「ヒトとAIの力で、店舗の集客力を上げる」の実装プロダクト。MEOから始まり、HP / 在庫 / SNS / 広告 / 予約 / CRM を順次包含し、最終的に「店舗集客AIエージェント」へ収斂。
+        <ul>
+          <li><b>1stフェーズ MVP:</b> MEOエージェント（6/1 プレス予定・社内KR4「機能リリース」）</li>
+          <li><b>進化形:</b> 因果モデルベース／複数チャネル横断／ダイナミック学習／段階的自律型</li>
+          <li><b>差別化軸:</b> カンリー独自データウェアハウス（タッチポイント横断フルファネルトラッキング）</li>
+          <li><b>競合:</b> MEOエージェント単体ではmov／GMO TECH、AIエージェント化では未確立</li>
+        </ul>
+        <div class="roadmap">
+          <b>ロードマップ:</b> 〜25/7期 MEO支援フロント（ホリゾンタル拡大済） → 26/7-27/7 ホリゾンタル×マルチバーティカル → 28/7期〜 AIエージェント×統合データ基盤
+        </div>
+      </div>
+    </div>
+
+    <div class="strategy-card">
+      <h3>B. カンリーローカル在庫<span class="tag">独立戦略商材</span></h3>
+      <div class="strategy-sub">Agentic Commerce 来店型のCV層装置。「購買」のAIエージェント化に対応</div>
+      <div class="strategy-detail">
+        中期計画の独立戦略軸。エージェンティックコマース「来店型」の動的データ供給装置。汎用AI（Gemini/ChatGPT/Perplexity等）に「今、ここにある在庫」を渡し続けることが勝敗を分ける。
+        <ul>
+          <li><b>差別化軸:</b> Google Local Feed Partner（LFP）国内2社目認定（25/10）</li>
+          <li><b>独占性:</b> 日本で運用可能2社のみ／広告代理店全員がカンリーLFPを担ぐ契約に集約</li>
+          <li><b>競合:</b> mov（口コミコム）— LFP認定なし、ネーミング戦略で「ローカルインベントリー」訴求</li>
+          <li><b>Google協定:</b> 年1万店舗導入コミット（4ヶ月で3,000店舗達成）</li>
+          <li><b>PMM KR1:</b> 累計5,000店舗のローカル在庫導入確定</li>
+        </ul>
+        <div class="roadmap">
+          <b>営業導線上の二面性:</b> ① カンリー店舗集客のアップセル品（基幹領域に入り込むオプション）｜② 戦略上は独立商材として位置付け
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== LAYER 3: プロダクト体系 ============== -->
+<section class="layer">
+  <h2 class="layer-title">
+    <span class="badge">LAYER 3</span>プロダクト体系（excel「所属グループ」基準・社内正式階層）
+    <span class="sub-h2">product_catalog.xlsx 107行を完全展開</span>
+  </h2>
+  <p class="lead">excel上の正式階層。「所属グループ」→「プロダクト/サービス」→「オプション・プラン」の3階層。販売状況・対象セグメント・参考価格を網羅。</p>
+
+  <div class="tree-section">
+
+    <!-- ============ A-① 所属G: カンリー店舗集客 ============ -->
+    <div class="group-block bg-main">
+      <div class="group-header">
+        <div class="group-name">A. 所属G「カンリー店舗集客」 — EP/MID向け主力ファミリー</div>
+        <div class="group-tag main">事業区分 ①</div>
+      </div>
+
+      <!-- A-1 本体 -->
+      <div class="product-block">
+        <div class="product-name">A-1. プロダクト「カンリー店舗集客」<span class="note">Canly Store Marketing｜本体＋オプション12種</span></div>
+        <table class="options-table">
+          <thead><tr>
+            <th>通称</th><th>正式名称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>商流</th><th>参考価格</th><th>備考</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="col-name">カンリー店舗集客（本体）</td><td class="col-formal">Canly Store Marketing</td><td class="col-cat">Map連携</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">親プロダクト</td></tr>
+            <tr><td class="col-name">クチコミAI分析</td><td class="col-formal">クチコミAI分析 for Googleマップ</td><td class="col-cat">Map連携</td><td class="col-target">EP/MID/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">30,000円〜/月</td><td class="col-note">PMM伊藤舞</td></tr>
+            <tr><td class="col-name">Appleマップ連携</td><td class="col-formal">集客媒体オプション for Appleマップ</td><td class="col-cat">Map連携</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">25/6 API認定</td></tr>
+            <tr><td class="col-name">Yahoo!プレイス連携</td><td class="col-formal">集客媒体オプション for Yahoo!プレイス</td><td class="col-cat">Map連携</td><td class="col-target">EP/MID/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">24/2 国内史上初連携</td></tr>
+            <tr><td class="col-name">Baidu Map連携</td><td class="col-formal">集客媒体オプション for Baidu Map</td><td class="col-cat">インバウンド</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">Yexsys独占契約</td></tr>
+            <tr><td class="col-name">中国メディア連携</td><td class="col-formal">集客媒体オプション for 中国メディア</td><td class="col-cat">インバウンド</td><td class="col-target">EP/MID/SMB</td><td class="col-status"><span class="pill stopped">販売停止</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">Baidu単体に集約</td></tr>
+            <tr><td class="col-name">食べログ連携</td><td class="col-formal">集客媒体オプション for グルメサイト</td><td class="col-cat">オウンド強化</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill prep">準備中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">movの主戦場</td></tr>
+            <tr><td class="col-name">サイテーション（Uberall）</td><td class="col-formal">サイテーションオプション</td><td class="col-cat">Map連携</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">25/10〜販売開始</td></tr>
+            <tr><td class="col-name">GBP作成/登録代行</td><td class="col-formal">GBPオーナー権限認証代行</td><td class="col-cat">運用代行</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">—</td></tr>
+            <tr><td class="col-name">Yahoo!プレイス作成/登録代行</td><td class="col-formal">GBPオーナー権限認証代行</td><td class="col-cat">運用代行</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">—</td></tr>
+            <tr><td class="col-name">Apple ビジネスコネクト作成/登録代行</td><td class="col-formal">GBPオーナー権限認証代行</td><td class="col-cat">運用代行</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">—</td></tr>
+            <tr><td class="col-name">運用代行</td><td class="col-formal">運用代行オプション</td><td class="col-cat">運用代行</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">積極販売しない</td></tr>
+            <tr><td class="col-name">順位チェックツール (MEO)</td><td class="col-formal">MEO順位チェックオプション</td><td class="col-cat">Map連携</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">プロプラン</td></tr>
+            <tr><td class="col-name">インターネット広告運用代行</td><td class="col-formal">オンライン広告運用代行</td><td class="col-cat">運用代行</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">ローカルキャンペーン/P-max</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- A-2 店舗検索ページ -->
+      <div class="product-block">
+        <div class="product-name">A-2. プロダクト「カンリー店舗検索ページ」<span class="note">Canly Store Locator｜130社大手導入実績／LP 4年更新停止課題</span></div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>正式名称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>商流</th><th>参考価格</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">カンリー店舗検索ページ</td><td class="col-formal">Canly Store Locator</td><td class="col-cat">オウンド強化</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">親プロダクト</td></tr>
+            <tr><td class="col-name">多言語化オプション</td><td class="col-formal">カンリー店舗検索ページ 多言語化オプション</td><td class="col-cat">インバウンド</td><td class="col-target">EP/MID/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">4販売パターン（店舗検索内/単体EP/丸投げHP内/単体SMB）</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- A-3 カスタムシリーズ -->
+      <div class="product-block">
+        <div class="product-name">A-3. プロダクト「カンリーカスタムシリーズ」<span class="note">エンプラ向けカスタム連携</span></div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>正式名称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>商流</th><th>参考価格</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">カスタムCSV</td><td class="col-formal">カンリーカスタムシリーズ カスタムCSV</td><td class="col-cat">Map連携</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">—</td></tr>
+            <tr><td class="col-name">カスタムAPI</td><td class="col-formal">カンリーカスタムシリーズ カスタムAPI</td><td class="col-cat">Map連携</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">—</td></tr>
+            <tr><td class="col-name">カスタムDB</td><td class="col-formal">カンリーカスタムシリーズ カスタムDB</td><td class="col-cat">Map連携</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 販売停止系 -->
+      <div class="product-block">
+        <div class="product-name" style="color:var(--footer)">A-4. 販売停止プロダクト<span class="note">参考のため掲載</span></div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>正式名称</th><th>対象</th><th>状況</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">カンリーCMS</td><td class="col-formal">—</td><td class="col-target">EP</td><td class="col-status"><span class="pill stopped">販売停止</span></td><td class="col-note">25/11停止</td></tr>
+            <tr><td class="col-name">カンリー求人検索</td><td class="col-formal">—</td><td class="col-target">EP</td><td class="col-status"><span class="pill stopped">販売停止</span></td><td class="col-note">25/11停止</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ B 所属G: その他（独立プロダクト） ============ -->
+    <div class="group-block bg-other">
+      <div class="group-header">
+        <div class="group-name">B. 所属G「その他」 — 独立プロダクト群</div>
+        <div class="group-tag other">事業区分 ⑤</div>
+      </div>
+
+      <div class="product-block">
+        <div class="product-name">B-1. プロダクト「カンリーローカル在庫」<span class="note">Layer 2-B 戦略商材として独立扱い</span></div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>正式名称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>商流</th><th>参考価格</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">ローカル在庫</td><td class="col-formal">カンリーローカル在庫</td><td class="col-cat">Map連携</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">申込書準備中 #p_bizdev_ローカル在庫</td></tr>
+            <tr><td class="col-name">ローカル在庫広告</td><td class="col-formal">広告オプション for ローカル在庫</td><td class="col-cat">オウンド強化</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill prep">準備中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="product-block">
+        <div class="product-name">B-2. プロダクト「カンリーショート動画」<span class="note">単発・月額の2型</span></div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>正式名称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>商流</th><th>参考価格</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">ショート動画（ワンショット）</td><td class="col-formal">カンリーショート動画</td><td class="col-cat">オウンド強化</td><td class="col-target">EP/MID/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">単発発注</td></tr>
+            <tr><td class="col-name">ショート動画（月額定額）</td><td class="col-formal">カンリーショート動画</td><td class="col-cat">オウンド強化</td><td class="col-target">EP/MID/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">月額固定</td><td class="col-note">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ C 所属G: インバウンド ============ -->
+    <div class="group-block bg-inbound">
+      <div class="group-header">
+        <div class="group-name">C. 所属G「インバウンド」 — 独立クーポンキャンペーン群</div>
+        <div class="group-tag inbound">独立</div>
+      </div>
+      <div class="product-block">
+        <div class="product-name">C-1. プロダクト「インバウンド」<span class="note">店舗集客の Baidu/中国メディアオプションとは別の独立グループ</span></div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>正式名称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>商流</th><th>参考価格</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">WeChat Payキャンペーン</td><td class="col-formal">WeChat Payキャンペーン</td><td class="col-cat">インバウンド</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill stopped">販売停止</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">仲介のためなし</td></tr>
+            <tr><td class="col-name">Alipay+ 販促</td><td class="col-formal">Alipayクーポン</td><td class="col-cat">インバウンド</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">PMM池田光希</td></tr>
+            <tr><td class="col-name">大衆点評クーポン</td><td class="col-formal">大衆点評クーポン</td><td class="col-cat">インバウンド</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">メガエンプラ・小売に限る</td></tr>
+            <tr><td class="col-name">Ctripクーポン</td><td class="col-formal">Ctripクーポン</td><td class="col-cat">インバウンド</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">Japan DX社代理店経由・飲食不可</td></tr>
+            <tr><td class="col-name">Umetripクーポン</td><td class="col-formal">Umetripクーポン</td><td class="col-cat">インバウンド</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">Japan DX社代理店経由・飲食不可</td></tr>
+            <tr><td class="col-name">Paykeクーポン</td><td class="col-formal">Paykeクーポン</td><td class="col-cat">インバウンド</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">25/10〜販売開始</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ D 所属G: カンリー丸投げ集客 ============ -->
+    <div class="group-block bg-smb">
+      <div class="group-header">
+        <div class="group-name">D. 所属G「カンリー丸投げ集客」 — SMB向け AI BPO Agent</div>
+        <div class="group-tag smb">事業区分 ②</div>
+      </div>
+
+      <div class="product-block">
+        <div class="product-name">D-1. プロダクト「カンリー丸投げMEO」<span class="note">SMB向けMEO BPO</span></div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>正式名称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>商流</th><th>参考価格</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">カンリー丸投げMEO（本体）</td><td class="col-formal">カンリー丸投げMEO</td><td class="col-cat">Map連携</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販＋代理店</td><td class="col-price">—</td><td class="col-note">親</td></tr>
+            <tr><td class="col-name">GBP作成/登録代行</td><td class="col-formal">GBP作成/登録代行オプション</td><td class="col-cat">運用代行</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">代理店</td><td class="col-price">—</td><td class="col-note">直販は初期費用に内包</td></tr>
+            <tr><td class="col-name">運用代行</td><td class="col-formal">運用代行オプション</td><td class="col-cat">運用代行</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">基本+回数追加</td></tr>
+            <tr><td class="col-name">Instagram→GBP自動投稿</td><td class="col-formal">InstagramGBP自動投稿オプション</td><td class="col-cat">運用代行</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="product-block">
+        <div class="product-name">D-2. プロダクト「カンリー丸投げホームページ」<span class="note">3プラン+ショット</span></div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>正式名称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>商流</th><th>参考価格</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">ミニマム</td><td class="col-formal">カンリー丸投げホームページ</td><td class="col-cat">オウンド強化</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販＋代理店</td><td class="col-price">9,800円/月〜</td><td class="col-note">月額定額制</td></tr>
+            <tr><td class="col-name">レギュラー</td><td class="col-formal">カンリー丸投げホームページ</td><td class="col-cat">オウンド強化</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販＋代理店</td><td class="col-price">15,000円/月〜</td><td class="col-note">月額定額制</td></tr>
+            <tr><td class="col-name">プレミアム</td><td class="col-formal">カンリー丸投げホームページ</td><td class="col-cat">オウンド強化</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販＋代理店</td><td class="col-price">29,800円/月〜</td><td class="col-note">月額定額制</td></tr>
+            <tr><td class="col-name">ショット案件</td><td class="col-formal">カンリー丸投げホームページ</td><td class="col-cat">オウンド強化</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販＋代理店</td><td class="col-price">29,800円/月〜</td><td class="col-note">サブスクなし ワンショット</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="product-block">
+        <div class="product-name">D-3. その他 SMB商材（カンリー丸投げ集客系）</div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>正式名称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>商流</th><th>参考価格</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">カンリー丸投げLP制作</td><td class="col-formal">カンリー丸投げLP制作</td><td class="col-cat">オウンド強化</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">—</td></tr>
+            <tr><td class="col-name">カンリー丸投げリスティング広告</td><td class="col-formal">カンリー丸投げリスティング広告</td><td class="col-cat">運用代行</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">—</td></tr>
+            <tr><td class="col-name">カンリー丸投げ公式LINE</td><td class="col-formal">カンリー丸投げLINE公式アカウント</td><td class="col-cat">オウンド強化</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">—</td></tr>
+            <tr><td class="col-name">カンリー丸投げPOP作成</td><td class="col-formal">カンリー丸投げPOP作成</td><td class="col-cat">オウンド強化</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">—</td><td class="col-note">—</td></tr>
+            <tr><td class="col-name">カンリー丸投げSEOコンサル</td><td class="col-formal">カンリー丸投げSEOコンサル</td><td class="col-cat">Map連携</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">45,000円/月〜</td><td class="col-note">八代担当</td></tr>
+            <tr><td class="col-name">DEECH（ポスティング）</td><td class="col-formal">DEECH</td><td class="col-cat">運用代行</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">相場価格+20%</td><td class="col-note">ユニヴァジャイロン代理</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="product-block">
+        <div class="product-name">D-4. プロダクト「カンリー丸投げAIコンシェルジュ」<span class="note">準備中</span></div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">カンリー丸投げAIコンシェルジュ</td><td class="col-cat">Map連携</td><td class="col-target">SMB</td><td class="col-status"><span class="pill prep">準備中</span></td><td class="col-note">ダッシュボード機能</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="product-block">
+        <div class="product-name">D-5. SMBスタンドアロン商材<span class="note">所属Gは別だがSMB事業区分内</span></div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>正式名称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>参考価格</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">Chopchop（UberEats最適化）</td><td class="col-formal">チョップチョップ / Chopchop</td><td class="col-cat">運用代行</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">増加売上の30%</td><td class="col-note">OASIS社サービス代販／成果報酬</td></tr>
+            <tr><td class="col-name">サックとAIホームページ（無料）</td><td class="col-formal">サックとAIホームページ</td><td class="col-cat">オウンド強化</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">0円/月〜</td><td class="col-note">SB C&S提携</td></tr>
+            <tr><td class="col-name">サックとAIホームページ（有料）</td><td class="col-formal">サックとAIホームページ</td><td class="col-cat">オウンド強化</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">4,980円/月〜</td><td class="col-note">SB C&S提携</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ E 所属G: カンリー福利厚生 ============ -->
+    <div class="group-block bg-welfare">
+      <div class="group-header">
+        <div class="group-name">E. 所属G「カンリー福利厚生」 — EP/MID/SMB横断・別事業部</div>
+        <div class="group-tag welfare">事業区分 ③</div>
+      </div>
+      <div class="product-block">
+        <div class="product-name">E-1. プロダクト「カンリー福利厚生」<span class="note">4プラン</span></div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>正式名称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>商流</th><th>参考価格</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">直販プラン</td><td class="col-formal">カンリー福利厚生</td><td class="col-cat">福利厚生</td><td class="col-target">EP/MID/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">応相談</td><td class="col-note">直販営業のプラン</td></tr>
+            <tr><td class="col-name">販売代理店プラン</td><td class="col-formal">カンリー福利厚生</td><td class="col-cat">福利厚生</td><td class="col-target">SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">代理店</td><td class="col-price">応相談</td><td class="col-note">代理店向けプラン</td></tr>
+            <tr><td class="col-name">追加オプションプラン</td><td class="col-formal">追加オプションプラン</td><td class="col-cat">福利厚生</td><td class="col-target">EP/MID/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-channel">直販</td><td class="col-price">応相談</td><td class="col-note">デジタルチケット系バルク</td></tr>
+            <tr><td class="col-name">追加ポイントプラン</td><td class="col-formal">追加ポイントプラン</td><td class="col-cat">福利厚生</td><td class="col-target">EP/MID/SMB</td><td class="col-status"><span class="pill prep">準備中</span></td><td class="col-channel">直販</td><td class="col-price">応相談</td><td class="col-note">独自ポイントバルク</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ F リカバリー子会社 ============ -->
+    <div class="group-block bg-recovery">
+      <div class="group-header">
+        <div class="group-name">F. リカバリー子会社 — Uberall国内総代理店事業</div>
+        <div class="group-tag recovery">事業区分 ④</div>
+      </div>
+      <div class="product-block">
+        <div class="product-name">F-1. プロダクト「Uberall」<span class="note">3旧プラン停止＋現6プラン＋ホワイトラベル＋API</span></div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>参考価格</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">Essential</td><td class="col-cat">Map連携</td><td class="col-target">リカバリーEP/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">2,560円/月〜</td><td class="col-note">メディア連携</td></tr>
+            <tr><td class="col-name">Advanced</td><td class="col-cat">Map連携</td><td class="col-target">リカバリーEP/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">—</td><td class="col-note">+レビュー/メッセージ</td></tr>
+            <tr><td class="col-name">Advanced+Hospitality</td><td class="col-cat">Map連携</td><td class="col-target">リカバリーEP/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">—</td><td class="col-note">+TripAdvisor</td></tr>
+            <tr><td class="col-name">Pro</td><td class="col-cat">Map連携</td><td class="col-target">リカバリーEP/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">3,380円/月〜</td><td class="col-note">+SNS/web投稿タイル</td></tr>
+            <tr><td class="col-name">Pro+Hospitality</td><td class="col-cat">Map連携</td><td class="col-target">リカバリーEP/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">3,770円/月〜</td><td class="col-note">+TripAdvisor</td></tr>
+            <tr><td class="col-name">ホワイトラベル</td><td class="col-cat">Map連携</td><td class="col-target">リカバリーEP/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">—</td><td class="col-note">SSO・ロゴカスタム可</td></tr>
+            <tr><td class="col-name">API</td><td class="col-cat">Map連携</td><td class="col-target">リカバリーEP/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">—</td><td class="col-note">パートナー独自フロント開発可</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="product-block">
+        <div class="product-name">F-2. リカバリー独自商材</div>
+        <table class="options-table">
+          <thead><tr><th>通称</th><th>カテゴリ</th><th>対象</th><th>状況</th><th>参考価格</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">店舗検索ページ制作</td><td class="col-cat">オウンド強化</td><td class="col-target">リカバリーEP</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">500,000円〜</td><td class="col-note">Uberallデータ利用</td></tr>
+            <tr><td class="col-name">店舗検索ページ保守運用</td><td class="col-cat">オウンド強化</td><td class="col-target">リカバリーEP</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">都度見積もり</td><td class="col-note">—</td></tr>
+            <tr><td class="col-name">構造化タグ</td><td class="col-cat">オウンド強化</td><td class="col-target">リカバリーEP/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">400円/月〜</td><td class="col-note">Uberall情報連動</td></tr>
+            <tr><td class="col-name">カスタムタグ</td><td class="col-cat">オウンド強化</td><td class="col-target">リカバリーEP/SMB</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">600円/月〜</td><td class="col-note">表示内容＋構造化</td></tr>
+            <tr><td class="col-name">CX（HP制作）</td><td class="col-cat">オウンド強化</td><td class="col-target">リカバリーEP</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">都度見積もり</td><td class="col-note">店舗検索ページ前提</td></tr>
+            <tr><td class="col-name">CX（HP保守運用）</td><td class="col-cat">オウンド強化</td><td class="col-target">リカバリーEP</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">都度見積もり</td><td class="col-note">—</td></tr>
+            <tr><td class="col-name">CX（SNS運用代行）</td><td class="col-cat">運用代行</td><td class="col-target">リカバリーEP</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">都度見積もり</td><td class="col-note">運用外注</td></tr>
+            <tr><td class="col-name">CX（広告運用）</td><td class="col-cat">運用代行</td><td class="col-target">リカバリーEP</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">都度見積もり</td><td class="col-note">Google/Yahoo/Meta等</td></tr>
+            <tr><td class="col-name">キキコミ</td><td class="col-cat">代理店</td><td class="col-target">リカバリーEP</td><td class="col-status"><span class="pill live">販売中</span></td><td class="col-price">都度見積もり</td><td class="col-note">ユニヴァジャイロン代理</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ G 販売停止 ============ -->
+    <div class="group-block" style="border-left-color:var(--footer); background:#F0F0F0;">
+      <div class="group-header">
+        <div class="group-name" style="color:var(--footer)">G. 販売停止／統合済プロダクト</div>
+        <div class="group-tag standalone">参考</div>
+      </div>
+      <table class="options-table">
+        <thead><tr><th>通称</th><th>対象</th><th>状況</th><th>備考</th></tr></thead>
+        <tbody>
+          <tr><td class="col-name">トストア</td><td class="col-target">EP, MID</td><td class="col-status"><span class="pill stopped">販売停止</span></td><td class="col-note">EP本体に統合（25/3 M&A→25/4グループジョイン）</td></tr>
+          <tr><td class="col-name">カンリーCMS</td><td class="col-target">EP</td><td class="col-status"><span class="pill stopped">販売停止</span></td><td class="col-note">25/11停止</td></tr>
+          <tr><td class="col-name">カンリー求人検索</td><td class="col-target">EP</td><td class="col-status"><span class="pill stopped">販売停止</span></td><td class="col-note">25/11停止</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- 精査ポイント -->
+  <div class="review-points">
+    <h3>精査ポイント（ユーザー朱入れ希望事項）</h3>
+    <ol>
+      <li><b>「カンリーホームページ」の実在性</b>：5/24 MTGで藤林さん発言「HP単体 ARR 2億」が出たが、xlsxには登録なし。リカバリーCX（HP制作）と認識して良いか？ または別途存在する販売停止前のプロダクトか？</li>
+      <li><b>戦略商材レイヤー（Layer 2）の表現の妥当性</b>：MEOエージェント・店舗集客AIエージェント構想は、xlsx未登録だがLayer 2に独立配置している。これで合っているか？</li>
+      <li><b>ローカル在庫の二面性表現</b>：Layer 2-B（戦略商材）かつ Layer 3-B-1（「その他」グループのプロダクト）として両方に登場する設計。混乱を生まないか？</li>
+      <li><b>インバウンドの親子関係</b>：「Baidu Map／中国メディア」=店舗集客のオプション扱い、「Alipay/大衆点評/Ctrip/Umetrip/Payke」=独立グループ扱い、と社内で分けている根拠が要確認。価値提供の流れは似ているが、契約モデル（直販 vs 代理店経由）の違いが理由か？</li>
+      <li><b>カンリーカスタムシリーズの位置付け</b>：xlsxではカンリー店舗集客所属G内の独立プロダクトだが、機能的にはオプションのカスタム実装。「プロダクト扱い」が正しいか、それともオプション扱いに統合すべきか？</li>
+      <li><b>福利厚生の4Q組織変更後の階層変更</b>：下期に福利厚生マーケプレ事業部が ENP/MIDユニットに合流予定。Layer 1事業区分③→①に統合される可能性。本ツリーは現時点（4Q開始前）の状態を反映している点に注意。</li>
+      <li><b>SMB系のChopchop / サックとAI HPの所属G空白</b>：xlsx上「カンリー丸投げ集客」所属G未指定。スタンドアロン扱いとして D-5 に置いたが、これで合うか？</li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  <code>product_tree_v0_1.html</code> ／ <code>v0.1 (2026-05-27)</code> 初版作成・精査用 ／ Source: product_catalog.xlsx + 中期計画(76p) + 8P4Qキックオフ(80p) ／ 確定後 → icp_dashboard_v0_1.html へ反映
+</footer>
+
+</div>
+</body>
+</html>

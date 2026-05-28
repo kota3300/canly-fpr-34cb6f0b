@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>カンリーローカル在庫 LP精査 v0.1（local.can-ly.com）</title>
+<style>
+  :root {
+    --navy: #1B3A6B;
+    --navy-light: #2A4F8A;
+    --gold: #B8860B;
+    --gold-bg: #FFF7E5;
+    --green: #1B5E20;
+    --green-bg: #E8F5E9;
+    --orange: #EF6C00;
+    --orange-bg: #FFF3E0;
+    --red: #C62828;
+    --red-bg: #FFEBEE;
+    --accent: #1976D2;
+    --teal: #00796B;
+    --light-bg: #F5F5F5;
+    --footer: #6B7280;
+    --border: #E0E5EE;
+    --text: #1A1A2E;
+    --bg: #FAFAFA;
+    --soft-bg: #FAFBFD;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+    background: var(--bg);
+    padding: 24px 32px;
+  }
+  .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  header.title-strip {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    color: white;
+    padding: 28px 36px;
+  }
+  header h1 { font-size: 26px; margin-bottom: 6px; }
+  header .sub { color: #C9D8EF; font-size: 13px; margin-bottom: 12px; }
+  header .meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px 24px; font-size: 11px; color: #94B4D4; }
+  header .meta b { color: white; display: block; font-size: 12px; }
+  .gtm-nav {
+    background: linear-gradient(135deg, #FFF7E5 0%, #FFE9B0 100%);
+    border: 1.5px solid #B8860B;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin: 20px 36px 0;
+    font-size: 12.5px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .gtm-nav-label { font-weight: 700; color: #B8860B; letter-spacing: 0.5px; }
+  .gtm-nav-link { color: var(--navy); text-decoration: none; font-weight: 600; padding: 4px 10px; background: white; border-radius: 4px; border: 1.5px solid var(--navy); font-size: 12px; }
+  .gtm-nav-link:hover { background: var(--navy); color: white; }
+  .gtm-nav-link.self { background: var(--teal); color: white; border-color: var(--teal); cursor: default; opacity: 0.9; }
+  section { padding: 24px 36px; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  h2.section-title {
+    font-size: 22px;
+    color: var(--navy);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h2.section-title .badge { background: var(--navy); color: white; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 3px; letter-spacing: 0.5px; }
+  h3.sub { font-size: 16px; color: var(--navy); margin: 22px 0 8px; border-left: 4px solid var(--accent); padding-left: 10px; }
+  .lead { color: var(--footer); font-size: 12.5px; margin: 6px 0 16px; }
+  .lp-shot { margin: 12px 0; }
+  .lp-shot img { max-width: 100%; border: 1px solid var(--border); border-radius: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 8px 0; }
+  th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--navy); color: white; font-size: 11.5px; }
+  tr:nth-child(even) td { background: var(--light-bg); }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; color: white; }
+  .pill.crit { background: var(--red); }
+  .pill.high { background: var(--orange); }
+  .pill.mid { background: #B8860B; }
+  .pill.good { background: var(--green); }
+  .pill.new { background: var(--accent); }
+  .callout {
+    background: var(--red-bg);
+    border-left: 4px solid var(--red);
+    padding: 14px 18px;
+    border-radius: 4px;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  .callout.orange { background: var(--orange-bg); border-color: var(--orange); }
+  .callout.gold { background: var(--gold-bg); border-color: var(--gold); }
+  .callout.green { background: var(--green-bg); border-color: var(--green); }
+  .callout.blue { background: #EAF2FC; border-color: var(--accent); }
+  .callout h4 { margin-bottom: 6px; font-size: 14px; }
+  .callout.gold h4 { color: var(--gold); }
+  .callout.orange h4 { color: var(--orange); }
+  .callout h4.red { color: var(--red); }
+  .callout.green h4 { color: var(--green); }
+  .callout.blue h4 { color: var(--accent); }
+  ul.tight { padding-left: 22px; margin: 6px 0 10px; }
+  ul.tight li { margin-bottom: 4px; }
+  .copy-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .copy-card.recommended { border-color: var(--gold); background: linear-gradient(135deg, #FFFEFA 0%, #FFF7E5 100%); }
+  .copy-card .tag { font-size: 10px; background: var(--accent); color: white; padding: 2px 8px; border-radius: 3px; font-weight: 700; }
+  .copy-card .tag.rec { background: var(--gold); }
+  .copy-card h4 { margin: 6px 0 4px; color: var(--navy); font-size: 15px; }
+  .copy-card .copy-main { font-size: 16px; font-weight: 700; color: var(--text); padding: 8px 12px; background: white; border-left: 3px solid var(--navy); border-radius: 3px; margin: 6px 0; }
+  .copy-card .copy-sub { font-size: 13px; color: var(--footer); padding: 4px 0; line-height: 1.6; }
+  .copy-card .target { font-size: 11px; color: var(--accent); font-weight: 600; margin-top: 6px; }
+  .section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 12px 0; }
+  .section-card {
+    background: var(--soft-bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--navy);
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .section-card .num { font-size: 11px; color: var(--accent); font-weight: 700; letter-spacing: 0.5px; }
+  .section-card h4 { color: var(--navy); margin: 4px 0 6px; font-size: 14px; }
+  .section-card p { font-size: 12.5px; color: var(--text); line-height: 1.55; }
+  .section-card.new { border-left-color: var(--accent); background: #EAF2FC; }
+  .section-card.keep { border-left-color: var(--green); }
+  .section-card.improve { border-left-color: var(--orange); }
+  footer { padding: 18px 36px; background: var(--light-bg); color: var(--footer); font-size: 11px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="title-strip">
+  <h1>カンリーローカル在庫 LP精査 v0.1</h1>
+  <div class="sub">local.can-ly.com 現状分析 × 改善提案（藤林さん要望「LP/コンテンツ精査」への一次提示）</div>
+  <div class="meta">
+    <div><b>取得日</b>2026-05-28 14:25 JST</div>
+    <div><b>取得方法</b>Playwright（Chromium）SPAレンダリング後</div>
+    <div><b>対象URL</b>https://local.can-ly.com/</div>
+    <div><b>関連GTM</b>GTM-B（ローカル在庫）#7 Marketing Channels</div>
+  </div>
+</header>
+
+<div class="gtm-nav">
+  <span class="gtm-nav-label">📎 関連GTM Audit / 資料</span>
+  <a href="Canly_StoreMarketing_GTM_Audit_Living_v0.1.html" class="gtm-nav-link">▶ GTM-A：店舗集客事業</a>
+  <a href="Canly_LocalInventory_GTM_Audit_Living_v0.1.html" class="gtm-nav-link">▶ GTM-B：ローカル在庫</a>
+  <a href="Canly_Welfare_GTM_Audit_Living_v0.1.html" class="gtm-nav-link">▶ GTM-C：福利厚生</a>
+  <a href="product_tree_v0_1.html" class="gtm-nav-link">📐 プロダクト階層ツリー</a>
+  <span class="gtm-nav-link self">● LP精査 v0.1（現在）</span>
+</div>
+
+<!-- ============== 1. 現状LPサマリ ============== -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 1</span>現状LP構造サマリ（local.can-ly.com）</h2>
+  <p class="lead">2026-05-28時点、Playwrightレンダリング取得。Nuxt.js + Studio.Design 製の1ページSPA構成。</p>
+
+  <h3 class="sub">セクション構成（上から順）</h3>
+  <table>
+    <thead><tr><th style="width:6%">#</th><th style="width:22%">セクション</th><th style="width:36%">現状コピー</th><th>評価</th></tr></thead>
+    <tbody>
+      <tr><td>0</td><td>ナビ</td><td>TOP / ローカル在庫とは / LFPとは / 導入事例 / よくある質問 / お問い合わせ / 資料DL</td><td><span class="pill good">良い</span> 標準的構造</td></tr>
+      <tr><td>1</td><td>ファーストビュー</td><td>「在庫 見える化 で集客アップ」「カンリーローカル在庫」「Google ビジネスプロフィールと在庫情報の連携で、検索経由の新規流入が拡大。MEOのノウハウを活かし、集客効果を最大化します。」「130,000店舗以上に導入されているカンリーが運営」「Google Local Feed Partner(LFP)認定を取得」</td><td><span class="pill crit">致命的弱点</span> LFP希少性訴求が弱い／差別化軸が見えない</td></tr>
+      <tr><td>2</td><td>AI時代訴求</td><td>「選ばれるのは『AIにおすすめされた商品』」「AIに選ばれる仕組み、対応してますか？」</td><td><span class="pill mid">惜しい</span> 上位カテゴリ「Agentic Commerce」連動が浅い</td></tr>
+      <tr><td>3</td><td>3つの特徴</td><td>01: 検索から即来店につなげる新たな流入導線を創出／02: Google LFP認定取得→現場負担削減／03: MEOのプロ集団が広告・プロモーションの効果可視化</td><td><span class="pill high">改善余地大</span> コピーが平凡／数値訴求弱い</td></tr>
+      <tr><td>4</td><td>お困りごと</td><td>新しい集客施策／商品の魅力届けたい／問い合わせ対応負担</td><td><span class="pill good">良い</span> 痛みポイント整理OK</td></tr>
+      <tr><td>5</td><td>導入事例 VoC</td><td>嘉穂無線HD（グッデイ）／ビジョナリーHD（メガネスーパー）／ムラサキスポーツ の3社コメント</td><td><span class="pill good">良い</span> VoC強い／業種別ターゲ拡張余地あり</td></tr>
+      <tr><td>6</td><td>サービス説明</td><td>「店舗・ECの在庫を見せて新規集客する」「LFP Trusted Partner認定」「130,000店舗の実績」</td><td><span class="pill mid">惜しい</span> 「国内2社目」希少性が抜けている</td></tr>
+      <tr><td>7</td><td>LFPとは？</td><td>LFPは公式パートナープログラムの説明／短期間・低コスト・自動更新</td><td><span class="pill mid">惜しい</span> 「国内2社のみ」「mov等は監修のみ」の対比なし</td></tr>
+      <tr><td>8</td><td>FAQ</td><td>在庫確認短縮 / 導入1〜2ヶ月 / 料金「お打ち合わせにて」 / 導入後サポート</td><td><span class="pill mid">惜しい</span> 料金完全非公開／業種別Q&A不在</td></tr>
+      <tr><td>9</td><td>セミナー＋CTA</td><td>セミナー情報／お問い合わせ／資料DL</td><td><span class="pill good">良い</span> CV装置複数あり</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">📸 現状LP fullPage スクリーンショット</h3>
+  <div class="lp-shot">
+    <img src="local_canly_lp_current_2026-05-28.png" alt="local.can-ly.com fullPage screenshot 2026-05-28">
+  </div>
+</section>
+
+<!-- ============== 2. 改善ポイント ============== -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 2</span>改善ポイント（優先度別）</h2>
+
+  <h3 class="sub">🔴 致命的（4Q即着手）</h3>
+
+  <div class="callout">
+    <h4 class="red">致命的①：LFP「国内2社目」希少性訴求が抜け落ちている</h4>
+    <p><b>現状：</b>「Google Local Feed Partner(LFP)認定を取得」</p>
+    <p><b>問題：</b>カンリー最強の差別化軸である<b>「国内2社のみ」「日本で公式に運用できるのはカンリーを含む2社のみ」</b>が前面に出ていない。「LFP認定」だけでは、競合mov（GBPエキスパート監修のみ）との明確な差が分からない。</p>
+    <p><b>改善：</b>ファーストビューで「<b>国内2社目のGoogle Local Feed Partner（LFP）認定</b> / 日本で『公式に』ローカル在庫を運用できるのはカンリーを含む2社のみ」と即明示。</p>
+  </div>
+
+  <div class="callout">
+    <h4 class="red">致命的②：競合mov「ローカルインベントリーマーケティング」への撃ち返しゼロ</h4>
+    <p><b>現状：</b>競合への言及・撃ち返しコンテンツが一切なし。</p>
+    <p><b>問題：</b>movは独自カテゴリ用語『ローカルインベントリーマーケティング』で認知戦を展開中。BOOKOFF・ロフト・アンダーアーマー・ビックカメラ・ダイアナ・スギ薬局・二木ゴルフ等の導入実績で認知を取りに来ている。LP上で何も言及しないと、「LFPって何？」のbasic教育レイヤーで負ける可能性。</p>
+    <p><b>改善：</b>新規セクション「カンリーLFPがなぜ重要か」を追加し、「Google公式認定パートナー（カンリー）」vs「GBPエキスパート監修（mov）」の差を明示。直接競合名は出さなくてOK、構造的差別化として描く。</p>
+  </div>
+
+  <h3 class="sub">🟠 重要（4Q計画的実施）</h3>
+
+  <div class="callout orange">
+    <h4>重要①：Agentic Commerce／NRF26連動が浅い</h4>
+    <p>「AIに選ばれる仕組み、対応してますか？」セクションは方向性は正しいが、上位カテゴリ「<b>Agentic Commerce</b>」「<b>NRF26テーマ『検索の終わり、AI購買時代』</b>」との連動が浅い。Co-CEO新Vision「ヒトとAIの力で、店舗の集客力を上げる」とのナラティブ統一も弱い。</p>
+    <p><b>改善：</b>AIセクションをAgentic Commerce / Why Now? セクションに格上げし、(1)NRF26テーマ引用、(2)Walmart×Google CEO対談言及、(3)『来店型エージェンティックコマースの分水嶺は在庫データの鮮度』というカンリーの主張を提示。</p>
+  </div>
+
+  <div class="callout orange">
+    <h4>重要②：「3つの特徴」コピーが平凡＆数値訴求弱い</h4>
+    <p>現状：「検索から即来店につなげる新たな流入導線を創出」「導入・運用の現場負担を徹底削減」「広告・プロモーションの効果を可視化」</p>
+    <p><b>問題：</b>痛みベース／成果ベースのコピーになっていない。「※60店舗規模のホームセンターでの事例」と注釈はあるが、具体的数値（例：来店CV+30%／問合せ削減80%等）がない。</p>
+    <p><b>改善：</b>各特徴に痛みベースのコピー＋ロンチ3社の具体数値の例示を追加。</p>
+  </div>
+
+  <div class="callout orange">
+    <h4>重要③：業種別ターゲティングが弱い</h4>
+    <p>VoC 3社（嘉穂無線HD＝HC／ビジョナリーHD＝アイウェア／ムラサキ＝スポーツ）はあるが、業種別の「あなたの業界ではこう効く」セクションがない。HC・アパレル・スポーツ・アイウェア・ドラッグ・家電・ホームセンター・百貨店 等の業種別タブ／業種別1pagerDL動線が欲しい。</p>
+  </div>
+
+  <h3 class="sub">🟡 中（4Q末／5Qで実施）</h3>
+
+  <div class="callout gold">
+    <h4>中①：料金情報が「お打ち合わせにて」のみ</h4>
+    <p>FAQの料金回答が「店舗数や商品数、データ連携形式により異なる／詳細はお打ち合わせ」のみ。最低限「店舗数50〜の場合の目安レンジ」程度の開示は検討余地（藤林・神田と相談）。完全非公開は『LFP独占の希少性プレミアム』と整合する戦略選択肢でもあるが、リード獲得には不利。</p>
+  </div>
+
+  <div class="callout gold">
+    <h4>中②：マイクロCV装置が3種（資料DL／問合せ／セミナー）のみで多様性不足</h4>
+    <p>追加候補：（a）<b>業種別1pager DL</b>（小売／HC／アパレル別）／（b）<b>LFP適合チェッカー</b>（10問程度の診断）／（c）<b>ROI試算ツール</b>（店舗数×SKU数で来店CV増分を試算）／（d）<b>セミナー動画オンデマンド</b>。Sales Marker のmicro-CV診断ツールとして既にスキル化済み（sm-diagnosis-tool-builder）— 横展開可能。</p>
+  </div>
+
+  <div class="callout gold">
+    <h4>中③：データ訴求が「130,000店舗」のみ</h4>
+    <p>カンリー全社の強み数値（月次解約率0.52%／ARPA推移／CAGR 175.7%／契約社数3年で1.77倍）や、Google年1万店舗コミットの『信任』数値も訴求可能。シリーズD投資家説明資料との整合も含めて検討。</p>
+  </div>
+</section>
+
+<!-- ============== 3. 改善版コピー案 ============== -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 3</span>改善版ファーストビュー コピー案（A/B/C 3案）</h2>
+  <p class="lead">既存ファーストビュー「在庫 見える化 で集客アップ」を起点に、3軸（公式性／時代潮流／成果）で書き分け。藤林さん＋宮本＋木下で1案選定→A/Bテスト推奨。</p>
+
+  <div class="copy-card recommended">
+    <span class="tag rec">★ 推奨</span>
+    <h4>A案：公式性で勝つ（最も藤林さん『案C直行』ナラティブと整合）</h4>
+    <div class="copy-main">国内2社目。<br>『公式』ローカル在庫といえばカンリー。</div>
+    <div class="copy-sub">
+      Google Local Feed Partner（LFP）<b>国内2社目</b>認定パートナー。<br>
+      日本で「公式に」店舗の在庫情報をGoogle検索／マップ／ショッピングへ連携できるのは、カンリーを含む2社のみ。<br>
+      13万店舗の支援実績×LFP独占ポジション×ハイタッチサクセスで、AI購買時代の店舗集客を再定義します。
+    </div>
+    <div class="target">▶ 強い相手：小売エンプラ／OMO推進担当／Google連携実績検討層</div>
+  </div>
+
+  <div class="copy-card">
+    <span class="tag">B案</span>
+    <h4>B案：時代潮流で勝つ（NRF26連動・経営層向け）</h4>
+    <div class="copy-main">検索の終わり、AI購買の時代へ。<br>「今、ここにある在庫」が分水嶺。</div>
+    <div class="copy-sub">
+      NRF26（Retail's Big Show 2026）のメインテーマは『The AI platform shift and the opportunity ahead for retail』。<br>
+      AIが「買う店」を決める時代、店頭在庫がAIに「見える」かどうかが来店の分水嶺になる。<br>
+      Google公式LFP国内2社目認定パートナーとして、貴社の在庫を多面的にAIへ供給します。
+    </div>
+    <div class="target">▶ 強い相手：経営層／DX推進統括／グローバル動向感度高い層</div>
+  </div>
+
+  <div class="copy-card">
+    <span class="tag">C案</span>
+    <h4>C案：成果で勝つ（実務層・現場層向け）</h4>
+    <div class="copy-main">店頭在庫が、検索の瞬間に見える。<br>来店も、購入も、取り逃さない。</div>
+    <div class="copy-sub">
+      消費者が「近くで買える店」を探す瞬間、貴社の店頭在庫が表示される。<br>
+      Google LFP公式認定パートナー＋カンリー店舗集客13万店舗の運用実績で、機会損失と問合せ対応負荷を同時に解消。
+    </div>
+    <div class="target">▶ 強い相手：マーケ部長／オムニチャネル責任者／実務層</div>
+  </div>
+</section>
+
+<!-- ============== 4. 新セクション構成提案 ============== -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 4</span>新セクション構成提案（現状9セクション → 改善案12セクション）</h2>
+  <p class="lead">現状を保ちつつ、致命的②（mov対抗）・重要①（Agentic Commerce）・重要③（業種別）を埋める3セクション新設。</p>
+
+  <div class="section-grid">
+    <div class="section-card keep"><div class="num">SEC 01 / KEEP</div><h4>ファーストビュー（A案推奨で刷新）</h4><p>「国内2社目」希少性をHeroで即訴求。LFP認定バッジを大きく配置。</p></div>
+    <div class="section-card new"><div class="num">SEC 02 / NEW ★</div><h4>Why Now? — Agentic Commerce時代の到来</h4><p>NRF26テーマ引用／Walmart×Google CEO対談／『今、ここにある在庫』が分水嶺を1セクションで。</p></div>
+    <div class="section-card improve"><div class="num">SEC 03 / IMPROVE</div><h4>3つの特徴（数値訴求＋痛みベース化）</h4><p>各特徴にロンチ3社の具体数値の例示を追加。</p></div>
+    <div class="section-card keep"><div class="num">SEC 04 / KEEP</div><h4>こんなお困りごとはありませんか？</h4><p>痛みポイント整理は良いので維持。</p></div>
+    <div class="section-card new"><div class="num">SEC 05 / NEW ★</div><h4>業種別の効き方（タブ式）</h4><p>HC／アパレル／スポーツ／アイウェア／ドラッグ／家電／百貨店 別の刺さり方＋業種別1pagerDL。</p></div>
+    <div class="section-card improve"><div class="num">SEC 06 / IMPROVE</div><h4>導入事例 VoC（拡張）</h4><p>嘉穂無線HD・ビジョナリーHD・ムラサキの3社に加え、Tier1の小売チェーン顧客のコメントを増強。</p></div>
+    <div class="section-card keep"><div class="num">SEC 07 / KEEP</div><h4>カンリーローカル在庫とは？</h4><p>機能説明セクションは維持。</p></div>
+    <div class="section-card new"><div class="num">SEC 08 / NEW ★</div><h4>なぜカンリーLFPが他と違うのか（vs 監修・代理店）</h4><p>「Google公式認定パートナー」vs「GBPエキスパート監修のみ」の構造差を表で。代理店契約集約済の堀も。</p></div>
+    <div class="section-card improve"><div class="num">SEC 09 / IMPROVE</div><h4>LFPとは？（希少性強化）</h4><p>「国内で運用可能2社のみ」「年1万店舗コミット」等の認定の重み具体化。</p></div>
+    <div class="section-card improve"><div class="num">SEC 10 / IMPROVE</div><h4>FAQ（業種別Q&A追加）</h4><p>業種別の質問（HCはSKU多くて大変？／アパレルの色サイズ別在庫は？）を追加。料金は段階開示検討。</p></div>
+    <div class="section-card improve"><div class="num">SEC 11 / IMPROVE</div><h4>CV装置の多様化</h4><p>資料DL／問合せ／セミナーに加え、業種別1pager／LFP適合チェッカー／ROI試算ツール／オンデマンド動画。</p></div>
+    <div class="section-card improve"><div class="num">SEC 12 / IMPROVE</div><h4>運営会社＋関連プロダクト導線</h4><p>カンリー店舗集客との統合運用訴求／親GTM-A連動／13万店舗の安心感。</p></div>
+  </div>
+</section>
+
+<!-- ============== 5. mov対比表 ============== -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 5</span>vs mov（口コミコム）対比表 — LP上での描き方</h2>
+  <p class="lead">直接競合名は明示しないが、構造的差別化として読み手に届く形で描く（『監修パートナー』vs『公式認定パートナー』の対比など）。</p>
+
+  <table>
+    <thead><tr><th style="width:24%">論点</th><th style="width:38%">カンリー（自社）— LPで強調すべき</th><th>mov（競合）— LPでの撃ち返しコピー候補</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>Googleとの関係性</b></td>
+        <td>Google公式 Local Feed Partner（LFP）<b>国内2社目認定</b>（2025年10月）。日本で運用可能2社のみ。</td>
+        <td>「監修パートナー」ではなく「<b>認定パートナー</b>」。Google公式プログラムの『お墨付き』があるかないかが分水嶺。</td>
+      </tr>
+      <tr>
+        <td><b>代理店経路</b></td>
+        <td>広告代理店は全員カンリーLFPを担ぐ契約に集約済（4/15判明）。代理店経由ローカル在庫はカンリーがデファクト。</td>
+        <td>「日本のローカル在庫は、ほぼ全ての広告代理店がカンリー経由で扱っています」（事実情報として）</td>
+      </tr>
+      <tr>
+        <td><b>初期導入</b></td>
+        <td>LFP認定により「在庫確認」工程が短縮可能。1〜2ヶ月で運用開始。</td>
+        <td>「LFPがない場合の在庫確認工程がいかに重い負荷か」を解説するセクションで間接的に差別化。</td>
+      </tr>
+      <tr>
+        <td><b>顧客基盤</b></td>
+        <td>13万店舗の店舗集客運用実績。MEO/GBP一括管理基盤との統合運用。</td>
+        <td>「単体ローカル在庫サービスではなく、店舗集客基盤との統合で最速ローンチ」を強調。</td>
+      </tr>
+      <tr>
+        <td><b>導入実績の質</b></td>
+        <td>嘉穂無線HD・ビジョナリーHD・ムラサキスポーツ（小売エンプラ／VoC公表済）。</td>
+        <td>BOOKOFF・ロフト・アンダーアーマー・ビックカメラ・ダイアナ・スギ薬局・二木ゴルフ等（mov側、参考）。同等以上の実績拡充が4Q重点。</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============== 6. 次のステップ ============== -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 6</span>次のステップ（5/29 MTG 想定）</h2>
+
+  <div class="callout green">
+    <h4>5/29(木)18:00 藤林さんMTGでの議論ポイント</h4>
+    <ul class="tight">
+      <li>(1) 改善版ファーストビュー <b>A/B/C 3案から1案選定</b> ※宮本推奨：A案（公式性で勝つ）</li>
+      <li>(2) 新規セクション3本（SEC 02 Why Now / SEC 05 業種別 / SEC 08 vs mov）の <b>制作優先順</b></li>
+      <li>(3) 業種別1pager DL / LFP適合チェッカー / ROI試算ツール の <b>マイクロCV装置の追加可否</b></li>
+      <li>(4) <b>料金情報の段階開示</b>（完全非公開維持 vs 目安レンジ開示）の戦略判断（神田さんと共有）</li>
+      <li>(5) 木下さんと組む <b>ホワイトペーパー量産パイプライン</b>の中身（Agentic Commerce解説など）</li>
+    </ul>
+  </div>
+
+  <div class="callout blue">
+    <h4>4Q実装ロードマップ（提案）</h4>
+    <ul class="tight">
+      <li><b>5月末〜6月前半：</b>ファーストビュー刷新（A案実装）／LFP希少性訴求強化</li>
+      <li><b>6月中：</b>新規SEC 02（Why Now）／SEC 08（vs mov）追加 ※6/1 MEOエージェントプレス連動</li>
+      <li><b>6月後半：</b>SEC 05（業種別タブ）追加／業種別1pagerDL動線整備</li>
+      <li><b>7月：</b>マイクロCV装置追加（LFP適合チェッカー等／Sales Marker sm-diagnosis-tool-builder流用）</li>
+      <li><b>8月：</b>ホワイトペーパー量産パイプライン本格稼働（木下さんと連携）</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <h4 class="red">藤林さんに事前共有しておきたい点</h4>
+    <ul class="tight">
+      <li>LP取得日：2026-05-28（本日）／ Playwrightで Nuxt.js SPAをレンダリング後に取得した実物ベース</li>
+      <li>本資料はGTM-B（ローカル在庫）#7 Marketing Channels の深掘りとして位置付け。GTM-B本体にも反映予定</li>
+      <li>『国内2社目』の希少性訴求が前面に出ていない点が最重要発見。これ1点でLPの印象が大きく変わる</li>
+      <li>木下さんとの連携が4Q重点。本資料を木下さんへも共有して制作チームと議論したい</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div><code>Canly_LocalInventory_LP_Audit_v0.1.html</code> ／ v0.1（2026-05-28）／ Source: Playwright取得＋プレスリリース＋4/15藤林dinner＋5/24キックオフ ／ Next: 藤林さん×宮本×木下で議論</div>
+</footer>
+
+</div>
+</body>
+</html>

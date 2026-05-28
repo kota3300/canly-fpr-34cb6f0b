@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>カンリーPMM伴走サマリ 2026-05-29 — 藤林さん/宮本</title>
+<style>
+  :root {
+    --canly-navy-deep: #1B2F5C;
+    --canly-navy: #1B3A6B;
+    --canly-navy-light: #2A4F8A;
+    --canly-blue: #2670D8;
+    --canly-blue-light: #56A8F5;
+    --canly-cyan: #34BBFC;
+    --canly-cyan-light: #C9E6FE;
+    --canly-orange: #ff7e1c;
+    --canly-text: #1A1A2E;
+    --canly-gray: #6B7280;
+    --canly-light: #F5F7FB;
+    --canly-border: #E0E5EE;
+    --canly-red: #C62828;
+    --canly-green: #1B5E20;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Calibri", sans-serif;
+    color: var(--canly-text);
+    line-height: 1.55;
+    background: #2A2A2A;
+    padding: 24px 0;
+  }
+  .deck { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+  .slide {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: white;
+    border-radius: 6px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+    overflow: hidden;
+    position: relative;
+    padding: 36px 48px 28px;
+  }
+  .slide.cover, .slide.divider {
+    background: linear-gradient(135deg, var(--canly-navy-deep) 0%, var(--canly-blue) 60%, var(--canly-cyan) 130%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 70px;
+  }
+  .slide.cover h1, .slide.divider h2 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+  .slide.divider h2 { font-size: 38px; }
+  .slide.cover .sub { font-size: 18px; opacity: 0.9; margin-bottom: 24px; }
+  .slide.cover .date { font-size: 14px; opacity: 0.75; margin-top: 30px; }
+  .slide.divider .sub { font-size: 16px; opacity: 0.9; }
+  .slide.cover::before, .slide.divider::before {
+    content: "";
+    position: absolute;
+    right: -100px; top: -100px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .slide.cover::after, .slide.divider::after {
+    content: "";
+    position: absolute;
+    right: -200px; bottom: -150px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .canly-logo {
+    position: absolute;
+    top: 24px; left: 32px;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .canly-logo::after { content: "•"; color: var(--canly-cyan); margin-left: 4px; font-size: 24px; }
+  .confidential {
+    position: absolute;
+    top: 18px; right: 24px;
+    background: var(--canly-red);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    letter-spacing: 1px;
+    border-radius: 2px;
+  }
+  .slide-title {
+    color: var(--canly-navy);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--canly-cyan-light);
+  }
+  .slide-title::before {
+    content: "▶";
+    color: var(--canly-blue);
+    font-size: 16px;
+  }
+  .slide-subtitle {
+    color: var(--canly-gray);
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  .footer {
+    position: absolute;
+    bottom: 12px;
+    left: 48px;
+    right: 48px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 9.5px;
+    color: var(--canly-gray);
+  }
+  .footer .copy { font-style: italic; }
+  .footer .page { font-weight: 700; }
+
+  /* Cover specific */
+  .cover-tagline {
+    display: inline-block;
+    margin-top: 16px;
+    background: rgba(255,255,255,0.15);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    backdrop-filter: blur(6px);
+  }
+
+  /* Content layouts */
+  .agenda-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px 20px;
+    margin-top: 14px;
+  }
+  .agenda-item {
+    background: var(--canly-light);
+    border-left: 4px solid var(--canly-blue);
+    padding: 10px 14px;
+    border-radius: 4px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .agenda-item .num {
+    background: var(--canly-navy);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 3px;
+    min-width: 30px;
+    text-align: center;
+  }
+  .agenda-item .label { font-size: 13px; color: var(--canly-text); font-weight: 600; }
+  .agenda-item .time { font-size: 10.5px; color: var(--canly-gray); margin-left: auto; }
+
+  table.canly-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    margin: 8px 0;
+  }
+  table.canly-table th, table.canly-table td {
+    border: 1px solid var(--canly-border);
+    padding: 6px 9px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.canly-table th {
+    background: var(--canly-navy);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  table.canly-table tr:nth-child(even) td { background: #F8FAFD; }
+
+  .status-pill {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 9px;
+    font-size: 9.5px;
+    font-weight: 700;
+    color: white;
+  }
+  .sp-confirmed { background: var(--canly-green); }
+  .sp-progress { background: var(--canly-orange); }
+  .sp-pending { background: var(--canly-gray); }
+  .sp-red { background: var(--canly-red); }
+
+  .threlayer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .layer-row {
+    background: linear-gradient(90deg, var(--canly-cyan-light) 0%, white 100%);
+    border: 1.5px solid var(--canly-blue);
+    padding: 10px 16px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .layer-row.vision { background: linear-gradient(90deg, #E7F4E9 0%, white 100%); border-color: var(--canly-green); }
+  .layer-row.positioning { background: linear-gradient(90deg, #FFF7E5 0%, white 100%); border-color: var(--canly-orange); }
+  .layer-row .lname {
+    background: var(--canly-navy);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 3px;
+    min-width: 110px;
+    text-align: center;
+  }
+  .layer-row.vision .lname { background: var(--canly-green); }
+  .layer-row.positioning .lname { background: var(--canly-orange); }
+  .layer-row .ltext { font-size: 13px; color: var(--canly-text); font-weight: 600; flex: 1; }
+
+  .col-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card {
+    background: var(--canly-light);
+    border-radius: 6px;
+    padding: 12px 14px;
+    border-top: 3px solid var(--canly-blue);
+  }
+  .card.hero { border-top-color: var(--canly-orange); background: #FFF7E5; }
+  .card.red { border-top-color: var(--canly-red); background: #FFEBEE; }
+  .card.green { border-top-color: var(--canly-green); background: #E7F4E9; }
+  .card h4 { font-size: 13px; color: var(--canly-navy); margin-bottom: 6px; }
+  .card.hero h4 { color: var(--canly-orange); }
+  .card.red h4 { color: var(--canly-red); }
+  .card.green h4 { color: var(--canly-green); }
+  .card p { font-size: 11.5px; color: var(--canly-text); line-height: 1.55; }
+
+  ul.canly-list { padding-left: 18px; margin: 6px 0; }
+  ul.canly-list li { margin-bottom: 4px; font-size: 12px; line-height: 1.5; }
+
+  .copy-hero {
+    background: linear-gradient(135deg, var(--canly-navy-deep) 0%, var(--canly-blue) 100%);
+    color: white;
+    padding: 24px 28px;
+    border-radius: 8px;
+    margin: 12px 0;
+    text-align: center;
+  }
+  .copy-hero .label { font-size: 11px; opacity: 0.7; letter-spacing: 1px; }
+  .copy-hero h3 { font-size: 26px; font-weight: 700; margin: 8px 0 10px; line-height: 1.35; }
+  .copy-hero p { font-size: 13px; opacity: 0.9; line-height: 1.6; }
+
+  .copy-alt {
+    background: white;
+    border: 1.5px solid var(--canly-border);
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .copy-alt .tag { font-size: 10px; background: var(--canly-gray); color: white; padding: 2px 7px; border-radius: 3px; font-weight: 700; }
+  .copy-alt h4 { color: var(--canly-navy); font-size: 13px; margin: 4px 0 4px; }
+  .copy-alt p { font-size: 11.5px; color: var(--canly-text); line-height: 1.55; }
+
+  .vs-table th:nth-child(2), .vs-table td:nth-child(2) {
+    background: linear-gradient(90deg, #E7F4E9 0%, transparent 100%);
+  }
+  .vs-table th:nth-child(3), .vs-table td:nth-child(3) {
+    background: linear-gradient(90deg, #FFEBEE 0%, transparent 100%);
+  }
+
+  .roadmap-table th { background: var(--canly-navy-light); }
+  .roadmap-table td.month { background: var(--canly-cyan-light); font-weight: 700; min-width: 70px; text-align: center; }
+
+  .points-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .point-card {
+    background: white;
+    border-left: 4px solid var(--canly-orange);
+    padding: 10px 14px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .point-card .pnum { font-size: 10px; color: var(--canly-orange); font-weight: 700; letter-spacing: 0.5px; }
+  .point-card h4 { font-size: 13px; color: var(--canly-navy); margin: 4px 0; }
+  .point-card p { font-size: 11px; color: var(--canly-text); line-height: 1.5; }
+
+  .toc-nav {
+    background: linear-gradient(135deg, #FFF7E5 0%, #FFE9B0 100%);
+    border: 1.5px solid #B8860B;
+    padding: 10px 16px;
+    border-radius: 6px;
+    margin-bottom: 22px;
+    font-size: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .toc-nav-label { font-weight: 700; color: #B8860B; }
+  .toc-nav a { color: var(--canly-navy); text-decoration: none; padding: 3px 9px; background: white; border-radius: 3px; border: 1px solid var(--canly-navy); font-weight: 600; }
+  .toc-nav a:hover { background: var(--canly-navy); color: white; }
+</style>
+</head>
+<body>
+<div class="deck">
+
+<div class="toc-nav">
+  <span class="toc-nav-label">📎 関連資料</span>
+  <a href="Canly_StoreMarketing_GTM_Audit_Living_v0.1.html">GTM-A 店舗集客</a>
+  <a href="Canly_LocalInventory_GTM_Audit_Living_v0.1.html">GTM-B ローカル在庫</a>
+  <a href="Canly_Welfare_GTM_Audit_Living_v0.1.html">GTM-C 福利厚生</a>
+  <a href="product_tree_v0_1.html">プロダクト階層ツリー</a>
+  <a href="Canly_LocalInventory_LP_Audit_v0.1.html">LP精査</a>
+</div>
+
+<!-- ============ COVER ============ -->
+<div class="slide cover">
+  <div class="canly-logo">Canly</div>
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="cover-tagline">PMM伴走サマリ</div>
+  <h1>カンリーPMM伴走サマリ</h1>
+  <div class="sub">店舗集客事業 × カンリーローカル在庫 — 二軸アプローチでの整理 v0.1</div>
+  <div class="date">2026年5月29日（木）藤林さん × 宮本 定例MTG用 / Drafted by 宮本</div>
+</div>
+
+<!-- ============ 01 アジェンダ ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">本日のアジェンダ</div>
+  <div class="slide-subtitle">5/24キックオフ以降の整理 × 方向性合意の場として</div>
+  <div class="agenda-grid">
+    <div class="agenda-item"><span class="num">01</span><span class="label">前回（5/24キックオフ）振り返り＋宿題進捗</span><span class="time">5分</span></div>
+    <div class="agenda-item"><span class="num">02</span><span class="label">二軸アプローチ宣言：店舗集客＝土台 / ローカル在庫＝個別深堀り</span><span class="time">3分</span></div>
+    <div class="agenda-item"><span class="num">03</span><span class="label">店舗集客事業 GTM-A 全体まとめ</span><span class="time">5分</span></div>
+    <div class="agenda-item"><span class="num">04</span><span class="label">カンリーローカル在庫 GTM-B 個別深堀り</span><span class="time">10分</span></div>
+    <div class="agenda-item"><span class="num">05</span><span class="label">LP精査v0.1 — 改善ポイント＆ファーストビュー3案</span><span class="time">10分</span></div>
+    <div class="agenda-item"><span class="num">06</span><span class="label">方向性論点5項目 × 4Q実装ロードマップ</span><span class="time">7分</span></div>
+  </div>
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved. (PMM伴走サマリ)</span><span class="page">01 / 13</span></div>
+</div>
+
+<!-- ============ 02 前回振り返り ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">5/24 キックオフMTG 振り返り — 主要決定事項</div>
+  <div class="slide-subtitle">藤林さん×宮本 / 5/20 正式契約後の実質キックオフ</div>
+  <table class="canly-table">
+    <thead><tr><th style="width:24%">論点</th><th>5/24時点での確定事項</th></tr></thead>
+    <tbody>
+      <tr><td>スコープ拡張</td><td>ローカル在庫単体 → <b>全プロダクトPMM伴走</b>へ拡張（EP/MIDの店舗集客本体＋オプション＋ローカル在庫＋HP＋Sierra構想）</td></tr>
+      <tr><td>カテゴリー上位概念</td><td>『公式ローカル在庫』案C直行 → <b>『エージェンティックコマース＝カンリー』が上位カテゴリ</b>として浮上</td></tr>
+      <tr><td>中国インバウンド</td><td>日中関係悪化で<b>撤退方針</b>。代替売上の構築が必要</td></tr>
+      <tr><td>9月期通過必達</td><td><b>26/8単月黒字化見込み</b>。Rule of 40 = 43%達成。一人当たり売上1,600万円目標</td></tr>
+      <tr><td>シリーズD準備</td><td>2026年6-12月クロージング予定。5億〜30億調達。IPO 27/7-29/7期</td></tr>
+      <tr><td>4Q組織変更</td><td>福利厚生→ENP/MID合流／AX部新設／PMMユニット新設（神田大成兼任）／契約管理一元化PJ</td></tr>
+      <tr><td>次回MTG（本日）</td><td>5/29(木)18:00 オンライン → 本資料で方向性合意</td></tr>
+    </tbody>
+  </table>
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved.</span><span class="page">02 / 13</span></div>
+</div>
+
+<!-- ============ 03 宿題リスト ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">藤林さん要望項目 × 進捗状況</div>
+  <div class="slide-subtitle">5/24 MTGで言及された宿題のステータス</div>
+  <table class="canly-table">
+    <thead><tr><th style="width:5%">#</th><th style="width:38%">宿題</th><th style="width:12%">ステータス</th><th>本資料での着地</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>全プロダクト整理（カテゴリ／ポジ／メッセージング）</td><td><span class="status-pill sp-confirmed">完了</span></td><td>プロダクト階層ツリー v0.1 ＋ GTM-A/B/C 3本作成</td></tr>
+      <tr><td>2</td><td>全商材バトルカード作成</td><td><span class="status-pill sp-progress">v1着手</span></td><td>vs mov バトルカードv1 完成。他商材は4Q順次</td></tr>
+      <tr><td>3</td><td>エージェンティックコマース海外競合リサーチ</td><td><span class="status-pill sp-pending">残論点</span></td><td>4Q重点。本MTG後に着手</td></tr>
+      <tr><td>4</td><td>ホワイトペーパー量産パイプライン構築（木下さんと）</td><td><span class="status-pill sp-pending">準備中</span></td><td>4Q重点。本MTG後に着手</td></tr>
+      <tr><td>5</td><td>LP/サイト刷新（特に店舗検索ページ4年放置解消）</td><td><span class="status-pill sp-progress">v0.1着手</span></td><td><b>LP精査v0.1 完成（本資料 SEC 05）</b></td></tr>
+      <tr><td>6</td><td>Notion管理板（生きた管理ドキュメント）</td><td><span class="status-pill sp-confirmed">完了</span></td><td>Living Doc HTML 4本（GTM-A/B/C＋LP精査）が中核資産化</td></tr>
+      <tr><td>7</td><td>7月中：来期方針経営陣プレゼン用素材</td><td><span class="status-pill sp-progress">継続作成中</span></td><td>本Living Docを土台に7月までに集約</td></tr>
+      <tr><td>8</td><td>Sierra POC subject 1 で宮本会社の打診</td><td><span class="status-pill sp-pending">待ち</span></td><td>CEO・現役者MTG設定待ち</td></tr>
+    </tbody>
+  </table>
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved.</span><span class="page">03 / 13</span></div>
+</div>
+
+<!-- ============ DIVIDER 1 ============ -->
+<div class="slide divider">
+  <div class="canly-logo">Canly</div>
+  <div class="confidential">CONFIDENTIAL</div>
+  <div style="font-size: 14px; opacity: 0.7; letter-spacing: 1.5px; margin-bottom: 14px;">SECTION 01</div>
+  <h2>店舗集客事業 — 全体まとめ</h2>
+  <div class="sub">GTM-A：全社で共通言語を揃える土台。広く・薄く・素人向けの整理</div>
+</div>
+
+<!-- ============ 04 GTM-A ステータス ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">GTM-A：店舗集客事業 10要素 ステータス</div>
+  <div class="slide-subtitle">Foundation #1-5 / Execution #6-9 / Internal Alignment #10</div>
+  <table class="canly-table">
+    <thead><tr><th style="width:5%">#</th><th style="width:22%">要素</th><th style="width:10%">ステータス</th><th>主要トピック</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>ICP & Personas</td><td><span class="status-pill sp-progress">進行</span></td><td>Tier1メガエンプラ(100店超) / Tier2ミッド(10-99) / 応援団株主6,000店舗</td></tr>
+      <tr><td>2</td><td>Problem / Solution</td><td><span class="status-pill sp-progress">進行</span></td><td>媒体管理工数 / 人材不足危機 / Agentic Commerce対応の3大ペイン</td></tr>
+      <tr><td>3</td><td>Positioning & Messaging</td><td><span class="status-pill sp-progress">進行</span></td><td><b>3層構造：エージェンティックコマース → 集客力UP → 三位一体経営</b></td></tr>
+      <tr><td>4</td><td>Pricing & Packaging</td><td><span class="status-pill sp-progress">進行</span></td><td>ARPA 16.3万→22.5万円 / 解約率0.52% / ストック85.3%</td></tr>
+      <tr><td>5</td><td>Competition</td><td><span class="status-pill sp-progress">進行</span></td><td>MEO 3社収斂（カンリー / mov / GMO TECH）</td></tr>
+      <tr><td>6</td><td>Sales Pitch</td><td><span class="status-pill sp-progress">進行</span></td><td>RAG基盤×Notebook LM×Gemini → 受注率+2.2pt達成</td></tr>
+      <tr><td>7</td><td>Marketing Channels</td><td><span class="status-pill sp-progress">進行</span></td><td>外資総代理店ハック（Yahoo!/Apple/Uberall/Yexsys/Google LFP）</td></tr>
+      <tr><td>8</td><td>Sales Enablement</td><td><span class="status-pill sp-progress">進行</span></td><td>RAG基盤完成 / 商材横断バトルカード整備が4Q山</td></tr>
+      <tr><td>9</td><td>Product Adoption</td><td><span class="status-pill sp-progress">進行</span></td><td>顧客社数3年で1.77倍（291→514） / CS1人ARR 87.5百万</td></tr>
+      <tr><td>10</td><td>Internal Alignment</td><td><span class="status-pill sp-progress">進行</span></td><td>4Q組織変更5本柱 / 『戦い方を変え、黒字化で証明する』全社O</td></tr>
+    </tbody>
+  </table>
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved.</span><span class="page">04 / 13</span></div>
+</div>
+
+<!-- ============ 05 GTM-A 3層構造 ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">GTM-A：ポジショニング3層構造</div>
+  <div class="slide-subtitle">カテゴリー → ビジョン → ポジショニング・メッセージング</div>
+
+  <div class="threlayer">
+    <div class="layer-row">
+      <span class="lname">カテゴリー</span>
+      <span class="ltext">エージェンティックコマース ＝ カンリー（来店型 × マルチチャネル横断）</span>
+    </div>
+    <div class="layer-row vision">
+      <span class="lname">ビジョン</span>
+      <span class="ltext">ヒトとAIの力で、店舗の集客力を上げる（〜30/7期 新Vision）</span>
+    </div>
+    <div class="layer-row positioning">
+      <span class="lname">ポジショニング</span>
+      <span class="ltext">店舗集客AIエージェント構想 × 三位一体経営 × MEO→AIO→Agentic Commerce 3段階</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 18px; background: var(--canly-light); padding: 12px 16px; border-radius: 6px; font-size: 12px;">
+    <b style="color: var(--canly-navy);">▶ 主軸ナラティブ推奨（宮本案）：</b>
+    A案『Agentic Commerce × 来店型』を主軸、B-D（AIカンパニー転身宣言 / 三位一体経営 / 国内シェアNo.1）は補強角度として使い分け。
+    NRF26テーマ連動＋6/1 MEOエージェントプレスとの相性が最も良い。
+  </div>
+
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved.</span><span class="page">05 / 13</span></div>
+</div>
+
+<!-- ============ DIVIDER 2 ============ -->
+<div class="slide divider">
+  <div class="canly-logo">Canly</div>
+  <div class="confidential">CONFIDENTIAL</div>
+  <div style="font-size: 14px; opacity: 0.7; letter-spacing: 1.5px; margin-bottom: 14px;">SECTION 02</div>
+  <h2>カンリーローカル在庫 — 個別深堀り</h2>
+  <div class="sub">GTM-B：藤林さんが主軸。狭く・深く・LPからコンテンツまで個別整理</div>
+</div>
+
+<!-- ============ 06 GTM-B ステータス ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">GTM-B：カンリーローカル在庫 10要素 ステータス</div>
+  <div class="slide-subtitle">戦略商材として独立扱い / 親GTM-A『エージェンティックコマース』カテゴリのCV装置</div>
+  <table class="canly-table">
+    <thead><tr><th style="width:5%">#</th><th style="width:22%">要素</th><th style="width:10%">ステータス</th><th>主要トピック</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>ICP & Personas</td><td><span class="status-pill sp-progress">進行</span></td><td>小売×EC両運営の中〜大規模チェーン（嘉穂無線HD/ビジョナリーHD/ムラサキ）</td></tr>
+      <tr><td>2</td><td>Problem / Solution</td><td><span class="status-pill sp-progress">進行</span></td><td>店頭在庫非可視化 / 問合せ負荷 / OMO ROI不可視の3大ペイン</td></tr>
+      <tr><td>3</td><td>Positioning & Messaging</td><td><span class="status-pill sp-progress">進行</span></td><td><b>3層構造：公式ローカル在庫 → 在庫鮮度供給 → LFP独占×統合運用</b></td></tr>
+      <tr><td>4</td><td>Pricing & Packaging</td><td><span class="status-pill sp-pending">未確定</span></td><td>独立プライシング未設計（4Q要設計）</td></tr>
+      <tr><td>5</td><td>Competition</td><td><span class="status-pill sp-progress">進行</span></td><td>mov深堀り（LFP認定なし）／海外Agentic Commerce勢を将来脅威として監視</td></tr>
+      <tr><td>6</td><td>Sales Pitch</td><td><span class="status-pill sp-progress">進行</span></td><td>vs mov バトルカードv1完成（公式性 / 代理店集約 / 統合運用の3軸）</td></tr>
+      <tr><td>7</td><td>Marketing Channels</td><td><span class="status-pill sp-red">🔴最優先</span></td><td><b>LP/コンテンツ精査 → LP精査v0.1 完成（次スライド）</b></td></tr>
+      <tr><td>8</td><td>Sales Enablement</td><td><span class="status-pill sp-red">🔴最優先</span></td><td><b>藤林属人化解消 → 既存営業20名への展開が4Q最大ミッション</b></td></tr>
+      <tr><td>9</td><td>Product Adoption</td><td><span class="status-pill sp-progress">進行</span></td><td>Google年1万店舗コミット（4ヶ月で3,000店舗達成）</td></tr>
+      <tr><td>10</td><td>Internal Alignment</td><td><span class="status-pill sp-progress">進行</span></td><td>藤林（オーナー）×宮本（伴走）×木下（コンテンツ）の3角形</td></tr>
+    </tbody>
+  </table>
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved.</span><span class="page">06 / 13</span></div>
+</div>
+
+<!-- ============ 07 GTM-B 3層 ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">GTM-B：ポジショニング3層構造 — 案C直行</div>
+  <div class="slide-subtitle">親GTM-A『エージェンティックコマース』のCV層装置として位置付け</div>
+
+  <div class="threlayer">
+    <div class="layer-row">
+      <span class="lname">カテゴリー</span>
+      <span class="ltext">公式ローカル在庫 ＝ カンリー（案C直行 / 指名検索獲得狙い）</span>
+    </div>
+    <div class="layer-row vision">
+      <span class="lname">ビジョン</span>
+      <span class="ltext">『今、ここにある在庫』をAIが判断できる鮮度で、多面的に供給し続ける</span>
+    </div>
+    <div class="layer-row positioning">
+      <span class="lname">ポジショニング</span>
+      <span class="ltext">Google LFP独占（国内2社のみ） × 代理店契約集約 × カンリー店舗集客との統合運用</span>
+    </div>
+  </div>
+
+  <div class="col-2" style="margin-top: 16px;">
+    <div class="card hero">
+      <h4>📎 親GTM-Aとの関係性</h4>
+      <p>最上位カテゴリ『エージェンティックコマース ＝ カンリー』の中で、SierraがECで切り拓いた領域に対し、カンリーは『来店型でリアル店舗の在庫データ供給』という形で抑える戦略商材。</p>
+    </div>
+    <div class="card">
+      <h4>📜 4/15 藤林さんdinnerでの合意</h4>
+      <p>「このサービスはマーケット独占、オールオアナッシング」「Google公式ローカル在庫といえばカンリーで指名検索取りたい」 → 案A→C段階移行ではなく<b>案C直行</b>へ。</p>
+    </div>
+  </div>
+
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved.</span><span class="page">07 / 13</span></div>
+</div>
+
+<!-- ============ 08 LP精査 ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">LP精査 v0.1 — local.can-ly.com 重要発見</div>
+  <div class="slide-subtitle">2026-05-28 Playwright取得＋競合mov対比から導出</div>
+
+  <div class="points-grid" style="grid-template-columns: 1fr 1fr;">
+    <div class="point-card" style="border-left-color: var(--canly-red);">
+      <div class="pnum" style="color: var(--canly-red);">🔴 致命的①</div>
+      <h4>LFP「国内2社目」希少性訴求が抜け落ち</h4>
+      <p>現状LP：「Google Local Feed Partner(LFP)認定を取得」しか書いていない。最強の差別化『日本で公式運用可能2社のみ』がファーストビューに無い。</p>
+    </div>
+    <div class="point-card" style="border-left-color: var(--canly-red);">
+      <div class="pnum" style="color: var(--canly-red);">🔴 致命的②</div>
+      <h4>競合mov「ローカルインベントリーマーケティング」への撃ち返しゼロ</h4>
+      <p>movは独自カテゴリ用語で認知戦展開中。LP上で対抗描写が一切ない。『公式認定パートナー』vs『監修のみ』の構造差を1セクション必要。</p>
+    </div>
+    <div class="point-card">
+      <div class="pnum">🟠 重要①</div>
+      <h4>Agentic Commerce／NRF26連動が浅い</h4>
+      <p>「AIに選ばれる仕組み」セクションあるが、上位カテゴリ用語との連動が弱い。『Why Now?』セクション新設で強化候補。</p>
+    </div>
+    <div class="point-card">
+      <div class="pnum">🟠 重要②</div>
+      <h4>業種別ターゲティング／数値訴求弱い</h4>
+      <p>VoC 3社あるが、業種別タブ／業種別1pagerDLが無い。「3つの特徴」も平凡コピー＋具体数値訴求が弱い。</p>
+    </div>
+  </div>
+
+  <div style="margin-top: 14px; background: #FFF7E5; border-left: 4px solid var(--canly-orange); padding: 8px 14px; border-radius: 4px; font-size: 11.5px;">
+    <b>これ1点でLP印象が大きく変わる：</b>『国内2社目』希少性訴求をHero部分に即明示。LFP認定バッジを大きく配置。
+  </div>
+
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved.</span><span class="page">08 / 13</span></div>
+</div>
+
+<!-- ============ 09 FV 3案 ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">改善版ファーストビュー — A/B/C 3案 ＋ 宮本推奨</div>
+  <div class="slide-subtitle">公式性 / 時代潮流 / 成果 の3軸で書き分け。藤林さん×宮本×木下で1案選定 → A/Bテスト推奨</div>
+
+  <div class="copy-hero">
+    <div class="label">★ 宮本推奨 ／ A案：公式性で勝つ（藤林さん『案C直行』ナラティブと最整合）</div>
+    <h3>国内2社目。<br>『公式』ローカル在庫といえばカンリー。</h3>
+    <p>Google Local Feed Partner（LFP）<b>国内2社目認定</b>パートナー。日本で「公式に」店舗の在庫情報をGoogle検索／マップ／ショッピングへ連携できるのは、カンリーを含む2社のみ。</p>
+  </div>
+
+  <div class="col-2">
+    <div class="copy-alt">
+      <span class="tag">B案</span>
+      <h4>時代潮流で勝つ（NRF26連動・経営層向け）</h4>
+      <p>「検索の終わり、AI購買の時代へ。<br>『今、ここにある在庫』が分水嶺。」</p>
+    </div>
+    <div class="copy-alt">
+      <span class="tag">C案</span>
+      <h4>成果で勝つ（実務層・現場層向け）</h4>
+      <p>「店頭在庫が、検索の瞬間に見える。<br>来店も、購入も、取り逃さない。」</p>
+    </div>
+  </div>
+
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved.</span><span class="page">09 / 13</span></div>
+</div>
+
+<!-- ============ 10 vs mov 対比 ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">vs mov（口コミコム）対比 — バトルカードv1 要点</div>
+  <div class="slide-subtitle">LP上での描き方は、直接競合名を出さず構造的差別化として表現</div>
+  <table class="canly-table vs-table">
+    <thead><tr><th style="width:20%">論点</th><th style="width:38%">カンリー（自社）</th><th>mov（競合）</th></tr></thead>
+    <tbody>
+      <tr><td><b>Googleとの関係性</b></td><td>Google公式 LFP <b>国内2社目認定</b>（2025年10月）<br>日本で運用可能2社のみ</td><td>GBPエキスパート監修のみ<br>LFP認定なし</td></tr>
+      <tr><td><b>代理店経路</b></td><td>広告代理店は<b>全員カンリーLFPを担ぐ契約に集約済</b>（4/15判明）</td><td>残るはmovのみ（実質消滅）</td></tr>
+      <tr><td><b>初期導入</b></td><td>LFP認定により「在庫確認」工程短縮 / 1〜2ヶ月で運用開始</td><td>『在庫確認』工程が重い負荷として残る</td></tr>
+      <tr><td><b>顧客基盤</b></td><td>13万店舗のMEO/GBP一括管理基盤との統合運用</td><td>単体ローカル在庫サービス</td></tr>
+      <tr><td><b>導入実績</b></td><td>嘉穂無線HD / ビジョナリーHD / ムラサキスポーツ（VoC公表済）</td><td>BOOKOFF / ロフト / アンダーアーマー / ビックカメラ / 二木ゴルフ等</td></tr>
+      <tr><td><b>カテゴリ訴求</b></td><td>公式ローカル在庫＝カンリー（案C直行）</td><td>『ローカルインベントリーマーケティング』独自ネーミング</td></tr>
+    </tbody>
+  </table>
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved.</span><span class="page">10 / 13</span></div>
+</div>
+
+<!-- ============ DIVIDER 3 ============ -->
+<div class="slide divider">
+  <div class="canly-logo">Canly</div>
+  <div class="confidential">CONFIDENTIAL</div>
+  <div style="font-size: 14px; opacity: 0.7; letter-spacing: 1.5px; margin-bottom: 14px;">SECTION 03</div>
+  <h2>方向性論点 ＆ 次のアクション</h2>
+  <div class="sub">5/29 MTG で藤林さんの方向性合意をもらいたい5項目 / 4Q実装ロードマップ</div>
+</div>
+
+<!-- ============ 11 議論ポイント ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">5/29 MTG 議論ポイント 5項目</div>
+  <div class="slide-subtitle">本日合意取りたい方向性</div>
+
+  <div class="points-grid">
+    <div class="point-card">
+      <div class="pnum">論点 ①</div>
+      <h4>改善版ファーストビュー A/B/C 3案 から1案選定</h4>
+      <p>宮本推奨：A案（公式性で勝つ）— 案C直行ナラティブと最整合。藤林さん＋木下さん意見を踏まえて選定。</p>
+    </div>
+    <div class="point-card">
+      <div class="pnum">論点 ②</div>
+      <h4>新規セクション3本（Why Now / 業種別 / vs mov）の制作優先順</h4>
+      <p>SEC 02 Why Now（NRF26連動）／SEC 05 業種別タブ／SEC 08 vs mov 構造差別化 — どこから着手？</p>
+    </div>
+    <div class="point-card">
+      <div class="pnum">論点 ③</div>
+      <h4>マイクロCV装置の追加可否</h4>
+      <p>業種別1pagerDL / LFP適合チェッカー / ROI試算ツール — どこまで実装？Sales Marker 流用可。</p>
+    </div>
+    <div class="point-card">
+      <div class="pnum">論点 ④</div>
+      <h4>料金情報の段階開示戦略（神田さんと共有）</h4>
+      <p>完全非公開維持（希少性プレミアム）vs 目安レンジ開示（リード獲得）— どちらに振る？</p>
+    </div>
+    <div class="point-card" style="grid-column: 1 / -1;">
+      <div class="pnum">論点 ⑤</div>
+      <h4>木下さん連携でホワイトペーパー量産パイプラインの中身</h4>
+      <p>第1本目候補：「Agentic Commerce時代の店舗集客 — MEO→AIO→Agentic Commerce 3段階フレーム」。週次1本ペース目標。LP SEC 02 Why Now の素材と兼用。</p>
+    </div>
+  </div>
+
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved.</span><span class="page">11 / 13</span></div>
+</div>
+
+<!-- ============ 12 ロードマップ ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">4Q（26/5〜26/7）実装ロードマップ</div>
+  <div class="slide-subtitle">『戦い方を変え、黒字化で証明する』全社O ＋ ローカル在庫個別深堀り</div>
+  <table class="canly-table roadmap-table">
+    <thead><tr><th style="width:14%">期</th><th style="width:36%">ローカル在庫（GTM-B / 個別深堀り）</th><th>店舗集客事業（GTM-A / 土台）</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="month">5月末〜6月前半</td>
+        <td>ファーストビュー刷新（A案実装）／LFP希少性訴求強化</td>
+        <td>6/1 MEOエージェントプレス連動 / Internal Alignment Demo</td>
+      </tr>
+      <tr>
+        <td class="month">6月中</td>
+        <td>新規SEC 02 Why Now / SEC 08 vs mov 追加</td>
+        <td>RAG基盤への商談録音統合強化</td>
+      </tr>
+      <tr>
+        <td class="month">6月後半</td>
+        <td>SEC 05 業種別タブ / 業種別1pagerDL動線整備</td>
+        <td>全商材バトルカード×5本（4Q末完成目標）</td>
+      </tr>
+      <tr>
+        <td class="month">7月前半</td>
+        <td>マイクロCV装置追加（LFP適合チェッカー等）</td>
+        <td>経営陣プレゼン素材集約（7月中達成）</td>
+      </tr>
+      <tr>
+        <td class="month">7月後半</td>
+        <td>ホワイトペーパー第1本リリース（Agentic Commerce解説）</td>
+        <td>商材整理一元管理PJと連携完了</td>
+      </tr>
+      <tr>
+        <td class="month">8月</td>
+        <td>ホワイトペーパー量産パイプライン本格稼働（週次1本）</td>
+        <td>26/8 単月黒字化達成 / 9期準備完了</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved.</span><span class="page">12 / 13</span></div>
+</div>
+
+<!-- ============ 13 次のアクション ============ -->
+<div class="slide">
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="slide-title">次のアクション</div>
+  <div class="slide-subtitle">本MTG後の動き</div>
+
+  <div class="col-2">
+    <div class="card hero">
+      <h4>📌 宮本側</h4>
+      <ul class="canly-list">
+        <li>本日の議論を Living Doc HTML 4本に反映（5/30）</li>
+        <li>Agentic Commerce 海外競合リサーチ着手（4Q最重点）</li>
+        <li>SEC 02 Why Now ホワイトペーパー第1本草案（6月前半）</li>
+        <li>木下さん連携で量産パイプライン設計（6月中）</li>
+        <li>毎週木曜18:00 定例継続</li>
+      </ul>
+    </div>
+    <div class="card green">
+      <h4>📌 カンリー側（藤林さん）</h4>
+      <ul class="canly-list">
+        <li>本資料を神田さん／木下さんへ共有</li>
+        <li>Sierra POC subject 1 で宮本会社の打診タイミング調整</li>
+        <li>料金開示戦略を神田さんと整理</li>
+        <li>6/1 MEOエージェントプレスドラフトの宮本レビュー依頼</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px; background: linear-gradient(135deg, var(--canly-navy) 0%, var(--canly-blue) 100%); color: white; padding: 16px 20px; border-radius: 6px; font-size: 12px;">
+    <b style="font-size: 13px;">📎 共有用：本資料はGitHub Pagesにデプロイ済み（temporary noindex）。<br>関連資料：GTM-A / GTM-B / GTM-C / プロダクト階層ツリー / LP精査v0.1 から相互参照可能。</b>
+  </div>
+
+  <div class="footer"><span class="copy">Copyright © 株式会社カンリー. All rights reserved.</span><span class="page">13 / 13</span></div>
+</div>
+
+</div>
+</body>
+</html>

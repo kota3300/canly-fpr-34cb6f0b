@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>カンリー福利厚生 GTM Audit — Living Document v0.1</title>
+<style>
+  :root {
+    --navy: #1B3A6B;
+    --navy-dark: #122749;
+    --navy-light: #2A4F8A;
+    --gold: #B8860B;
+    --gold-bg: #FFF7E5;
+    --gold-bg-strong: #FFE9B0;
+    --green: #1B5E20;
+    --green-bg: #E8F5E9;
+    --orange: #EF6C00;
+    --orange-bg: #FFF3E0;
+    --red: #C62828;
+    --red-bg: #FFEBEE;
+    --gray: #6B7280;
+    --gray-bg: #F5F5F5;
+    --border: #E0E5EE;
+    --text: #1A1A2E;
+    --bg: #FAFAFA;
+    --paper: #FAF7F2;
+    --accent-blue: #1976D2;
+    --teal: #00796B;
+    --light-subtitle: #C9D8EF;
+
+    --diff-add-bg: #E6F4EA;
+    --diff-add-border: #2E7D32;
+    --diff-del-bg: #FCE8E6;
+    --diff-del-border: #C62828;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif;
+    color: var(--text);
+    line-height: 1.55;
+    background: var(--bg);
+    padding: 24px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    color: white;
+    padding: 22px 28px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+  }
+  header .eyebrow { font-size: 11px; color: #C9D8EF; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+  header h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+  header .sub { font-size: 13px; color: #C9D8EF; margin-bottom: 10px; }
+  header .meta { display: flex; gap: 22px; font-size: 12px; color: #94B4D4; flex-wrap: wrap; }
+  header .meta b { color: white; font-weight: 600; }
+
+  /* Cover */
+  .cover {
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 36px 48px 32px;
+    margin-bottom: 26px;
+    position: relative;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #E8E1D0;
+  }
+  .cover .corner-tl { position: absolute; top: 18px; left: 22px; font-size: 10px; color: var(--navy); letter-spacing: 1.5px; font-weight: 700; }
+  .cover .corner-tr { position: absolute; top: 18px; right: 28px; font-size: 11px; color: var(--gray); font-style: italic; font-family: Georgia, serif; }
+  .cover .corner-br { position: absolute; bottom: 12px; right: 24px; font-size: 10px; color: var(--gray); font-style: italic; font-family: Georgia, serif; }
+  .cover h2.cover-title { font-size: 30px; color: var(--navy); font-weight: 400; margin: 18px 0 28px; letter-spacing: -0.3px; font-family: Georgia, "Hiragino Mincho ProN", serif; }
+  .cover-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 18px; }
+  .cover-block { background: white; border: 1.5px solid var(--navy); border-radius: 6px; padding: 18px 22px; }
+  .cover-block h3 { font-size: 17px; color: var(--navy); font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .cover-block ul { list-style: none; padding: 0; }
+  .cover-block ul li { display: flex; align-items: center; gap: 10px; padding: 7px 6px; font-size: 13.5px; color: var(--text); cursor: pointer; border-radius: 4px; transition: background 0.12s; }
+  .cover-block ul li:hover { background: var(--gold-bg); }
+  .cover-block ul li .li-num { font-weight: 700; color: var(--navy); min-width: 22px; text-align: right; }
+  .cover-block ul li .li-text { flex: 1; }
+  .li-status { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .li-status.confirmed { background: var(--green); }
+  .li-status.progress { background: var(--orange); }
+  .li-status.pending { background: #CCC; }
+  .cover-block ul li .li-ver { font-size: 10px; color: var(--gray); font-weight: 600; background: var(--gray-bg); padding: 1px 6px; border-radius: 3px; }
+  .cover-crossblock { background: white; border: 1.5px solid var(--navy); border-radius: 6px; padding: 12px 22px; display: flex; align-items: center; gap: 14px; font-size: 13.5px; cursor: pointer; transition: background 0.12s; }
+  .cover-crossblock:hover { background: var(--gold-bg); }
+  .cover-crossblock .li-num { font-weight: 700; color: var(--navy); min-width: 22px; }
+  .cover-crossblock .li-text { flex: 1; font-weight: 600; color: var(--navy); }
+  .cover-crossblock .li-ver { font-size: 10px; color: var(--gray); font-weight: 600; background: var(--gray-bg); padding: 1px 6px; border-radius: 3px; }
+
+  .legend { background: white; border-radius: 8px; padding: 12px 18px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); display: flex; gap: 22px; flex-wrap: wrap; align-items: center; font-size: 12px; }
+  .legend .title { font-weight: 700; color: var(--navy); letter-spacing: 0.5px; text-transform: uppercase; font-size: 10.5px; }
+  .legend .item { display: flex; align-items: center; gap: 6px; color: var(--text); }
+  .legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .legend .dot.confirmed { background: var(--green); }
+  .legend .dot.progress { background: var(--orange); }
+  .legend .dot.pending { background: var(--gray); }
+
+  .section-heading { font-size: 14px; color: var(--navy); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin: 26px 0 14px; padding-left: 8px; border-left: 4px solid var(--navy); }
+
+  .tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .tile { background: white; border-radius: 10px; padding: 16px 18px; cursor: pointer; border: 2px solid var(--border); transition: all 0.18s; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .tile:hover { border-color: var(--navy); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(27,58,107,0.15); }
+  .tile.confirmed { border-left: 4px solid var(--green); }
+  .tile.progress { border-left: 4px solid var(--orange); }
+  .tile.pending { border-left: 4px solid var(--gray); opacity: 0.7; }
+  .tile .head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .tile .num { font-size: 10px; color: var(--gray); letter-spacing: 1px; font-weight: 700; }
+  .tile .ver { font-size: 10px; background: var(--navy); color: white; padding: 2px 7px; border-radius: 3px; font-weight: 700; }
+  .tile.confirmed .ver { background: var(--green); }
+  .tile.progress .ver { background: var(--orange); }
+  .tile.pending .ver { background: var(--gray); }
+  .tile h3 { font-size: 15px; color: var(--navy); font-weight: 700; margin-bottom: 6px; }
+  .tile .summary { font-size: 12px; color: var(--text); line-height: 1.55; margin-bottom: 10px; min-height: 38px; }
+  .tile .footer-meta { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--gray); padding-top: 8px; border-top: 1px dashed var(--border); }
+  .tile .footer-meta .hcount { font-weight: 700; color: var(--navy); }
+
+  .detail-section { background: white; border-radius: 12px; padding: 0; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; display: none; border-top: 4px solid var(--navy); }
+  .detail-section.active { display: block; }
+  .detail-section.confirmed { border-top-color: var(--green); }
+  .detail-section.progress { border-top-color: var(--orange); }
+  .detail-section.pending { border-top-color: var(--gray); }
+
+  .detail-head { padding: 18px 24px; background: linear-gradient(180deg, #F8FAFC 0%, white 100%); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .detail-head .title-block .num { font-size: 10px; color: var(--gray); letter-spacing: 1.5px; font-weight: 700; }
+  .detail-head h2 { font-size: 20px; color: var(--navy); font-weight: 700; margin-top: 4px; }
+  .detail-head .close-btn { background: none; border: 1.5px solid var(--gray); color: var(--gray); padding: 5px 14px; border-radius: 16px; font-size: 11px; font-weight: 600; cursor: pointer; }
+  .detail-head .close-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .current-card { margin: 20px 24px; padding: 20px 24px; background: var(--green-bg); border: 2px solid var(--green); border-radius: 10px; position: relative; }
+  .detail-section.progress .current-card { background: var(--orange-bg); border-color: var(--orange); }
+  .detail-section.pending .current-card { background: var(--gray-bg); border-color: var(--gray); }
+  .current-card .badge { position: absolute; top: -10px; left: 18px; background: var(--green); color: white; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 4px; letter-spacing: 1px; }
+  .detail-section.progress .current-card .badge { background: var(--orange); }
+  .detail-section.pending .current-card .badge { background: var(--gray); }
+  .current-card .ver-info { display: flex; gap: 14px; font-size: 11px; color: var(--gray); margin-bottom: 10px; flex-wrap: wrap; }
+  .current-card .ver-info b { color: var(--text); font-weight: 700; }
+  .current-card .title-text { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .current-card .statement { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 12px; }
+
+  /* === LEVEL 3 RICH VIEW === */
+  .rich-wrap { margin: 0 24px 20px; }
+  .rich-toggle {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold-bg) 0%, var(--gold-bg-strong) 100%);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 14px 22px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    transition: all 0.15s;
+  }
+  .rich-toggle:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(184,134,11,0.2); }
+  .rich-toggle .arrow { transition: transform 0.2s; }
+  .rich-toggle.open .arrow { transform: rotate(90deg); }
+  .rich-content {
+    display: none;
+    margin-top: 14px;
+    padding: 20px;
+    background: var(--paper);
+    border: 1px solid #E8E1D0;
+    border-radius: 10px;
+  }
+  .rich-content.open { display: block; }
+  .rich-section-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 12px; letter-spacing: 0.5px; }
+  .rich-section { margin-bottom: 22px; }
+  .rich-section:last-child { margin-bottom: 0; }
+
+  /* TIER grid (ICP) */
+  .tier-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+  .tier-card { border: 2px solid var(--border); border-radius: 8px; padding: 14px 16px; background: white; position: relative; }
+  .tier-card.hero { border-color: var(--gold); background: var(--gold-bg); }
+  .tier-card.tier1 { border-color: var(--green); }
+  .tier-card .badge { position: absolute; top: -10px; left: 14px; background: var(--navy); color: white; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.5px; }
+  .tier-card.hero .badge { background: var(--gold); }
+  .tier-card.tier1 .badge { background: var(--green); }
+  .tier-card .label { font-size: 10.5px; color: var(--gray); margin-top: 4px; font-weight: 600; letter-spacing: 0.5px; }
+  .tier-card h4 { font-size: 14px; color: var(--navy); font-weight: 700; margin: 6px 0 8px; }
+  .tier-card.hero h4 { color: var(--gold); }
+  .tier-card.tier1 h4 { color: var(--green); }
+  .tier-card .companies { font-size: 11.5px; color: var(--text); line-height: 1.55; margin-bottom: 6px; }
+  .tier-card .strategy { font-size: 11px; color: var(--gray); padding-top: 8px; border-top: 1px dashed var(--border); margin-top: 6px; }
+
+  /* Persona grid */
+  .persona-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .persona { background: white; border: 1px solid var(--border); border-left: 4px solid var(--navy); border-radius: 8px; padding: 12px 14px; }
+  .persona.t3 { border-left-color: var(--gold); background: var(--gold-bg); }
+  .persona.t1 { border-left-color: var(--green); }
+  .persona.t2 { border-left-color: var(--gray); background: #FAFAFA; }
+  .persona-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed var(--border); }
+  .persona-head .tier-tag { font-size: 9.5px; font-weight: 700; color: white; background: var(--navy); padding: 2px 7px; border-radius: 3px; letter-spacing: 0.3px; }
+  .persona.t3 .tier-tag { background: var(--gold); }
+  .persona.t1 .tier-tag { background: var(--green); }
+  .persona.t2 .tier-tag { background: var(--gray); }
+  .persona-head .role { font-size: 10px; font-weight: 700; color: var(--red); background: #FFE5E5; padding: 2px 6px; border-radius: 3px; }
+  .persona-head .name { font-size: 13.5px; font-weight: 700; color: var(--navy); }
+  .persona.t3 .persona-head .name { color: var(--gold); }
+  .persona-head .title { font-size: 11px; color: var(--gray); }
+  .persona-body .row { margin-bottom: 6px; font-size: 11.5px; }
+  .persona-body .row b { color: var(--navy); }
+  .persona-body .msg { background: var(--light-subtitle); padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; color: var(--navy); border-left: 2px solid var(--navy); margin-top: 6px; }
+  .persona.t3 .msg { background: var(--gold-bg-strong); border-left-color: var(--gold); color: #5B4500; }
+
+  /* Narrative legend (4 boxes) */
+  .narrative-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .narr-box { background: white; border-radius: 8px; padding: 12px 14px; border-left: 3px solid var(--navy); }
+  .narr-box.gold { border-left-color: var(--gold); background: var(--gold-bg); }
+  .narr-box.green { border-left-color: var(--green); background: var(--green-bg); }
+  .narr-box h4 { font-size: 13px; color: var(--navy); font-weight: 700; margin-bottom: 4px; }
+  .narr-box.gold h4 { color: var(--gold); }
+  .narr-box.green h4 { color: var(--green); }
+  .narr-box p { font-size: 11.5px; color: var(--text); line-height: 1.5; }
+  .narr-box .ag { font-size: 10.5px; color: var(--gray); margin-top: 4px; }
+
+  /* Category 3 layers */
+  .category-layers { display: flex; flex-direction: column; gap: 8px; max-width: 600px; margin: 0 auto; }
+  .layer-row { background: white; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
+  .layer-row.market { border-color: var(--gray); }
+  .layer-row.category { border-color: var(--gold); background: var(--gold-bg); }
+  .layer-row.positioning { border-color: var(--navy); background: #F0F4FA; }
+  .layer-row .lname { font-size: 12px; font-weight: 700; color: var(--navy); }
+  .layer-row.category .lname { color: var(--gold); }
+  .layer-row .ltext { font-size: 13px; font-weight: 600; color: var(--text); }
+
+  /* Sales pitch leaves */
+  .leaf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .leaf-mini { background: white; border-left: 4px solid var(--navy); border-radius: 6px; padding: 10px 12px; }
+  .leaf-mini.hero { border-left-color: var(--gold); background: var(--gold-bg); }
+  .leaf-mini .pri { font-size: 10px; font-weight: 700; color: var(--orange); margin-bottom: 4px; letter-spacing: 0.5px; }
+  .leaf-mini.hero .pri { color: var(--gold); }
+  .leaf-mini .lname { font-size: 12.5px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .leaf-mini.hero .lname { color: var(--gold); }
+  .leaf-mini .core { font-size: 11px; color: var(--text); line-height: 1.5; }
+  .leaf-mini .core b { color: var(--navy); }
+
+  /* ROI formula */
+  .roi-formula { background: white; padding: 16px 18px; border-radius: 10px; border: 2px solid var(--green); margin-bottom: 14px; }
+  .roi-formula .ftitle { font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: 1px; margin-bottom: 6px; }
+  .roi-formula .fstep { display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 600; color: var(--text); padding: 6px 0; }
+  .roi-formula .fstep .arr { color: var(--green); font-weight: 700; }
+  .roi-formula .fstep b { color: var(--green); }
+
+  /* Competitor table */
+  .comp-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 11.5px; }
+  .comp-table th { background: var(--navy); color: white; text-align: left; padding: 10px 12px; font-weight: 700; font-size: 11px; letter-spacing: 0.3px; }
+  .comp-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table tr:hover { background: var(--paper); }
+  .comp-table .cname { font-weight: 700; color: var(--navy); }
+  .comp-table .weak { color: var(--red); }
+
+  /* Link to external */
+  .external-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--navy); color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; margin-top: 14px; transition: background 0.15s; }
+  .external-link:hover { background: var(--navy-light); }
+  .external-link::after { content: "↗"; }
+
+  /* Timeline / History (継承) */
+  .timeline-wrap { padding: 0 24px; margin-bottom: 20px; }
+  .timeline-wrap .label, .history-wrap .label { font-size: 10.5px; font-weight: 700; color: var(--gray); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+  .timeline { display: flex; align-items: center; gap: 0; position: relative; padding: 14px 8px; background: #F8FAFC; border-radius: 8px; overflow-x: auto; }
+  .timeline .node { flex: 0 0 auto; text-align: center; cursor: pointer; min-width: 110px; padding: 0 6px; position: relative; }
+  .timeline .node:not(:last-child)::after { content: ""; position: absolute; top: 22px; right: -50%; width: 100%; height: 2px; background: var(--border); z-index: 0; }
+  .timeline .node .circle { width: 18px; height: 18px; border-radius: 50%; background: white; border: 3px solid var(--gray); margin: 0 auto 8px; position: relative; z-index: 1; transition: transform 0.15s; }
+  .timeline .node:hover .circle { transform: scale(1.2); }
+  .timeline .node.current .circle { background: var(--green); border-color: var(--green); box-shadow: 0 0 0 4px var(--green-bg); }
+  .timeline .node .ver { font-size: 11px; font-weight: 700; color: var(--navy); }
+  .timeline .node.current .ver { color: var(--green); }
+  .timeline .node .date { font-size: 9.5px; color: var(--gray); margin-top: 2px; }
+
+  .history-wrap { padding: 0 24px 24px; }
+  .history-list { display: flex; flex-direction: column; gap: 10px; }
+  .history-item { border: 1.5px solid var(--border); border-radius: 8px; background: white; overflow: hidden; transition: border-color 0.15s; }
+  .history-item:hover { border-color: var(--navy-light); }
+  .history-item.open { border-color: var(--navy); }
+  .history-summary { padding: 12px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .history-summary .left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+  .history-summary .ver-tag { font-size: 11px; font-weight: 700; color: white; background: var(--navy); padding: 3px 9px; border-radius: 3px; flex-shrink: 0; }
+  .history-summary .date-tag { font-size: 11px; color: var(--gray); flex-shrink: 0; }
+  .history-summary .title-text { font-size: 13px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .history-summary .toggle { font-size: 16px; color: var(--gray); transition: transform 0.2s; flex-shrink: 0; }
+  .history-item.open .history-summary .toggle { transform: rotate(90deg); color: var(--navy); }
+  .history-detail { display: none; padding: 16px 18px; background: #FAFBFC; border-top: 1px dashed var(--border); }
+  .history-item.open .history-detail { display: block; }
+
+  .history-block { margin-bottom: 14px; }
+  .history-block:last-child { margin-bottom: 0; }
+  .history-block .blabel { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; color: var(--gray); text-transform: uppercase; margin-bottom: 6px; }
+  .history-block .btext { font-size: 12.5px; color: var(--text); line-height: 1.6; padding: 8px 12px; background: white; border-radius: 6px; border-left: 3px solid var(--navy); }
+  .history-block.trigger .btext { border-left-color: var(--orange); }
+  .history-block.why .btext { border-left-color: var(--gold); background: var(--gold-bg); }
+
+  .diff-block { background: white; border-radius: 6px; padding: 10px 12px; font-size: 12px; line-height: 1.65; border: 1px solid var(--border); }
+  .diff-add { background: var(--diff-add-bg); border-left: 3px solid var(--diff-add-border); padding: 4px 8px; margin: 3px 0; border-radius: 3px; color: #1B5E20; }
+  .diff-add::before { content: "+ "; font-weight: 700; }
+  .diff-del { background: var(--diff-del-bg); border-left: 3px solid var(--diff-del-border); padding: 4px 8px; margin: 3px 0; border-radius: 3px; color: var(--red); text-decoration: line-through; }
+  .diff-del::before { content: "− "; font-weight: 700; text-decoration: none; display: inline-block; }
+  .diff-unchanged { padding: 4px 8px; color: var(--gray); font-size: 11.5px; }
+
+  .placeholder-note { margin: 20px 24px; padding: 16px; background: var(--gray-bg); border: 1px dashed var(--gray); border-radius: 8px; text-align: center; font-size: 12.5px; color: var(--gray); }
+  .placeholder-note b { color: var(--navy); }
+
+  /* === PMA Q&A === */
+  .pma-block { background: white; border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; border: 1px solid var(--border); }
+  .pma-block .pma-group-name { font-size: 12px; font-weight: 700; color: var(--navy); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1.5px solid var(--navy); display: flex; align-items: center; gap: 8px; }
+  .pma-block .pma-group-name .gtag { font-size: 9.5px; font-weight: 600; background: var(--navy); color: white; padding: 2px 7px; border-radius: 3px; letter-spacing: 0.5px; }
+  .qna-list { display: flex; flex-direction: column; gap: 8px; }
+  .qna-item { padding: 10px 12px; border-radius: 6px; border-left: 4px solid var(--gray); background: var(--gray-bg); cursor: pointer; transition: all 0.12s; }
+  .qna-item:hover { transform: translateX(2px); }
+  .qna-item.answered { border-left-color: var(--green); background: var(--green-bg); }
+  .qna-item.partial { border-left-color: var(--orange); background: var(--orange-bg); }
+  .qna-item.no_data { border-left-color: var(--gray); background: var(--gray-bg); }
+  .qna-item .qrow { display: flex; align-items: flex-start; gap: 10px; font-size: 12.5px; }
+  .qna-item .qicon { font-size: 14px; flex-shrink: 0; }
+  .qna-item .qtext { flex: 1; font-weight: 600; color: var(--text); line-height: 1.5; }
+  .qna-item .arow { font-size: 11.5px; color: var(--text); line-height: 1.55; padding: 8px 0 0 24px; border-top: 1px dashed rgba(0,0,0,0.08); margin-top: 8px; display: none; }
+  .qna-item.open .arow { display: block; }
+  .qna-item .arow b { color: var(--navy); }
+  .qna-item.answered .arow b { color: var(--green); }
+  .qna-item.partial .arow b { color: var(--orange); }
+  .qna-item.no_data .arow b { color: var(--red); }
+  .qna-summary-bar { display: flex; gap: 14px; margin-bottom: 12px; font-size: 11.5px; flex-wrap: wrap; }
+  .qna-stat { padding: 4px 10px; border-radius: 12px; font-weight: 600; }
+  .qna-stat.a { background: var(--green-bg); color: var(--green); }
+  .qna-stat.p { background: var(--orange-bg); color: var(--orange); }
+  .qna-stat.n { background: var(--gray-bg); color: var(--gray); }
+  .pma-methods { background: var(--paper); padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 11.5px; color: var(--gray); border-left: 3px solid var(--gold); }
+  .pma-methods b { color: var(--navy); }
+
+  footer { margin-top: 32px; padding: 14px 20px; text-align: center; color: var(--gray); font-size: 11px; }
+  footer b { color: var(--navy); }
+
+  @media print {
+    .legend, .detail-head .close-btn, .rich-toggle { display: none; }
+    .detail-section, .detail-section.active { display: block; page-break-inside: avoid; }
+    .history-detail, .rich-content { display: block !important; }
+    .tile { break-inside: avoid; }
+  }
+
+  /* === Cross-GTM Navigation === */
+  .gtm-nav {
+    background: linear-gradient(135deg, #FFF7E5 0%, #FFE9B0 100%);
+    border: 1.5px solid #B8860B;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin: 0 0 20px;
+    font-size: 12.5px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .gtm-nav-label { font-weight: 700; color: #B8860B; letter-spacing: 0.5px; }
+  .gtm-nav-link {
+    color: #1B3A6B;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 4px 10px;
+    background: white;
+    border-radius: 4px;
+    border: 1.5px solid #1B3A6B;
+    transition: all 0.15s;
+    font-size: 12px;
+  }
+  .gtm-nav-link:hover { background: #1B3A6B; color: white; }
+  .gtm-nav-link.self { background: #1B3A6B; color: white; cursor: default; opacity: 0.7; }
+  .gtm-nav-link.product-tree { border-color: #00796B; color: #00796B; }
+  .gtm-nav-link.product-tree:hover { background: #00796B; color: white; }
+
+  /* === Positioning Layers Extension === */
+  .layer-row.vision { background: linear-gradient(135deg, #E7F4E9 0%, #C9E5CD 100%); border-color: #1B5E20; }
+  .layer-row.vision .lname { background: #1B5E20; color: white; }
+  .parent-ref-box {
+    background: #F5F8FC;
+    border: 1.5px dashed #1976D2;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 8px 0 16px;
+    font-size: 12px;
+    color: #1A1A2E;
+  }
+  .parent-ref-box b { color: #1976D2; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">カンリー福利厚生 / GTM Audit — Living Document</div>
+  <h1>GTM Audit Living Doc v0.1 — Questions × カンリー福利厚生回答</h1>
+  <div class="sub">5階層ドリルダウン: 目次 → タイル → CURRENT/Timeline/History → リッチ構造ビュー → ★ Questions×答え</div>
+  <div class="meta">
+    <span><b>Client:</b> カンリー福利厚生</span>
+    <span><b>Last Updated:</b> 2026-05-28</span>
+    <span><b>Version:</b> v0.1</span>
+    <span><b>Source:</b> PMA Go-to-market audit 全Questions / カンリー福利厚生成果物</span>
+  </div>
+</header>
+  <div class="gtm-nav">
+    <span class="gtm-nav-label">📎 関連GTM Audit / 資料</span>
+    <a href="Canly_StoreMarketing_GTM_Audit_Living_v0.1.html" class="gtm-nav-link">▶ GTM-A：店舗集客事業</a>
+    <a href="Canly_LocalInventory_GTM_Audit_Living_v0.1.html" class="gtm-nav-link">▶ GTM-B：ローカル在庫</a>
+    <span class="gtm-nav-link self">● GTM-C：福利厚生（現在）</span>
+    <a href="product_tree_v0_1.html" class="gtm-nav-link product-tree">📐 プロダクト階層ツリー</a>
+    <a href="Canly_LocalInventory_LP_Audit_v0.1.html" class="gtm-nav-link" style="border-color:#EF6C00;color:#EF6C00;">📐 LP精査 v0.1（GTM-B紐付）</a>
+  </div>
+
+<div class="cover">
+  <div class="corner-tl">PMA / BLUE WONDER 準拠</div>
+  <div class="corner-tr">GTM audit</div>
+  <h2 class="cover-title">The 10 key elements of a GTM audit</h2>
+  <div class="cover-grid">
+    <div class="cover-block">
+      <h3>Foundation</h3>
+      <ul id="foundationList"></ul>
+    </div>
+    <div class="cover-block">
+      <h3>Execution</h3>
+      <ul id="executionList"></ul>
+    </div>
+  </div>
+  <div class="cover-crossblock" id="crossItem"></div>
+  <div class="corner-br">カンリー福利厚生 GTM Audit Living Doc · 2026-05-28</div>
+</div>
+
+<div class="legend">
+  <span class="title">凡例:</span>
+  <span class="item"><span class="dot confirmed"></span>確定</span>
+  <span class="item"><span class="dot progress"></span>進行中</span>
+  <span class="item"><span class="dot pending"></span>未着手</span>
+  <span class="item" style="margin-left:auto;color:var(--gray);">目次番号 / タイル → 詳細展開 / リッチ詳細トグル → 構造化ビュー</span>
+</div>
+
+<div class="section-heading">Foundation — 戦略の土台</div>
+<div class="tile-grid" id="foundationTiles"></div>
+
+<div class="section-heading">Execution — 実行</div>
+<div class="tile-grid" id="executionTiles"></div>
+
+<div class="section-heading">Cross-cutting — 横断</div>
+<div class="tile-grid" id="crossTiles"></div>
+
+<div id="detailContainer"></div>
+
+<footer>
+  <b>カンリー福利厚生 GTM Audit Living Doc v0.1</b> · 10要素 × Questions×回答 × 5階層ドリルダウン · 2026-05-28
+</footer>
+
+<script>
+/* ============ DATA ============ */
+/*
+ * ▼ USAGE
+ * 1. metadata.client / lastUpdated を埋める
+ * 2. 各カテゴリの current / history / pmaQuestions を埋める
+ * 3. リッチビューを使う場合は richType を設定（icp_personas / problem_solution / positioning_messaging / pricing / competition / sales_pitch / sales_enablement）
+ * 4. リッチビュー本体は renderRich***() 関数を書き換える（下記）
+ * ▼ ステータス
+ *  - status: "confirmed" | "progress" | "pending"
+ *  - Q&A status: "answered" | "partial" | "no_data"
+ * ▼ リファレンス例: ~/Dropbox/PMM/projects/casematch/deliverables/CaseMatch_GTM_Audit_Living_v0.4.html
+ */
+const gtmAudit = {
+  metadata: { client: "カンリー福利厚生", lastUpdated: "2026-05-28" },
+  categories: [
+    /* ===== 01. ICP & Personas ===== */
+    {
+      id: "icp", num: "01", group: "foundation",
+      name: "ICP & Personas",
+      status: "progress",
+      summary: "アルバイト・パート多い業態の店舗事業者（飲食/小売/サービス）が主。カンリー店舗集客の既存顧客クロスセルが本流。EP/MID中心・SMBは代理店プラン併用",
+      current: {
+        version: "v1.0", date: "2026-05-28",
+        title: "カンリー福利厚生 ICP（2026Q3版）— アルバイト・パート多い店舗事業者",
+        statement: "Tier1コア：アルバイト・パートなどの有期雇用社員の人材不足・流動性に課題を抱える店舗事業者（飲食／小売／サービス業）。EP/MID中心。Tier2準コア：カンリー店舗集客既存契約社（クロスセル）— 8P3Q『福利厚生のバルク売り、リニューアル移行』推進中。Tier3：SMB（販売代理店プラン経由）。優待提供企業：カンリー店舗集客導入企業（割引提供側）と利用企業（従業員受益側）の二面構造。担当：福利厚生マーケットプレイス事業部 林佑樹事業部長／横山昂史（EPセールス）。4Q組織変更で ENP/MIDユニット合流予定（TAM拡大）。",
+        source: "中期計画 p.20, 27 / 8P4Qキックオフ p.39, 78 / product_catalog.xlsx #200-203"
+      },
+      history: [],
+      richType: "icp_personas",
+      pmaQuestions: {
+        methods: "カンリー店舗集客既存顧客のクロスセル分析 / アプリDL・利用率分析 / 林事業部長ヒアリング / 横山さんセールスログ",
+        groups: [
+          { name: "マーケティング", questions: [
+            { q: "イベント・広告・コンテンツ・リードは、定義されたICP／ターゲットペルソナに整合しているか？", status: "no_data", answer: "宮本スコープ外につき情報限定。要林事業部長ヒアリング" },
+            { q: "社内ドキュメント（ICP・ペルソナ）は、他チームの認識と一致しているか？", status: "no_data", answer: "（4Q組織変更でENP/MID合流後に正規化候補）" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "購買委員会のキーメンバーは、ターゲットペルソナに含まれているか？", status: "partial", answer: "EP/MID顧客の人事・労務部門が新たな購買委員会メンバー" },
+            { q: "ICP案件は、非ICP案件より受注率が高いか？", status: "no_data", answer: "（要分析）" },
+            { q: "SDRはターゲットICP／ペルソナへのアウトリーチで成果を出せているか？", status: "partial", answer: "横山さん中心にアポ獲得中（モトヤフーズ／J-Connect／OWN／CHINTAIなどバルクアポ実績／8P3Q）" }
+          ]},
+          { name: "カスタマーサクセス", questions: [
+            { q: "ICP顧客は、非ICP顧客よりプロダクト導入が早いか？", status: "no_data", answer: "（要分析）" },
+            { q: "ICP顧客はNPS/CSATが非ICPより高いか？", status: "no_data", answer: "（要調査）" },
+            { q: "ICP顧客はChurnが低く、Renewal/Upsell/ACVが高いか？", status: "no_data", answer: "（要追跡）" },
+            { q: "バイヤー・ユーザー・実装担当者は、ターゲットペルソナと一致しているか？", status: "no_data", answer: "（要調査）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 02. Problem / Solution ===== */
+    {
+      id: "problem", num: "02", group: "foundation",
+      name: "Problem / Solution",
+      status: "progress",
+      summary: "アルバイト・パート採用/定着問題＋店舗事業者特有『自社割』運用負荷＋福利厚生差別化ニーズが3大ペイン。カンリー顧客基盤×地図検索×自社割DXが3軸ソリューション",
+      current: {
+        version: "v1.0", date: "2026-05-28",
+        title: "店舗事業者特有3大ペイン × 3軸ソリューション",
+        statement: "ペイン①：アルバイト・パートなどの有期雇用社員の採用・定着問題（業界の人材不足危機）／ペイン②：店舗事業者特有『自社割』の運用負荷／ペイン③：従業員向け福利厚生制度の差別化ニーズ。ソリューション：（1）位置情報×地図検索メディア『カンリー福利厚生』で従業員に高い利用率を創出／（2）『カンリー店舗集客』導入企業から割引率の高い特別優待を独自仕入／（3）自社割のDXによる利用促進で新たな収益源を創出。最大の構造優位：カンリー顧客基盤（13万店舗）からの優待調達ルート＝他福利厚生サービスが真似できない独自アセット。",
+        source: "中期計画 p.27 / 8P4Qキックオフ p.39（顧客層①飲食・小売の高粘着性向上ソリューション）"
+      },
+      history: [],
+      richType: "problem_solution",
+      pmaQuestions: {
+        methods: "顧客VoC（導入企業）/ 従業員アンケート / 林事業部長ヒアリング",
+        groups: [
+          { name: "問題／ソリューション", questions: [
+            { q: "ICPに対してプロダクトが解決する具体的な課題は何か？（トップ3の痛点）", status: "answered", answer: "①アルバイト・パートの採用・定着／②自社割の運用負荷／③福利厚生差別化" },
+            { q: "課題を解決しないと、どんな影響／結果が起きるか？（なぜ重要か）", status: "answered", answer: "店舗産業の人材不足危機（サービス業115万人不足）の中で離職率増・採用コスト増" },
+            { q: "既存の代替手段に対して、自社のソリューションはどう優れているか？", status: "answered", answer: "カンリー顧客基盤（13万店舗）からの優待調達は他社が真似できない構造優位／一般福利厚生（ベネ・ワン等）との差別化軸" },
+            { q: "この課題を解くことのメリット・価値は？", status: "partial", answer: "従業員定着率向上／自社割の収益化／カンリー本体顧客の相互送客で来店促進" },
+            { q: "このプロダクトで解くことの固有のメリット・価値は？", status: "answered", answer: "アプリ＋地図検索の高利用率＋カンリー本体との相互送客プラットフォーム＝来店促進と福利厚生の二重便益" }
+          ]},
+          { name: "プロダクト", questions: [
+            { q: "ユーザーはプロダクトのどこから価値を得ているか？", status: "partial", answer: "アプリ利用＆地図検索＆特別優待。具体的な利用ログ分析は未確認" },
+            { q: "プロダクト利用は、社員／見込客／顧客が定義する価値と一致しているか？", status: "no_data", answer: "（要VoC調査）" },
+            { q: "顧客が評価しているが訴求不足の機能・ベネフィットはあるか？", status: "no_data", answer: "（要営業現場ヒアリング）" },
+            { q: "それらはプロダクトロードマップの方向性と整合しているか？", status: "partial", answer: "追加オプション／追加ポイント（準備中）でアップセル設計中" },
+            { q: "バイヤーが求めるものと、開発しているものにギャップはないか？", status: "no_data", answer: "（要調査）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 03. Positioning & Messaging ===== */
+    {
+      id: "positioning", num: "03", group: "foundation",
+      name: "Positioning & Messaging",
+      status: "progress",
+      summary: "ポジショニング3層：カテゴリー『店舗特化型福利厚生＋自社割DXメディア』／ビジョン『13万店舗ネットワークを相互送客P/Fに昇華』／ポジ『地図検索×独自仕入×自社割DX』",
+      current: {
+        version: "v1.0", date: "2026-05-28",
+        title: "ポジショニング3層：店舗特化型福利厚生（カテゴリー）→ 13万店舗ネットワーク昇華（ビジョン）→ 自社割DX×独自仕入（ポジ）",
+        statement: "【カテゴリー（最上位）】『店舗特化型の福利厚生＋自社割DXメディア』（一般福利厚生サービス／ベネ・ワン・リロクラブ・福利厚生倶楽部とは別の独自カテゴリ）。親GTM-Aの最上位カテゴリ『エージェンティックコマース＝カンリー』の『来店促進×従業員ロイヤリティ』軸として位置付け。中期計画では『顧客層①飲食/小売の高粘着性向上ソリューション』として明示（p.13/p.39）。【ビジョン（中間・10年スパン）】カンリーのアセット（13万店舗ネットワーク）を福利厚生×相互送客プラットフォームに昇華し、親Vision『ヒトとAIの力で、店舗の集客力を上げる』の集客側面を補強する。【ポジショニング・メッセージング（具体的訴求）】差別化3軸：①アプリ＋地図検索の高利用率／②カンリー店舗集客顧客から割引率の高い特別優待を独自仕入／③自社割DXで店舗事業者特有のニーズに対応。",
+        source: "中期計画 p.13, 20, 27, 39 / product_catalog.xlsx #200-203"
+      },
+      history: [],
+      richType: "positioning_messaging",
+      pmaQuestions: {
+        methods: "メッセージング・フレームワーク / ポジショニング・ステートメント / 顧客知覚調査未実施",
+        groups: [
+          { name: "マーケ＆セールス", questions: [
+            { q: "提供価値を定義できているか？", status: "partial", answer: "中期計画上は明文化済。営業現場の言語化は要追加調査" },
+            { q: "プロダクトの語り方について社内アラインメントが取れているか？", status: "partial", answer: "8P4Qキックオフで全社共有済。4Q ENP/MID合流で本体営業20名への浸透が課題" },
+            { q: "パッケージング／プライシング戦略は、プロダクトナラティブを支えているか？", status: "partial", answer: "従量課金（400円/人〜）＋追加オプション／追加ポイントでアップセル設計" },
+            { q: "マーケチーム全体が、このドキュメントの保管場所を把握しているか？", status: "no_data", answer: "本Living Doc共有予定" },
+            { q: "営業資料・コンテンツ・Webで一貫してポジショニングされているか？", status: "no_data", answer: "（要営業資料レビュー）" },
+            { q: "営業チームは一貫したピッチを持っているか？", status: "no_data", answer: "（林事業部長＋横山さん属人）" },
+            { q: "最も成果を出す営業はどんなストーリーを語っているか？", status: "no_data", answer: "（要営業録音レビュー）" }
+          ]},
+          { name: "見込客・顧客の認識", questions: [
+            { q: "バイヤーの頭の中で、自社はどんなポジションを占めているか？", status: "no_data", answer: "（指名検索／ブランド調査未実施）" },
+            { q: "ポジショニング／メッセージは明確で差別化されているか？", status: "partial", answer: "店舗特化×自社割DXは独自ポジ。バルク売りリニューアルで認知拡大中" },
+            { q: "見込客／顧客の認識・体験と合致しているか？", status: "no_data", answer: "（要VoC調査）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 04. Pricing & Packaging ===== */
+    {
+      id: "pricing", num: "04", group: "foundation",
+      name: "Pricing & Packaging",
+      status: "progress",
+      summary: "従量課金400円/人〜。直販／販売代理店／追加オプション（デジタルチケット系バルク）／追加ポイント（準備中）の4プラン構成",
+      current: {
+        version: "v1.0", date: "2026-05-28",
+        title: "従量課金（400円/人〜）×4プラン構成",
+        statement: "プライシング：従量課金 400円/人〜（利用社員ベース）。4プラン：（1）直販プラン（EP/MID/SMB／応相談）／（2）販売代理店プラン（SMB／応相談）／（3）追加オプションプラン（デジタルチケット系バルク販売／応相談）／（4）追加ポイントプラン（独自ポイントバルク／準備中）。8P3Qで『福利厚生のバルク売り、リニューアル移行』を実施。アップセル：追加オプション・追加ポイントでデジタルチケット／独自ポイントを上乗せ。",
+        source: "product_catalog.xlsx #200-203 / 8P4Qキックオフ p.39（バルク売り）"
+      },
+      history: [],
+      richType: "pricing",
+      pmaQuestions: {
+        methods: "競合ベンチマーク（ベネ・ワン / リロクラブ / 福利厚生倶楽部） / Win-Loss",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "プライシング／パッケージング／値引きについて、社内に『一つの正解』があるか？", status: "partial", answer: "基本パッケージは確立。バルク売りのプライシングロジック設計中" },
+            { q: "主要ステークホルダーは、プライシング／パッケージングについて同じ理解か？", status: "no_data", answer: "（4Q ENP/MID合流後に再整理）" }
+          ]},
+          { name: "知覚（Perception）", questions: [
+            { q: "選んだバリューメトリクスは、本当に『価値』と相関しているか？", status: "partial", answer: "人数ベース課金は店舗事業者の福利厚生予算と相関するが、利用率連動の検討余地" },
+            { q: "プライシングモデルはポジショニングと整合しているか？", status: "partial", answer: "シンプル人数ベースは『福利厚生』のメンタルモデルと整合" },
+            { q: "価格は、見込客／顧客／営業の品質知覚と整合しているか？", status: "no_data", answer: "（要営業ヒアリング）" },
+            { q: "価格は競合と比べてどうか？提供価値と整合しているか？", status: "partial", answer: "ベネ・ワン等の一般福利厚生サービスより安価帯。独自仕入の特別優待で価値訴求" }
+          ]},
+          { name: "更新／Churn", questions: [
+            { q: "X%自動値上げを含む、標準化された更新プロセスがあるか？", status: "no_data", answer: "（要確認）" },
+            { q: "Churn理由の15%超で、価格が単独／主要因として挙がっているか？", status: "no_data", answer: "（要Churn分析）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 05. Competition ===== */
+    {
+      id: "competition", num: "05", group: "foundation",
+      name: "Competition",
+      status: "progress",
+      summary: "一般福利厚生（ベネ・ワン／リロクラブ／福利厚生倶楽部）が間接競合。店舗事業者特化＋自社割DXは独自ポジで直接競合少",
+      current: {
+        version: "v1.0", date: "2026-05-28",
+        title: "店舗事業者特化×自社割DXは独自ポジ（直接競合少）",
+        statement: "直接競合：店舗事業者特化＋自社割DXは独自ポジで類似サービスほぼなし（カンリー優位）。間接競合：（a）一般福利厚生サービス（ベネフィット・ワン／リロクラブ／福利厚生倶楽部）— 大手で全業種対応／（b）店舗事業者独自の自社割運用（紙ベース／Excelベース）／（c）福利厚生代行サービス。差別化軸：①店舗事業者特化（業態理解／自社割DXノウハウ）／②カンリー顧客基盤（13万店舗）から優待を独自仕入できる構造優位／③相互送客プラットフォーム機能。",
+        source: "中期計画 p.27 / 一般福利厚生市場の公開情報"
+      },
+      history: [],
+      richType: "competition",
+      pmaQuestions: {
+        methods: "競合公開情報モニタリング / 顧客Win-Loss / 一般福利厚生市場の調査",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "現在および近い将来の最大の脅威について、社内合意はあるか？", status: "partial", answer: "①ベネ・ワン等大手が店舗事業者特化セグメントへ進出する将来脅威／②店舗事業者の内製化（紙/Excel運用継続）" },
+            { q: "それら競合を上回るためのプランがあるか？", status: "answered", answer: "①カンリー店舗集客顧客基盤からの優待調達ルート維持／②4Q ENP/MID合流でセールス連携強化／③相互送客の価値訴求" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "営業はバトルカード／反論処理コンテンツで武装されており、それは有効か？", status: "no_data", answer: "バトルカード未整備（要4Q作成）" },
+            { q: "競合はレビューサイト（G2／Capterra／TrustPilot）でどう評価されているか？", status: "no_data", answer: "（要モニタリング）" }
+          ]},
+          { name: "更新／Churn", questions: [
+            { q: "Churn会話で最も頻出する競合トップ5は？", status: "no_data", answer: "（要Churn分析）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 06. Sales Pitch ===== */
+    {
+      id: "sales_pitch", num: "06", group: "execution",
+      name: "Sales Pitch",
+      status: "pending",
+      summary: "林事業部長＋横山さん属人化。商談は創出できているが成約はまだ（8P3Q）。4Qで形にする・林さん以外からの成約がテーマ",
+      current: {
+        version: "v0.5", date: "2026-05-28",
+        title: "セールスチーム連携強化中：商談→成約変換が4Q課題",
+        statement: "現状：林佑樹事業部長＋横山昂史（EPセールス）中心に営業活動。8P3Qで横山さん中心に既存企業（モトヤフーズ／J-Connect／OWN等）のバルクアポ獲得実施。CHINTAI様の福利厚生バルクアポ獲得も実施。GOSSOの金谷取締役にコミュニティ割で了承獲得→作戦会議予定。課題：商談は創出できているが『成約』はまだ→4Qで形にする、林さん以外からの成約がテーマ。ピッチ整備が4Q重点。",
+        source: "8P4Qキックオフ p.78（セールスチーム内でも売れる体制構築に向けて進捗中）"
+      },
+      history: [],
+      richType: "sales_pitch",
+      pmaQuestions: {
+        methods: "林事業部長＋横山さんインタビュー / 商談録音 / Win-Loss",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "セールスピッチについて社内合意があるか？", status: "no_data", answer: "（林事業部長属人化中）" },
+            { q: "経営層／営業／CSM／サポートまで、ピッチの主要要素を共有できているか？", status: "partial", answer: "8P4Qキックオフで戦略共有済。ピッチ標準化は4Q" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "営業は自社ナラティブの語り方を知っているか？", status: "no_data", answer: "林さん＋横山さん属人。他営業展開は4Q" },
+            { q: "最も成果を出す営業はどんなストーリー／事例を語るか？", status: "no_data", answer: "（要営業録音レビュー）" },
+            { q: "どの営業でも一貫したナラティブを語れるか？", status: "no_data", answer: "属人化🔴" },
+            { q: "顧客タイプによって、効くナラティブは違うか？", status: "partial", answer: "アルバイト・パート多い飲食／小売／サービス業でナラティブ分岐余地" }
+          ]},
+          { name: "マーケティング", questions: [
+            { q: "セールスピッチは、Web／営業資料／コンテンツのメッセージと整合しているか？", status: "partial", answer: "提案資料あり（ご検討企業様宛/利用汎用資料/アライアンス資料）" },
+            { q: "マーケコンテンツはバイヤーに前提知識／参照枠を提供しているか？", status: "no_data", answer: "（要追加調査）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 07. Marketing Channels & Partnerships ===== */
+    {
+      id: "channels", num: "07", group: "execution",
+      name: "Marketing Channels & Partnerships",
+      status: "progress",
+      summary: "カンリー店舗集客既存顧客からの相互送客が主軸。8P3Qでバルクアポ獲得＋リニューアル移行＋アライアンス活用中",
+      current: {
+        version: "v1.0", date: "2026-05-28",
+        title: "カンリー本体顧客との相互送客 ＋ アライアンス推進",
+        statement: "主要チャネル：（1）カンリー店舗集客既存顧客のクロスセル（最強の動線）／（2）横山さん中心の既存ネットワーク活用（モトヤフーズ／J-Connect／OWN／CHINTAI／GOSSOコミュニティ割等）／（3）アライアンス（07_アライアンス資料あり）。8P3Q取組ハイライト：リカバリーの大型提携（ぐるなび様など）／ローカル在庫・福利厚生のバルク売り・リニューアル移行。4Q重点：成約獲得（商談→成約変換）／本体営業20名連携／アライアンス拡大。",
+        source: "8P4Qキックオフ p.39, 78 / product_catalog.xlsx #200-203"
+      },
+      history: [],
+      richType: null,
+      pmaQuestions: {
+        methods: "横山さんセールスログ / アライアンスチャネル分析 / 本体顧客クロスセル率",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "どのチャネル／パートナーが最も質の高いリードを生み出しているか？（データ基準）", status: "partial", answer: "カンリー店舗集客既存顧客（13万店舗）からのクロスセルが最強。詳細ROAS分析は未" },
+            { q: "その結果に基づき、その投資を倍掛けしているか？", status: "partial", answer: "4Q ENP/MID合流でクロスセル動線強化" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "営業は主要パートナーのコミュニティ／技術／流通を理解しているか？", status: "partial", answer: "横山さん中心にネットワーク活用中" },
+            { q: "これらパートナーと明確なコミュニケーション／連携があるか？", status: "partial", answer: "アライアンス資料あり" }
+          ]},
+          { name: "マーケティング", questions: [
+            { q: "ターゲットペルソナの学習方法（情報源）を顧客調査で把握しているか？", status: "no_data", answer: "（要VoC調査）" },
+            { q: "どこで情報／紹介を得ているか？", status: "partial", answer: "カンリー本体顧客／既存ネットワーク／コミュニティ割" },
+            { q: "どのイベント／コミュニティ／インフルエンサーを信頼しているか？", status: "no_data", answer: "（要調査）" },
+            { q: "どのチャネル／パートナーシップが最も質の高いリードを生み出すか？", status: "partial", answer: "カンリー本体顧客クロスセル＞アライアンス＞既存ネットワーク" },
+            { q: "未開拓の新規パートナーシップ／チャネル機会はあるか？", status: "partial", answer: "応援団株主小売チェーンの従業員リーチ／ENP/MID合流後の本体営業20名動員" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 08. Sales Enablement ===== */
+    {
+      id: "sales_enablement", num: "08", group: "execution",
+      name: "Sales Enablement",
+      status: "pending",
+      summary: "林事業部長＋横山さん属人化🔴。本体営業20名への展開＝4Q ENP/MID合流後の最大ミッション。バトルカード未整備",
+      current: {
+        version: "v0.5", date: "2026-05-28",
+        title: "本体営業20名への展開（4Q合流後）が最大ミッション",
+        statement: "現状資料：①ご検討企業様宛 提案資料（20250909V）／②01_利用汎用資料／③07_アライアンス資料／④申込書・規約（直販／代理店／追加クーポン）／⑤Miroボード（共通）。属人化🔴：林事業部長＋横山さん中心。4Q取組：（a）4Q ENP/MID合流で本体営業20名向け研修／（b）バトルカード作成（vs ベネ・ワン／リロクラブ／自社割内製）／（c）成約事例の量産（8P3Q時点で商談は創出済だが成約不足）／（d）ピッチ標準化＋RAG基盤への統合（親GTM-A連動）。",
+        source: "product_catalog.xlsx #200-203（提案資料／申込書／規約） / 8P4Qキックオフ p.78"
+      },
+      history: [],
+      richType: "sales_enablement",
+      pmaQuestions: {
+        methods: "林事業部長＋横山さんインタビュー / 商談録音 / Win/Loss / 本体営業20名ヒアリング",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "営業／CSが顧客フィードバックをCRM／プロダクト／マーケに共有する仕組みがあるか？", status: "no_data", answer: "（4Q ENP/MID合流で連携強化候補）" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "営業はプロダクト／競合／市場を理解し、ピッチ・デモの研修に納得しているか？", status: "no_data", answer: "林事業部長＋横山さん属人。本体営業20名への研修は4Q合流後" },
+            { q: "必要な営業資料を持っており、保管場所を把握しているか？", status: "partial", answer: "提案資料／申込書／規約あり（product_catalog.xlsx #200-203参照）" },
+            { q: "理想を言えば、他にどんなコンテンツが欲しいか？", status: "no_data", answer: "（要営業現場ヒアリング）" }
+          ]},
+          { name: "マーケティング", questions: [
+            { q: "営業資料は一箇所に集約され、利用状況が追跡されているか？", status: "partial", answer: "資料は集約済。利用状況追跡は要設計" },
+            { q: "営業はある程度カスタマイズ可能か？", status: "no_data", answer: "（要確認）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 09. Product Adoption ===== */
+    {
+      id: "product_adoption", num: "09", group: "execution",
+      name: "Product Adoption",
+      status: "progress",
+      summary: "アプリDL率＋地図検索利用率＋特別優待利用率が主要KPI。自社割DXの利用促進が継続課題。バルク売りでロゴ獲得加速中",
+      current: {
+        version: "v1.0", date: "2026-05-28",
+        title: "アプリ × 地図検索 × 特別優待利用の3軸アダプション",
+        statement: "アダプション3軸：（1）アプリDL率＝企業導入後の従業員利用開始／（2）地図検索利用率＝位置情報×優待検索の体験品質／（3）特別優待利用率＝カンリー店舗集客顧客から仕入れた優待の実消費。8P3Q：『福利厚生のバルク売り、リニューアル移行』推進中／CHINTAI様等バルクアポ獲得。指標例：カンリー店舗集客顧客＝割引提供企業として、福利厚生導入企業＝利用企業（従業員）の二面構造のバランス。",
+        source: "中期計画 p.27 / 8P4Qキックオフ p.39, 78"
+      },
+      history: [],
+      richType: null,
+      pmaQuestions: {
+        methods: "アプリログ分析 / 地図検索ログ / 優待利用率追跡 / 企業別CSデータ",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "ユーザーが導入後にスムーズに活用できるオンボーディングプロセスがあるか？", status: "partial", answer: "アプリDLからの導線あり。標準化は要追加調査" },
+            { q: "ユーザー単位／アカウント単位の指標で『Product Adoption』が明確に定義されているか？", status: "partial", answer: "3軸（DL／地図検索／優待利用）あり。詳細指標は要設計" },
+            { q: "その定義はチーム横断で共通理解されているか？", status: "no_data", answer: "（要確認）" }
+          ]},
+          { name: "プロダクト / CS / マーケティング", questions: [
+            { q: "更新につながる『最低限の活用度・エンゲージメント水準』を把握しているか？", status: "no_data", answer: "（要設定）" },
+            { q: "活用度を段階的に引き上げる仕組み（プログレッシブ・アダプション）はあるか？", status: "partial", answer: "追加オプション／追加ポイントでアップセル設計" },
+            { q: "ユーザー行動に応じたトリガーメール／ポップアップ／CSMアウトリーチが整備されているか？", status: "no_data", answer: "（要確認）" },
+            { q: "ドキュメントサイト／プロダクトツアー／LMS／プロダクト内事例／コミュニティはあるか？", status: "no_data", answer: "（要確認）" },
+            { q: "早期警戒システムを伴うアカウントヘルススコアがあるか？", status: "no_data", answer: "（要設計）" },
+            { q: "PBR（Periodic Business Review）と更新プロセスは整備されているか？", status: "no_data", answer: "（要確認）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 10. Internal Alignment ===== */
+    {
+      id: "internal_alignment", num: "10", group: "cross",
+      name: "Internal Alignment",
+      status: "progress",
+      summary: "4Q組織変更：福利厚生マーケットプレイス事業部 → ENP/MIDユニット合流（TAM拡大）。本体営業20名連携が4Q最大ミッション",
+      current: {
+        version: "v1.0", date: "2026-05-28",
+        title: "4Q ENP/MID合流：本体営業20名連携が最大ミッション",
+        statement: "現状：福利厚生マーケットプレイス事業部（林佑樹事業部長／横山昂史EPセールス／田村玲奈第1セールス／永倉莉子CSM／平林祐弥CSM／戸塚良太福利厚生マケプレMkt）が独立組織。4Q組織変更：福利厚生マーケットプレイス事業部→ENP/MIDユニット合流（TAM拡大・本体顧客クロスセル強化が目的）。最大ミッション：（a）本体営業20名連携で成約獲得（8P3Q時点商談は創出済・成約不足）／（b）林さん以外からの成約創出／（c）親GTM-A（店舗集客事業）とのシナジー設計／（d）本Living Docがアライメント中核資産化を目指す。",
+        source: "中期計画 p.67-70 / 8P4Qキックオフ p.40, 53（タイムライン）, 78"
+      },
+      history: [],
+      richType: null,
+      pmaQuestions: {
+        methods: "社内インタビュー / 定例議事録レビュー / 8P4Qキックオフ実施 / 林事業部長×ENP/MID連携",
+        groups: [
+          { name: "クロスファンクショナル・アラインメント", questions: [
+            { q: "標準化された社内アラインメントの定例（週次／月次）があるか？", status: "answered", answer: "四半期キックオフ／月次経営会議／週次部門定例" },
+            { q: "PMM／Sales／Product／CS の間で、ポジショニング・プライシング・ナラティブの認識が揃っているか？", status: "partial", answer: "4Q ENP/MID合流＋PMMユニット新設で正規化中。本Living Docが正規化の中核資産候補" },
+            { q: "チーム横断のコンフリクトを表面化し解決する仕組みがあるか？", status: "partial", answer: "福利厚生事業部の独立性と本体ユニット連携のバランスが4Q合流の焦点" },
+            { q: "重要なローンチで Internal Alignment Demo型FW を適用しているか？", status: "no_data", answer: "（要藤林さん＋林事業部長相談）" }
+          ]}
+        ]
+      }
+    }
+  ]
+};
+
+/* ============ RICH VIEW RENDERERS ============ */
+/*
+ * ▼ リッチビューについて
+ * 下記7つの renderRich***() は CaseMatch v0.4 の実例コードです。
+ * クライアントごとに以下を書き換えて使ってください：
+ *   - renderRichICP        : Tier区分・ペルソナ4種
+ *   - renderRichProblem    : 課題A/B × 解A/B（2×2）
+ *   - renderRichPositioning: 市場/カテゴリ/ポジ 三層 + 4ナラティブ
+ *   - renderRichPricing    : ROI公式 + 稟議ロジック + 残論点
+ *   - renderRichCompetition: 競合4社テーブル + 撃ち返しメッセージ
+ *   - renderRichSalesPitch : 判定ロジック + 5リーフカード
+ *   - renderRichSalesEnablement: 資材インベントリ + 運用ルール
+ *
+ * CSSクラスはそのまま流用可能（.tier-grid, .persona-grid, .narrative-legend,
+ * .category-layers, .roi-formula, .comp-table, .leaf-grid 等）。
+ * リファレンス: ~/Dropbox/PMM/projects/casematch/deliverables/CaseMatch_GTM_Audit_Living_v0.4.html
+ */
+function renderRichView(cat) {
+  switch (cat.richType) {
+    case "icp_personas": return renderRichICP();
+    case "problem_solution": return renderRichProblem();
+    case "positioning_messaging": return renderRichPositioning();
+    case "pricing": return renderRichPricing();
+    case "competition": return renderRichCompetition();
+    case "sales_pitch": return renderRichSalesPitch();
+    case "sales_enablement": return renderRichSalesEnablement();
+    default: return null;
+  }
+}
+
+function renderRichICP() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">🎯 Tier別 ターゲット戦略（3カラム）— アルバイト・パート多い業態軸</div>
+      <div class="tier-grid">
+        <div class="tier-card hero">
+          <div class="badge">★★★ 最優先</div>
+          <div class="label">TIER ① コア</div>
+          <h4>アルバイト・パート多い店舗事業者</h4>
+          <div class="companies">飲食（鳥貴族・くら寿司・PRONTO・モンテローザ）<br>小売（しまむら・ミニストップ・コメリ）<br>サービス（カラオケBanBan・りらく・てもみん）</div>
+          <div class="strategy">人材不足危機（業界115万人不足）を背景に採用・定着・自社割DXで訴求</div>
+        </div>
+        <div class="tier-card tier1">
+          <div class="badge">クロスセル</div>
+          <div class="label">TIER ② 準コア</div>
+          <h4>カンリー店舗集客既存顧客</h4>
+          <div class="companies">514社（26/1時点）／ 13万店舗の利用企業<br>本体導入済からのアップセル先</div>
+          <div class="strategy">4Q ENP/MID合流で本体営業20名連携を加速／成約獲得が4Q重点</div>
+        </div>
+        <div class="tier-card">
+          <div class="badge">代理店経由</div>
+          <div class="label">TIER ③ ターゲット</div>
+          <h4>SMB（1-9店舗）</h4>
+          <div class="companies">販売代理店プラン経由（応相談）</div>
+          <div class="strategy">SMB事業（丸投げ集客）と連動／代理店経由で取り扱い</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">👥 バイヤーペルソナ 4種（2×2グリッド）</div>
+      <div class="persona-grid">
+        <div class="persona t3">
+          <div class="persona-head">
+            <span class="tier-tag">T1 エンプラ</span>
+            <span class="role">意思決定者</span>
+            <span class="name">人事部長／労務担当（40-55）</span>
+          </div>
+          <div class="persona-body">
+            <div class="row">飲食／小売／サービス業 / 100店舗超 / アルバイト・パート定着率責任</div>
+            <div class="row"><b>Challenge:</b> 採用コスト膨張／離職率／福利厚生制度の差別化／自社割の運用負荷</div>
+            <div class="msg">「店舗特化型福利厚生＋自社割DX。アプリ＋地図検索で従業員利用率を引き上げ」</div>
+          </div>
+        </div>
+        <div class="persona t3">
+          <div class="persona-head">
+            <span class="tier-tag">T1 エンプラ</span>
+            <span class="role">チャンピオン</span>
+            <span class="name">店舗運営責任者（35-45）</span>
+          </div>
+          <div class="persona-body">
+            <div class="row">店舗マネジメント／自社割運用／福利厚生現場担当</div>
+            <div class="row"><b>Challenge:</b> 紙/Excelの自社割運用負荷／店舗ごとの管理バラつき／従業員からの不満</div>
+            <div class="msg">「自社割DXで運用工数削減＋カンリー13万店舗ネットワークから割引率の高い優待を独自仕入」</div>
+          </div>
+        </div>
+        <div class="persona t1">
+          <div class="persona-head">
+            <span class="tier-tag">T2 クロスセル</span>
+            <span class="role">既存窓口</span>
+            <span class="name">カンリー店舗集客 担当者（30-50）</span>
+          </div>
+          <div class="persona-body">
+            <div class="row">既にMEO/GBP一括管理SaaSを利用中／福利厚生はベネ・ワン等を別契約</div>
+            <div class="row"><b>Challenge:</b> 福利厚生制度の差別化／カンリー連携での割引提供メリット未認知</div>
+            <div class="msg">「カンリー店舗集客顧客同士の相互送客プラットフォーム。優待提供側になることで来店促進も二重便益」</div>
+          </div>
+        </div>
+        <div class="persona t2">
+          <div class="persona-head">
+            <span class="tier-tag">既存ネットワーク</span>
+            <span class="role">経営層</span>
+            <span class="name">店舗オーナー／経営層（45-65）</span>
+          </div>
+          <div class="persona-body">
+            <div class="row">モトヤフーズ・J-Connect・OWN・CHINTAI・GOSSO等 / バルクアポ獲得実績済</div>
+            <div class="row"><b>Challenge:</b> アルバイト・パート定着／業界横断の人材獲得競争／福利厚生コスト</div>
+            <div class="msg">「業界仲間でコミュニティ割。横山さん中心に既存ネットワーク経由で着実に商談創出」</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <a class="external-link" href="Canly_StoreMarketing_GTM_Audit_Living_v0.1.html" target="_blank">▶ 親GTM-A（店舗集客事業）のICPで上位カテゴリの全体像を確認</a>
+    </div>
+  `;
+}
+
+function renderRichProblem() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">⚠️ 店舗事業者特有の3大ペイン</div>
+      <div class="narrative-legend">
+        <div class="narr-box" style="border-left-color: var(--red); background: #FFF4F0;">
+          <h4 style="color: var(--red);">課題A: アルバイト・パートの採用・定着</h4>
+          <p>店舗産業の人材不足危機（サービス業115万人不足）。離職率増・採用コスト膨張で店舗運営に直結する経営課題。</p>
+        </div>
+        <div class="narr-box" style="border-left-color: var(--red); background: #FFF4F0;">
+          <h4 style="color: var(--red);">課題B: 自社割の運用負荷</h4>
+          <p>店舗事業者特有の『自社割』が紙／Excel／POS連動で運用される現場。管理工数大・店舗ごとのバラつき・従業員不満の温床。</p>
+        </div>
+        <div class="narr-box" style="border-left-color: var(--red); background: #FFF4F0;">
+          <h4 style="color: var(--red);">課題C: 福利厚生制度の差別化ニーズ</h4>
+          <p>大手汎用福利厚生（ベネ・ワン等）は全業種共通優待で、店舗事業者にとって魅力の薄い優待が多い。差別化策が必要。</p>
+        </div>
+      </div>
+    </div>
+    <div class="rich-section">
+      <div class="rich-section-title">✅ 提供するソリューション（カンリー独自構造）</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>解A: アプリ × 地図検索の高利用率</h4>
+          <p>位置情報×地図検索の使いやすさで従業員のアプリ起動率を引き上げ。利用率が低いと福利厚生は意味がないという本質課題に応える。</p>
+        </div>
+        <div class="narr-box gold">
+          <h4>解B: 13万店舗ネットワーク独自仕入</h4>
+          <p>カンリー店舗集客導入企業（13万店舗）から割引率の高い特別優待を独自仕入。他福利厚生サービスが真似できない構造優位。</p>
+        </div>
+        <div class="narr-box gold">
+          <h4>解C: 自社割DX</h4>
+          <p>店舗事業者特有の自社割をDX化＋利用促進。紙/Excel運用からの脱却＋利用率向上で新たな収益源創出。</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderRichPositioning() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">🔗 親GTM-A カテゴリーの中での位置付け</div>
+      <div class="parent-ref-box">
+        <b>📎 親GTM-A の最上位カテゴリ</b>：『エージェンティックコマース ＝ カンリー（来店型 × マルチチャネル横断）』<br>
+        <b>📎 その中で福利厚生の役割</b>：『来店促進 × 従業員ロイヤリティ』軸として、カンリー13万店舗ネットワークを相互送客プラットフォームに昇華
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">🎯 ポジショニング3層構造（カテゴリー → ビジョン → ポジショニング・メッセージング）</div>
+      <div class="category-layers">
+        <div class="layer-row category">
+          <span class="lname">カテゴリー</span>
+          <span class="ltext">店舗特化型の福利厚生＋自社割DXメディア（独自カテゴリ）</span>
+        </div>
+        <div class="layer-row vision">
+          <span class="lname">ビジョン</span>
+          <span class="ltext">カンリー13万店舗ネットワークを福利厚生×相互送客プラットフォームに昇華</span>
+        </div>
+        <div class="layer-row positioning">
+          <span class="lname">ポジショニング</span>
+          <span class="ltext">アプリ＋地図検索の高利用率 × 独自仕入の特別優待 × 自社割DX</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">📣 4ナラティブ案</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>A案: 店舗特化型福利厚生 — 独自カテゴリ宣言</h4>
+          <p>一般福利厚生（ベネ・ワン／リロクラブ）とは別軸。アルバイト・パート多い店舗事業者特化＋自社割DXで独自ポジ。</p>
+          <div class="ag">強い相手: 飲食／小売／サービス業の人事部長・店舗運営責任者</div>
+        </div>
+        <div class="narr-box">
+          <h4>B案: 13万店舗ネットワーク — 相互送客プラットフォーム</h4>
+          <p>カンリー店舗集客導入企業から独自仕入の特別優待。13万店舗ネットワーク発の構造優位は他社が真似できない。</p>
+          <div class="ag">強い相手: カンリー店舗集客既存顧客（クロスセル）</div>
+        </div>
+        <div class="narr-box">
+          <h4>C案: 自社割DX — 紙/Excel運用からの脱却</h4>
+          <p>店舗事業者特有の自社割を紙/Excelで運用している現場のDX訴求。アプリ＋地図検索で従業員利用率を引き上げ。</p>
+          <div class="ag">強い相手: 自社割を内製運用中の店舗チェーン</div>
+        </div>
+        <div class="narr-box green">
+          <h4>D案: 来店促進 × 福利厚生の二重便益</h4>
+          <p>福利厚生（従業員受益）＋来店促進（カンリー店舗集客顧客の集客）の二面構造で、優待提供側にもメリット。</p>
+          <div class="ag">強い相手: アライアンス先・カンリー本体クロスセル先</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">⚠️ 4Q ENP/MID合流後のポジ再整理が必要</div>
+      <div class="parent-ref-box">
+        4Q組織変更で<b>福利厚生マーケットプレイス事業部 → ENP/MIDユニット合流</b>（TAM拡大目的）。本体営業20名が福利厚生も売る体制に移行する中で、カテゴリー・ビジョン・ポジショニングの3層を本体ナラティブと整合させる必要あり。次回 林事業部長×藤林さん×宮本で再整理推奨。
+      </div>
+    </div>
+  `;
+}
+
+function renderRichPricing() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">💰 福利厚生プライシング — 従量課金（400円/人〜）</div>
+      <div class="roi-formula">
+        <div class="ftitle">PRICING STRUCTURE</div>
+        <div class="fstep">基本: <b>400円/人/月〜</b>（利用社員ベース従量課金）</div>
+        <div class="fstep"><span class="arr">→</span> 直販プラン（EP/MID/SMB） / 販売代理店プラン（SMB）</div>
+        <div class="fstep"><span class="arr">→</span> 追加オプション（デジタルチケット系バルク） / 追加ポイント（準備中）</div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">⚔️ 競合価格との比較</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>vs ベネフィット・ワン／リロクラブ</h4>
+          <p>大手汎用福利厚生より安価帯。独自仕入の特別優待＋自社割DXで価値訴求。店舗特化型として独自カテゴリでプライシング正当性を確保。</p>
+        </div>
+        <div class="narr-box">
+          <h4>vs 福利厚生倶楽部</h4>
+          <p>中小汎用と価格帯は近いが、店舗事業者特化＋自社割DX＋相互送客の3軸便益で差別化。</p>
+        </div>
+        <div class="narr-box">
+          <h4>vs 自社割内製運用（紙/Excel）</h4>
+          <p>運用工数削減＋外部優待追加の二重価値で従業員1人400円〜は十分に正当化される。ROI比較資料を4Qで作成（バトルカード連動）。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">🔧 4Q検討論点</div>
+      <div class="narr-box" style="border-left-color: var(--orange); background: var(--orange-bg);">
+        <h4 style="color: var(--orange);">バルク売りプライシング設計</h4>
+        <p>8P3Qで『福利厚生のバルク売り、リニューアル移行』を実施。バルクアポ獲得（CHINTAI／モトヤフーズ／OWN等）から成約に変換するためのバルク向け価格パッケージを4Qで標準化。林事業部長×ENP/MID 合流後の本体営業向けに分かりやすいパッケージング必要。</p>
+      </div>
+    </div>
+  `;
+}
+
+function renderRichCompetition() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">🏆 福利厚生領域 競合マップ（店舗特化×自社割DXは独自ポジ）</div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th style="width:18%;">競合</th>
+            <th style="width:28%;">ポジション</th>
+            <th style="width:14%;">店舗特化度</th>
+            <th>弱点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="cname">カンリー福利厚生（自社）</td>
+            <td>店舗事業者特化＋自社割DX＋カンリー13万店舗ネットワーク</td>
+            <td><span style="color:#1B5E20;font-weight:700">✓ 店舗業界特化</span></td>
+            <td class="weak">大手福利厚生サービスより認知低い／属人化中</td>
+          </tr>
+          <tr>
+            <td class="cname">ベネフィット・ワン</td>
+            <td>大手汎用福利厚生／全業種対応／会員数業界最大</td>
+            <td><span style="color:#C62828;font-weight:700">汎用</span></td>
+            <td class="weak">店舗事業者特化機能なし／自社割DX非対応／優待は全業種共通</td>
+          </tr>
+          <tr>
+            <td class="cname">リロクラブ（リロ・ホールディング）</td>
+            <td>大手汎用福利厚生／会員数2位／優待提携多数</td>
+            <td><span style="color:#C62828;font-weight:700">汎用</span></td>
+            <td class="weak">店舗事業者特化機能なし／自社割運用は別契約</td>
+          </tr>
+          <tr>
+            <td class="cname">福利厚生倶楽部</td>
+            <td>中小企業向け／低価格帯</td>
+            <td><span style="color:#C62828;font-weight:700">汎用</span></td>
+            <td class="weak">店舗事業者特化機能なし／優待バリエーション中規模</td>
+          </tr>
+          <tr>
+            <td class="cname">店舗自社割の内製運用</td>
+            <td>紙／Excel／POS連動／個別開発</td>
+            <td>—</td>
+            <td class="weak">運用負荷大／DX未着手／従業員利用率低</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">⚔️ 競合別 撃ち返しメッセージ</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>vs ベネ・ワン／リロクラブ（大手汎用）</h4>
+          <p>「大手は全業種対応で店舗事業者特化機能はない。カンリーは『店舗特化型福利厚生＋自社割DX』の独自カテゴリ。カンリー13万店舗ネットワーク発の独自仕入優待は他社が真似できない構造優位」</p>
+        </div>
+        <div class="narr-box">
+          <h4>vs 福利厚生倶楽部（中小汎用）</h4>
+          <p>「中小汎用も店舗事業者特化なし。アルバイト・パート定着率向上＋自社割DXの2大効果で差別化」</p>
+        </div>
+        <div class="narr-box">
+          <h4>vs 自社割の内製運用</h4>
+          <p>「紙/Excel運用は工数大・DX未着手。アプリ＋地図検索で従業員利用率を引き上げ、自社割DXで運用工数削減＋外部優待も追加」</p>
+        </div>
+        <div class="narr-box green">
+          <h4>vs 福利厚生制度なし（潜在市場）</h4>
+          <p>「人材不足危機（サービス業115万人不足）の中で、店舗事業者特化＝採用・定着・自社割DXの3軸便益を訴求。4Q ENP/MID合流で本体営業20名が一斉に推進」</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">📌 4Q追跡項目</div>
+      <div class="narr-box" style="border-left-color: var(--orange); background: var(--orange-bg);">
+        <h4 style="color: var(--orange);">大手汎用福利厚生サービスの店舗事業者特化セグメント進出を警戒</h4>
+        <p>将来脅威：ベネ・ワン等大手が店舗事業者特化機能を後追い実装する可能性。カンリー13万店舗の独自仕入ルートが模倣可能か注視。4Q ENP/MID合流で本体顧客クロスセル動線を強化し、参入障壁を高める。</p>
+      </div>
+    </div>
+  `;
+}
+
+function renderRichSalesPitch() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">🎯 福利厚生 統合ピッチ（HOOK → SOLUTION → CLOSE）</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>HOOK（質問形式のサウンドバイト）</h4>
+          <p>「アルバイト・パートの定着率に効く福利厚生、貴社の現場に本当に届いていますか？」<br>（業界の人材不足危機115万人不足を背景に、利用率の低い福利厚生は意味がない）</p>
+        </div>
+        <div class="narr-box">
+          <h4>SOLUTION</h4>
+          <p>「カンリー福利厚生は『店舗特化型福利厚生＋自社割DXメディア』の独自カテゴリ。アプリ＋地図検索の高利用率／カンリー13万店舗ネットワークから独自仕入の特別優待／自社割DXの3軸便益。一般福利厚生（ベネ・ワン等）は全業種共通で店舗特化機能なし」</p>
+        </div>
+        <div class="narr-box green">
+          <h4>CLOSE</h4>
+          <p>「（カンリー店舗集客既存顧客）優待提供側になることで来店促進も得られる二重便益／（自社割内製企業）紙/Excel運用からの脱却＋外部優待追加／（人事課題抱える経営層）400円/人〜の低価格帯で定着率向上を実証」</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">📈 8P3Q実績（横山さん中心の既存ネットワーク活用）</div>
+      <div class="roi-formula">
+        <div class="ftitle">OUTCOME（商談創出フェーズ）</div>
+        <div class="fstep">バルクアポ獲得: <b>CHINTAI / モトヤフーズ / J-Connect / OWN / GOSSO</b></div>
+        <div class="fstep"><span class="arr">→</span> 8P3Q時点: 商談は創出済 / 成約はまだ</div>
+        <div class="fstep"><span class="arr">→</span> 4Q方針: 林さん以外からの成約獲得をテーマに / 形にする</div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">⚠️ 4Q ENP/MID 合流後のピッチ標準化</div>
+      <div class="narr-box" style="border-left-color: var(--orange); background: var(--orange-bg);">
+        <h4 style="color: var(--orange);">本体営業20名へのピッチ研修</h4>
+        <p>福利厚生マーケットプレイス事業部のENP/MIDユニット合流に合わせ、本体営業20名向けに福利厚生ピッチを標準化。林事業部長＋横山さんの商談ナレッジを RAG 基盤（親GTM-A連動）に統合し、属人化解消＆ピッチ標準化を同時達成。</p>
+      </div>
+    </div>
+  `;
+}
+
+function renderRichSalesEnablement() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">📚 営業資材インベントリ（林事業部長＋横山さん属人化中）</div>
+      <div class="leaf-grid">
+        <div class="leaf-mini hero">
+          <div class="pri">★ 既存</div>
+          <div class="lname">提案資料（20250909V）</div>
+          <div class="core">『ご検討企業様宛』カンリー福利厚生ご提案資料（網羅マスタ版あり）</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">既存</div>
+          <div class="lname">01_利用汎用資料 / 07_アライアンス資料</div>
+          <div class="core">既存パッケージ／Miroボード（共通）あり</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">既存</div>
+          <div class="lname">申込書・契約書・規約</div>
+          <div class="core">直販／代理店／追加クーポン／追加ポイント各種</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">4Q要作成</div>
+          <div class="lname">バトルカード（vs ベネ・ワン／リロクラブ／自社割内製）</div>
+          <div class="core">店舗特化＋自社割DXの独自ポジで撃ち返し</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">4Q要作成</div>
+          <div class="lname">成約事例（8P3Q時点 商談創出済・成約不足）</div>
+          <div class="core">CHINTAI／モトヤフーズ／J-Connect／OWN／GOSSO等 商談中案件の成約完了 → 事例化</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">4Q要作成</div>
+          <div class="lname">本体営業20名向けピッチ標準化</div>
+          <div class="core">4Q ENP/MID合流に合わせ、林・横山以外からの成約獲得を仕組み化</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">⚠️ 4Q ENP/MID合流後の展開ステップ</div>
+      <div class="narrative-legend">
+        <div class="narr-box red">
+          <h4>Step 1：本体営業20名への研修（4Q前半）</h4>
+          <p>4Q組織変更で福利厚生マーケットプレイス事業部がENP/MIDユニットに合流。本体営業20名向けに福利厚生ピッチを研修。林事業部長×横山さんによる商談ナレッジを伝授</p>
+        </div>
+        <div class="narr-box">
+          <h4>Step 2：成約獲得（4Q中盤）</h4>
+          <p>商談は8P3Q時点で創出できているが『成約』はまだ。4Q方針：林さん以外からの成約獲得をテーマに。CHINTAI／GOSSOコミュニティ割等のバルクアポを成約に変換</p>
+        </div>
+        <div class="narr-box green">
+          <h4>Step 3：本体クロスセル動線確立（4Q末）</h4>
+          <p>カンリー店舗集客既存顧客（514社）への福利厚生クロスセル動線を仕組み化。本体営業20名が福利厚生も標準的に提案できる状態に</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">📌 営業資料の RAG 基盤統合（4Q検討）</div>
+      <div class="narr-box" style="border-left-color: var(--orange); background: var(--orange-bg);">
+        <h4 style="color: var(--orange);">親GTM-A の RAG 基盤への福利厚生資料統合</h4>
+        <p>親GTM-A（店舗集客事業）の RAG 基盤×Notebook LM×Gemini を福利厚生にも拡張。本体営業20名が福利厚生もRAGから引き出せる状態にすることで属人化解消＆ピッチ標準化。4Q ENP/MID 合流の最大シナジー候補。</p>
+      </div>
+    </div>
+  `;
+}
+
+/* ============ PMA Q&A RENDERER ============ */
+function renderPMAQuestions(cat) {
+  if (!cat.pmaQuestions) return '';
+  const pma = cat.pmaQuestions;
+
+  // 統計
+  let cnt = { answered: 0, partial: 0, no_data: 0, total: 0 };
+  pma.groups.forEach(g => g.questions.forEach(q => {
+    cnt[q.status]++; cnt.total++;
+  }));
+  const pct = (n) => cnt.total ? Math.round(n / cnt.total * 100) : 0;
+
+  const icon = s => ({ answered: '✅', partial: '🟡', no_data: '❌' }[s] || '⚪');
+  const slabel = s => ({ answered: '回答済', partial: '部分回答', no_data: '未回答' }[s] || s);
+
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">📋 Questions × CaseMatchの答え（${cnt.total}問）</div>
+
+      <div class="qna-summary-bar">
+        <span class="qna-stat a">✅ 回答済 ${cnt.answered} / ${cnt.total} (${pct(cnt.answered)}%)</span>
+        <span class="qna-stat p">🟡 部分回答 ${cnt.partial} (${pct(cnt.partial)}%)</span>
+        <span class="qna-stat n">❌ 未回答 ${cnt.no_data} (${pct(cnt.no_data)}%)</span>
+      </div>
+
+      <div class="pma-methods">
+        <b>調査メソッド:</b> ${pma.methods}
+      </div>
+
+      ${pma.groups.map(g => `
+        <div class="pma-block">
+          <div class="pma-group-name">
+            <span class="gtag">${g.name}</span>
+            <span>(${g.questions.length}問)</span>
+          </div>
+          <div class="qna-list">
+            ${g.questions.map(q => `
+              <div class="qna-item ${q.status}" onclick="this.classList.toggle('open')">
+                <div class="qrow">
+                  <span class="qicon">${icon(q.status)}</span>
+                  <span class="qtext">${q.q}</span>
+                </div>
+                <div class="arow"><b>[${slabel(q.status)}] CaseMatch:</b> ${q.answer}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+/* ============ RENDER ============ */
+const detailContainer = document.getElementById('detailContainer');
+
+function statusLabel(s) {
+  return { confirmed: '🟢 確定', progress: '🟠 進行中', pending: '⚪ 未着手' }[s] || s;
+}
+
+function renderCoverList() {
+  const fnd = document.getElementById('foundationList');
+  const exc = document.getElementById('executionList');
+  gtmAudit.categories.filter(c => c.group === 'foundation').forEach(c => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="li-num">${parseInt(c.num)}.</span><span class="li-text">${c.name}</span><span class="li-status ${c.status}"></span><span class="li-ver">${c.current.version}</span>`;
+    li.addEventListener('click', () => openDetail(c.id));
+    fnd.appendChild(li);
+  });
+  gtmAudit.categories.filter(c => c.group === 'execution').forEach(c => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="li-num">${parseInt(c.num)}.</span><span class="li-text">${c.name}</span><span class="li-status ${c.status}"></span><span class="li-ver">${c.current.version}</span>`;
+    li.addEventListener('click', () => openDetail(c.id));
+    exc.appendChild(li);
+  });
+  const cross = gtmAudit.categories.find(c => c.group === 'cross');
+  const ci = document.getElementById('crossItem');
+  ci.innerHTML = `<span class="li-num">10.</span><span class="li-text">${cross.name}</span><span class="li-status ${cross.status}"></span><span class="li-ver">${cross.current.version}</span>`;
+  ci.addEventListener('click', () => openDetail(cross.id));
+}
+
+function renderTiles() {
+  const groups = { foundation: 'foundationTiles', execution: 'executionTiles', cross: 'crossTiles' };
+  Object.entries(groups).forEach(([g, containerId]) => {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    gtmAudit.categories.filter(c => c.group === g).forEach(cat => {
+      const tile = document.createElement('div');
+      tile.className = `tile ${cat.status}`;
+      tile.innerHTML = `
+        <div class="head">
+          <div class="num">${cat.num}. ${cat.group.toUpperCase()}</div>
+          <span class="ver">${cat.current.version}</span>
+        </div>
+        <h3>${cat.name}</h3>
+        <div class="summary">${cat.summary}</div>
+        <div class="footer-meta">
+          <span>${statusLabel(cat.status)}</span>
+          <span>履歴 <span class="hcount">${cat.history.length}</span> 件 ・ ${cat.current.date}</span>
+        </div>
+      `;
+      tile.addEventListener('click', () => openDetail(cat.id));
+      container.appendChild(tile);
+    });
+  });
+}
+
+function renderDiff(diff) {
+  if (!diff || diff.length === 0) return '<div class="diff-unchanged">差分データなし（初版）</div>';
+  return diff.map(d => {
+    const cls = d.type === 'add' ? 'diff-add' : d.type === 'del' ? 'diff-del' : 'diff-unchanged';
+    return `<div class="${cls}">${d.text}</div>`;
+  }).join('');
+}
+
+function openDetail(id) {
+  let section = document.getElementById(`detail-${id}`);
+  if (section) {
+    section.classList.add('active');
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  const cat = gtmAudit.categories.find(c => c.id === id);
+  if (!cat) return;
+
+  section = document.createElement('section');
+  section.className = `detail-section active ${cat.status}`;
+  section.id = `detail-${id}`;
+
+  const timelineNodes = [...cat.history, { version: cat.current.version, date: cat.current.date, isCurrent: true }];
+  const richHTMLBase = renderRichView(cat) || '';
+  const pmaHTML = renderPMAQuestions(cat);
+  const richHTML = richHTMLBase + pmaHTML;
+
+  section.innerHTML = `
+    <div class="detail-head">
+      <div class="title-block">
+        <div class="num">ELEMENT ${cat.num} / ${cat.group.toUpperCase()} / ${statusLabel(cat.status)}</div>
+        <h2>${cat.name}</h2>
+      </div>
+      <button class="close-btn" onclick="document.getElementById('detail-${id}').classList.remove('active')">閉じる ×</button>
+    </div>
+
+    <div class="current-card">
+      <span class="badge">CURRENT — ${cat.current.version}</span>
+      <div class="ver-info">
+        <span>📅 <b>${cat.current.date}</b></span>
+        <span>📍 <b>${cat.current.source}</b></span>
+      </div>
+      <div class="title-text">${cat.current.title}</div>
+      <div class="statement">${cat.current.statement}</div>
+    </div>
+
+    ${richHTML ? `
+    <div class="rich-wrap">
+      <button class="rich-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
+        <span>📂 リッチ詳細＋Q&A を見る — 構造化ビュー / 質問への回答</span>
+        <span class="arrow">▶</span>
+      </button>
+      <div class="rich-content">
+        ${richHTML}
+      </div>
+    </div>` : ''}
+
+    ${cat.history.length > 0 ? `
+    <div class="timeline-wrap">
+      <div class="label">⏱ Timeline — クリックで該当バージョンへジャンプ</div>
+      <div class="timeline">
+        ${timelineNodes.map(n => `
+          <div class="node ${n.isCurrent ? 'current' : ''}" data-ver="${n.version}">
+            <div class="circle"></div>
+            <div class="ver">${n.version}</div>
+            <div class="date">${n.date}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="history-wrap">
+      <div class="label">📜 History — ${cat.history.length}件 / 古い順</div>
+      <div class="history-list">
+        ${cat.history.map(h => `
+          <div class="history-item" data-ver="${h.version}">
+            <div class="history-summary">
+              <div class="left">
+                <span class="ver-tag">${h.version}</span>
+                <span class="date-tag">${h.date}</span>
+                <span class="title-text">${h.title}</span>
+              </div>
+              <span class="toggle">▶</span>
+            </div>
+            <div class="history-detail">
+              <div class="history-block"><div class="blabel">📝 確定文（当時）</div><div class="btext">${h.statement || '—'}</div></div>
+              <div class="history-block trigger"><div class="blabel">⚡ Trigger</div><div class="btext">${h.trigger || '—'}</div></div>
+              <div class="history-block"><div class="blabel">🔀 Diff（直前との差分）</div><div class="diff-block">${renderDiff(h.diff)}</div></div>
+              <div class="history-block why"><div class="blabel">💡 なぜ変えたか</div><div class="btext">${h.why_changed || '—'}</div></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    ` : `<div class="placeholder-note">${cat.status === 'pending' ? '<b>未着手要素</b> — 履歴データなし。今後蓄積予定。' : '履歴データなし — このバージョンが初版'}</div>`}
+  `;
+
+  detailContainer.appendChild(section);
+  section.querySelectorAll('.history-summary').forEach(s => {
+    s.addEventListener('click', () => s.parentElement.classList.toggle('open'));
+  });
+  section.querySelectorAll('.timeline .node').forEach(n => {
+    n.addEventListener('click', () => {
+      const ver = n.dataset.ver;
+      const item = section.querySelector(`.history-item[data-ver="${ver}"]`);
+      if (item) { item.classList.add('open'); item.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    });
+  });
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+renderCoverList();
+renderTiles();
+</script>
+</body>
+</html>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>カンリー キックオフMTG マスター議事録 2026-05-24</title>
+<style>
+  :root {
+    --navy: #1B3A6B;
+    --dark: #1A1A2E;
+    --light-bg: #F5F5F5;
+    --footer: #6B7280;
+    --green: #1B5E20;
+    --blue: #1565C0;
+    --teal: #00796B;
+    --red: #C62828;
+    --orange: #EF6C00;
+    --accent: #1976D2;
+    --light-subtitle: #C9D8EF;
+    --border: #E5E7EB;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Calibri", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+    color: var(--dark);
+    background: #FAFAFA;
+    margin: 0;
+    padding: 32px 0;
+    line-height: 1.6;
+    font-size: 14px;
+  }
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  header.title-strip {
+    background: var(--navy);
+    color: #FFFFFF;
+    padding: 36px 40px 28px;
+    border-left: 8px solid var(--accent);
+  }
+  header.title-strip h1 {
+    font-family: "Calibri Light", "Calibri", sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    margin: 0 0 6px;
+    letter-spacing: 0.5px;
+  }
+  header.title-strip .sub {
+    color: var(--light-subtitle);
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+  header.title-strip .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px 24px;
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--light-subtitle);
+  }
+  header.title-strip .meta-grid b { color: #FFFFFF; font-size: 13px; display: block; }
+  section { padding: 28px 40px; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  h2.section-title {
+    font-family: "Calibri Light", "Calibri", sans-serif;
+    font-size: 22px;
+    color: var(--navy);
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h2.section-title .badge {
+    display: inline-block;
+    background: var(--navy);
+    color: #FFFFFF;
+    font-family: "Calibri", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+  h2.section-title .h2-sub {
+    font-size: 13px;
+    color: var(--footer);
+    font-weight: 400;
+    margin-left: 8px;
+  }
+  .lead {
+    color: var(--footer);
+    font-size: 13px;
+    margin: 4px 0 18px;
+  }
+  h3.sub {
+    font-size: 15px;
+    color: var(--navy);
+    margin: 22px 0 8px;
+    border-left: 4px solid var(--accent);
+    padding-left: 10px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 4px;
+    font-size: 12.5px;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--navy);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  tr:nth-child(even) td { background: var(--light-bg); }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .pill.scope-in   { background: var(--green); }
+  .pill.scope-sub  { background: var(--blue); }
+  .pill.scope-out  { background: var(--footer); }
+  .pill.risk-red   { background: var(--red); }
+  .pill.risk-amber { background: var(--orange); }
+  .pill.risk-green { background: var(--green); }
+  .pill.new        { background: var(--accent); }
+  ul.tight { margin: 6px 0 10px; padding-left: 22px; }
+  ul.tight li { margin-bottom: 4px; }
+  /* プロダクトツリー */
+  .tree { background: #FAFBFD; border: 1px solid var(--border); border-radius: 6px; padding: 18px 22px; font-size: 13px; }
+  .tree .root { font-weight: 700; color: var(--navy); font-size: 16px; }
+  .tree .lv1 { margin: 14px 0 4px 0; padding-left: 18px; border-left: 3px solid var(--navy); }
+  .tree .lv1-title { font-weight: 700; color: var(--navy); font-size: 14px; }
+  .tree .lv2 { margin: 4px 0 4px 18px; padding-left: 14px; border-left: 2px dashed #B6C5DE; }
+  .tree .lv2-title { font-weight: 700; color: var(--dark); }
+  .tree .meta { color: var(--footer); font-size: 11.5px; }
+  /* 注釈ボックス */
+  .callout {
+    background: #FFF4E6;
+    border-left: 4px solid var(--orange);
+    padding: 12px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin: 10px 0;
+  }
+  .callout.red { background: #FDECEC; border-color: var(--red); }
+  .callout.blue { background: #EAF2FC; border-color: var(--accent); }
+  .callout.green { background: #E7F4E9; border-color: var(--green); }
+  .placeholder {
+    border: 1.5px dashed #B6C5DE;
+    background: #F5F8FC;
+    color: var(--footer);
+    padding: 14px 18px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    text-align: center;
+    font-style: italic;
+  }
+  footer {
+    padding: 20px 40px;
+    background: var(--light-bg);
+    color: var(--footer);
+    font-size: 11px;
+    text-align: center;
+  }
+  .changelog { font-size: 12px; color: var(--footer); }
+  .changelog code { background: var(--light-bg); padding: 1px 5px; border-radius: 3px; font-family: "SF Mono", monospace; font-size: 11px; }
+  /* 干渉マトリクス用 */
+  table.matrix th:first-child { width: 16%; background: var(--navy); }
+  table.matrix td:first-child { background: var(--navy); color: #FFFFFF; font-weight: 700; }
+  table.matrix th { font-size: 11px; }
+  table.matrix td { font-size: 11.5px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="title-strip">
+  <h1>カンリー キックオフMTG マスター議事録</h1>
+  <div class="sub">2026-05-24（土）藤林さん × 宮本 / 上段（カンリー全体）→ 管理本体 → 管理ローカル在庫の階層整理版</div>
+  <div class="meta-grid">
+    <div><b>日付</b>2026-05-24（土）</div>
+    <div><b>出席</b>藤林さん（カンリー）、宮本</div>
+    <div><b>形式</b>対面・音声録音→文字起こし反映</div>
+    <div><b>位置付け</b>5/20正式契約後の実質キックオフ／全プロダクトPMMスコープ化MTG</div>
+    <div><b>前回</b>2026-04-15 藤林さんdinner（ローカル在庫単体スコープ）</div>
+    <div><b>次回</b>2026-05-29（木）18:00–18:30 オンライン</div>
+    <div><b>ステータス</b>v0.1（追加コンテンツ反映で随時更新）</div>
+    <div><b>主担当</b>宮本（全プロダクトPMM伴走）</div>
+  </div>
+</header>
+
+<!-- ========================= 1. 会社の賭けポイント ========================= -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 1</span>会社の賭けポイント（上段：経営意思決定レベル）<span class="h2-sub">PMM伴走の与件となる5項目</span></h2>
+  <p class="lead">プロダクト個別の整理に入る前に、カンリー全体としてどこに賭けているかを固定する。以下の5本柱が、本案件PMMの全意思決定の前提となる。</p>
+
+  <table>
+    <thead>
+      <tr><th style="width:18%">賭けポイント</th><th style="width:42%">内容</th><th style="width:24%">PMMへの含意</th><th style="width:16%">変更点</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>① Sierra（日本版）直行</td>
+        <td>代表決断で、エンプラ向けエージェンティックコマースのSierra日本版（仮称）に賭ける。6/1プレス予定、1社1億円規模で営業をかける、CEO直案件。BtoBエンプラのEC＋アプリ起点で売上コミット型（SI 5,000万級＋成果課金）を狙う。</td>
+        <td>カンリー全体のポジショニング上位概念が「店舗マーケ」から「エージェンティックコマース」にシフト。全プロダクトのナラティブをこの軸で再整理する必要。</td>
+        <td><span class="pill new">NEW</span> 4/15時点では未出現</td>
+      </tr>
+      <tr>
+        <td>② 中国インバウンド撤退</td>
+        <td>日中関係悪化で、当初計画していた中国インバウンド向け商材（バイドゥ等連携）は潰す方針。代替の売上構築が必要。</td>
+        <td>インバウンド系メッセージング・LP・営業資料は順次クローズ。代替売上の出所をエンプラ×Sierra系で埋める前提。</td>
+        <td><span class="pill new">NEW</span></td>
+      </tr>
+      <tr>
+        <td>③ 店舗ロールアップ</td>
+        <td>9期（2026年9月期以降）で店舗そのものを買収する戦略。個人投資家の成田氏（店舗経営）等と組み、買収先で全プロダクトを自社運用→事例化。PMI実績が強み。</td>
+        <td>「自社運用事例＝最強のケーススタディ」になりうる。ローカル在庫・店舗集客・Sierraの三点セット導入の旗艦事例として活用可能。</td>
+        <td><span class="pill new">NEW</span></td>
+      </tr>
+      <tr>
+        <td>④ シリーズD準備中</td>
+        <td>ファイナンス進行中、来期コミット必達がプレッシャー。投資家評価軸は「集客力UP」＋「カスタマーサクセスの泥臭さ」。</td>
+        <td>経営陣プレゼン（7月中）はシリーズD投資家向け資料との整合が必要。「集客→売上」と「PMI×店舗運営」の両ナラティブを支える。</td>
+        <td><span class="pill new">NEW</span></td>
+      </tr>
+      <tr>
+        <td>⑤ 9月期通過必達</td>
+        <td>来期9月以降を1年で通過させるための商材ベットを今期中に決める。MRR＋ショット売上の二本立てで作る。</td>
+        <td><b>7月中に経営陣プレゼン</b>が宮本側マイルストーン。商材ベット根拠＋GTM Initial Deckで提示する。</td>
+        <td><span class="pill new">NEW</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout blue">
+    <b>4/15藤林dinnerからの最大変化：</b>当時は「ローカル在庫で案C（公式ローカル在庫カテゴリ直行）」が最上位だった。今回は <b>その上に「エージェンティックコマース×Sierra」という会社全体カテゴリ</b>が乗り、ローカル在庫はその構成要素の1つに位置付けが変わった。案Cは継続だが、上位カテゴリとの整合を取る必要が出てきた。
+  </div>
+</section>
+
+<!-- ========================= 2. プロダクト構造マップ ========================= -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 2</span>プロダクト構造マップ（階層ツリー）<span class="h2-sub">カンリー全体 → 管理本体 → 個別プロダクト群</span></h2>
+  <p class="lead">プロダクトは「<b>管理（カンリー本体）</b>」ファミリーと「<b>Sierra</b>」「<b>福利厚生</b>」の3系統に大別。宮本PMMスコープは管理ファミリーのエンプラ系（10店舗以上）＋Sierra。福利厚生・SMB（B-Pers）は別組織のため対象外。</p>
+
+  <div class="tree">
+    <div class="root">株式会社カンリー（13万店舗エンプラ／既存営業20＋新規8＋CS数人）</div>
+
+    <div class="lv1">
+      <div class="lv1-title">A. 管理（本体プロダクトファミリー）— ARRの大半／エンプラ10店舗以上</div>
+      <div class="meta">対象顧客：チェーン小売／外食／HC／アパレル／スポーツ／アイウェア／ドラッグ等</div>
+
+      <div class="lv2">
+        <div class="lv2-title"><span class="pill scope-in">IN</span>A-1. 管理店舗集客（メイン商材）</div>
+        <div class="meta">MEO／GBP一括管理。<b>会社売上の約80%</b>を占める基盤プロダクト。競合100社規模の超レッドオーシャン。すべてのアップセル元。</div>
+      </div>
+      <div class="lv2">
+        <div class="lv2-title"><span class="pill scope-in">IN</span>A-2. 管理ローカル在庫（オプション・<u>今回ミッション中核</u>）</div>
+        <div class="meta">Google公式LFP Trusted Partner国内唯一認定。日本で運用できているのは2社のみの独占的ポジ。4/15dinner時点では単独スコープ、5/24以降は管理ファミリー横断で位置付け再構築。</div>
+      </div>
+      <div class="lv2">
+        <div class="lv2-title"><span class="pill scope-in">IN</span>A-3. 管理店舗検索ページ（オプション）</div>
+        <div class="meta">130社の大手導入実績（鳥貴族等）。LP4年放置→宮本側で切り替え着手。実績はあるがコンテンツ更新が止まっている代表例。</div>
+      </div>
+      <div class="lv2">
+        <div class="lv2-title"><span class="pill scope-in">IN</span>A-4. 管理ホームページ（オプション）</div>
+        <div class="meta">単体ARR約2億円規模。「いいサービスだが整理しきれていない」評。プロダクト整理＋メッセージング再構築の余地大。</div>
+      </div>
+      <div class="lv2">
+        <div class="lv2-title"><span class="pill scope-sub">SUB</span>A-5. 管理ローカル在庫（リカバリー＝子会社経由）</div>
+        <div class="meta">リカバリー社（子会社、EP相当）経由で提供。EP本体とほぼ同等扱いだが商流別。</div>
+      </div>
+      <div class="lv2">
+        <div class="lv2-title"><span class="pill scope-out">OUT</span>A-6. 管理SMB（B-Pers／1〜9店舗）</div>
+        <div class="meta">10店舗未満。商流・営業組織が別。宮本スコープ外。</div>
+      </div>
+    </div>
+
+    <div class="lv1">
+      <div class="lv1-title">B. Sierra（日本版）— 新規・カテゴリ違い</div>
+      <div class="meta">エンプラ向けエージェンティックコマース。EC＋アプリ起点の購買エージェント。CEO直案件、6/1プレス、1社1億規模、現役者と3名運営。Sierra本家（海外）の日本版を意識した戦略商材。</div>
+      <div class="lv2">
+        <div class="lv2-title"><span class="pill scope-in">IN</span>B-1. Sierra Japan（仮称）</div>
+        <div class="meta">サツドラ／カインズ／ノースフェイス／ギャップ等の大手リテール向け。SI 5,000万＋成果課金の二段構え予定。</div>
+      </div>
+    </div>
+
+    <div class="lv1">
+      <div class="lv1-title">C. 福利厚生</div>
+      <div class="meta">別組織・別担当（PDM＋事業責任者体制）。宮本スコープ外（少なくとも初期は）。</div>
+      <div class="lv2">
+        <div class="lv2-title"><span class="pill scope-out">OUT</span>C-1. 管理福利厚生</div>
+        <div class="meta">PMM未配置。組織として完全に分離。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <b>宮本PMMスコープ確定：</b>A-1 / A-2 / A-3 / A-4 / B-1 の5プロダクト（青ラベル）＋A-5サブ。マルチプロダクト横断のポジショニング・メッセージング・バトルカード・コンテンツ・GTM設計を一括で見る。
+  </div>
+</section>
+
+<!-- ========================= 3. プロダクト間の干渉範囲マトリクス ========================= -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 3</span>プロダクト間の干渉範囲マトリクス<span class="h2-sub">クロスセル動線 × 共通顧客 × ポジ被り × 競合 × 営業オーナー</span></h2>
+  <p class="lead">マルチプロダクト構造で<b>どこが噛み合い、どこが食い合うか</b>を1枚に。今回のキックオフで宮本スコープに入った5プロダクト＋Sierraの相互関係。</p>
+
+  <table class="matrix">
+    <thead>
+      <tr>
+        <th></th>
+        <th>A-1 店舗集客</th>
+        <th>A-2 ローカル在庫</th>
+        <th>A-3 店舗検索ページ</th>
+        <th>A-4 ホームページ</th>
+        <th>B-1 Sierra Japan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>A-1 店舗集客</td>
+        <td>—</td>
+        <td><b>親→子</b>のアップセル本流。LFP連携で価値増。</td>
+        <td><b>親→子</b>アップセル。MEOの自然な拡張。</td>
+        <td>共通顧客多／HP更新が集客効果に寄与。</td>
+        <td>店舗側データを活用する基盤として連動可。</td>
+      </tr>
+      <tr>
+        <td>A-2 ローカル在庫</td>
+        <td>親に依存</td>
+        <td>—</td>
+        <td>来店誘導の<b>最終出口</b>（在庫×店舗ページ）。</td>
+        <td>EC側商品データとHP側商品在庫の整合課題あり。</td>
+        <td><b>潜在被り：</b>「店頭在庫＝買える」をエージェント側でも提示すると価値が重なる。Sierra側にローカル在庫API供給で整合可能。</td>
+      </tr>
+      <tr>
+        <td>A-3 店舗検索ページ</td>
+        <td>親アップセル先</td>
+        <td>来店誘導の出口で相補</td>
+        <td>—</td>
+        <td>HPと役割重複の懸念（店舗検索を本体HPに統合しているケース）。</td>
+        <td>Sierraの「店舗誘導」アクションの着地先になりうる。</td>
+      </tr>
+      <tr>
+        <td>A-4 ホームページ</td>
+        <td>SEO/集客側面で連動</td>
+        <td>HP側商品在庫との整合課題</td>
+        <td>役割重複の懸念</td>
+        <td>—</td>
+        <td>HP上のFAQ／レコメンドを Sierra に置き換える未来あり（部分的競合）。</td>
+      </tr>
+      <tr>
+        <td>B-1 Sierra Japan</td>
+        <td>店舗データ供給で連動</td>
+        <td><b>要設計：</b>API連携 or 重複か</td>
+        <td>誘導先として相補</td>
+        <td>HP部分機能と将来重複</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">干渉から見えた論点（PMM側で握る必要）</h3>
+  <ul class="tight">
+    <li><b>論点α：</b>A-4ホームページとB-1 Sierraが「商品レコメンド／FAQ」領域で将来食い合う可能性。Sierraに寄せるならHP側機能を再定義、共存ならHP側のCMSにSierra埋込として位置付ける設計判断が必要。</li>
+    <li><b>論点β：</b>A-2ローカル在庫とB-1 Sierraの在庫データ単一ソース化。同じ店頭在庫データを別ルートで2回流すと顧客側オペ負荷で破綻する。<b>「カンリー店舗データ基盤」</b>として上位レイヤーを設計するアイデア。</li>
+    <li><b>論点γ：</b>A-3店舗検索ページとA-4ホームページの役割整理。エンプラ顧客には片方で十分なケース多。営業時点でどちらを推すかの判断軸が未整備（神田・木下と要相談）。</li>
+    <li><b>論点δ：</b>A-1店舗集客は競合100社のレッドオーシャン。<b>差別化はA-2〜A-4＋B-1の組合せ価値</b>でしか作れない。単体での競合勝率改善より、バンドル価値を「カンリー＝店舗運営インフラ」として打ち出す方が筋。</li>
+  </ul>
+</section>
+
+<!-- ========================= 4. 管理ローカル在庫の位置付け再構築 ========================= -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 4</span>管理ローカル在庫の位置付け再構築（今回ミッション中核）<span class="h2-sub">単体スコープ → 階層内座標へ</span></h2>
+  <p class="lead">4/15dinner時点では「ローカル在庫単体で案C＝公式ローカル在庫カテゴリ創出」が最上位だった。今回キックオフでカンリー全体スコープに広がったため、ローカル在庫を<b>「上位カテゴリ＝エージェンティックコマース」の中でどう位置付けるか</b>を再定義する。</p>
+
+  <table>
+    <thead>
+      <tr><th style="width:22%">論点</th><th style="width:39%">4/15 dinner時点</th><th style="width:39%">5/24 キックオフ後</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>上位カテゴリ</td>
+        <td>公式ローカル在庫（案C・直行）</td>
+        <td>エージェンティックコマース（カンリー全社） ⊃ 公式ローカル在庫（案C）</td>
+      </tr>
+      <tr>
+        <td>第一想起の取り方</td>
+        <td>「ローカル在庫といえばカンリー」</td>
+        <td>「エージェンティックコマース×小売といえばカンリー」＋「その入口にローカル在庫」</td>
+      </tr>
+      <tr>
+        <td>movへの差別化軸</td>
+        <td>LFP公式認定（独占期間の堅さ）</td>
+        <td>LFP認定＋エージェンティックコマース基盤（movは追従不可）</td>
+      </tr>
+      <tr>
+        <td>Google年1万店舗コミット</td>
+        <td>4ヶ月で3,000店舗（最優先KPI）</td>
+        <td>変わらず最優先KPI。Sierraの旗艦顧客から在庫導入でブースト可能</td>
+      </tr>
+      <tr>
+        <td>営業の言語化</td>
+        <td>藤林さん属人（🔴）</td>
+        <td>属人継続。<b>全プロダクト統合バトルカードで他セールスに移管</b>する必要</td>
+      </tr>
+      <tr>
+        <td>LP・コンテンツ</td>
+        <td>movに認知で押されぎみ</td>
+        <td>LP 4年放置の店舗検索ページとセット整備。ホワイトペーパー量産で巻き返し</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout blue">
+    <b>再構築の方向性（v0.1仮説）：</b>「ローカル在庫＝エージェンティックコマース時代の<b>最初の入口</b>」と位置付ける。Sierraの戦略大企業向けPOC（1社1億）から店舗在庫データ提供のニーズが必ず出るため、ローカル在庫を<b>Sierra連動のフロントエンド</b>として営業導線を組む。これによりmovが追従不可な競争優位を作る。
+  </div>
+</section>
+
+<!-- ========================= 5. 数字ファクト ========================= -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 5</span>数字ファクト<span class="h2-sub">経営・プロダクト・営業の主要数値</span></h2>
+  <table>
+    <thead><tr><th style="width:30%">領域</th><th style="width:70%">ファクト</th></tr></thead>
+    <tbody>
+      <tr><td>会社業績</td><td>26年8月期 FR（予算）約20億円規模（1本173の表現あり、要確認）／シリーズD準備中／9月期通過必達</td></tr>
+      <tr><td>顧客規模</td><td>エンプラ約13万店舗（10店舗以上）／既存営業20＋新規8＋CS数人で運営</td></tr>
+      <tr><td>A-1 店舗集客</td><td>会社売上の約80%／競合100社規模</td></tr>
+      <tr><td>A-2 ローカル在庫</td><td>Google年1万店舗コミット（4ヶ月で約3,000店舗達成済）／日本で運用可能2社のみ</td></tr>
+      <tr><td>A-3 店舗検索ページ</td><td>130社大手導入実績</td></tr>
+      <tr><td>A-4 ホームページ</td><td>単体ARR約2億円</td></tr>
+      <tr><td>B-1 Sierra Japan</td><td>1社1億規模で営業／SI 5,000万＋成果課金二段／6/1プレス予定</td></tr>
+      <tr><td>マーケ・コンテンツ</td><td>本体A-1側はSEO／資料DL／セミナーが回っている／A-2在庫側はほぼ未着手</td></tr>
+      <tr><td>株主構造</td><td>ジャフコ（メインVC）＋個人投資家＝店舗オーナー多数（成田氏／町田商店等）</td></tr>
+    </tbody>
+  </table>
+  <p class="lead">※業績数値（FR・1本表記）は文字起こしの音声誤変換が含まれる可能性あり。次回MTGで正確値を確認する。</p>
+</section>
+
+<!-- ========================= 6. 競合シフト ========================= -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 6</span>競合シフト（4/15 → 5/24）<span class="h2-sub">プロダクト別の競合構造変化</span></h2>
+  <table>
+    <thead><tr><th style="width:18%">プロダクト</th><th style="width:32%">主要競合</th><th style="width:25%">勝敗構造</th><th style="width:25%">5/24での新情報</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>A-1 店舗集客</td>
+        <td>100社規模の超レッドオーシャン</td>
+        <td>競合多数で個別勝敗ロジック未整備</td>
+        <td>「個別バトルカード作るより、A-2〜A-4＋B-1のバンドル価値で勝負」が筋（藤林・宮本合意）</td>
+      </tr>
+      <tr>
+        <td>A-2 ローカル在庫</td>
+        <td>株式会社mov（口コミコム）一社残り</td>
+        <td>原価優位＋LFP独占で<b>コンペになれば勝てる</b>／敗因はマーケ・認知</td>
+        <td><b>広告代理店は全員カンリーLFPを担ぐ契約に決着</b>（4/15時点で確認）／オンプレ・モブのみ残存</td>
+      </tr>
+      <tr>
+        <td>A-3 店舗検索ページ</td>
+        <td>個別実装・CMSベンダー</td>
+        <td>130社大手実績で勝てる</td>
+        <td>LP 4年放置で機会損失。営業現場で「あるけど見せ方がない」状態</td>
+      </tr>
+      <tr>
+        <td>A-4 ホームページ</td>
+        <td>個別Webサイト制作／CMS</td>
+        <td>ARR 2億の実績あり</td>
+        <td>整理不足で「いいサービスなのに語れない」状態</td>
+      </tr>
+      <tr>
+        <td>B-1 Sierra Japan</td>
+        <td>Sierra本家（海外）／Klevu／Bloomreach Discovery／Algolia AI／Constructor.io／Lily AI／Crossing Minds 等</td>
+        <td>未戦／海外勢が圧倒的に先行</td>
+        <td><b>海外競合リサーチをCEOが重視</b>。次回MTG前に一次資料を宮本側で着手予定</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========================= 7. 組織・人物マップ ========================= -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 7</span>組織・人物マップ<span class="h2-sub">PMM運用上の関係者と所感</span></h2>
+
+  <h3 class="sub">マーケ・PMM系統（宮本の主たる関わり先）</h3>
+  <table>
+    <thead><tr><th style="width:14%">氏名</th><th style="width:18%">役割</th><th style="width:18%">経歴</th><th style="width:50%">PMM運用上の所感</th></tr></thead>
+    <tbody>
+      <tr><td>藤林さん</td><td>ローカル在庫PMM／本案件発注主</td><td>—</td><td>営業も自分でやる兼任型。属人化🔴。意思決定権あり、宮本の主カウンターパート。</td></tr>
+      <tr><td>神田さん</td><td>マーケ責任者／宮本上司ライン</td><td>コンサルファーム出身</td><td>エクセル管理派／神田作の資料は「神田いじり」と社内で愛され役。形式重視。</td></tr>
+      <tr><td>木下さん</td><td>マーケ実務／コンテンツ実行部隊</td><td>—</td><td><b>本案件のコンテンツ量産パートナー候補</b>。組みやすそうとの藤林評。</td></tr>
+      <tr><td>長谷川さん</td><td>マーケ上位レイヤー</td><td>—</td><td>役割は上位だが「ほぼ追えていない」と藤林評。介入は最小限。</td></tr>
+      <tr><td>八代さん</td><td>同等ミッション（フルファネルマーケ系）</td><td>—</td><td>藤林さんと並ぶPMM的役割。要関係構築。</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">プロダクト系統</h3>
+  <table>
+    <thead><tr><th style="width:14%">氏名</th><th style="width:18%">役割</th><th style="width:18%">経歴</th><th style="width:50%">PMM運用上の所感</th></tr></thead>
+    <tbody>
+      <tr><td>友近さん</td><td>プロダクト本部長</td><td>ex-Sansan</td><td>プロダクト戦略の中心人物。ロードマップ握りで要連携。</td></tr>
+      <tr><td>矢沢さん</td><td>プロダクト戦略室室長</td><td>ex-ヤフー本部長、ex-PMM</td><td>新設ポジで取った中途。プロダクト戦略室自体がKPI未確定で苦戦中の様子。<b>PMM領域で役割被りの可能性、要観察</b>。</td></tr>
+      <tr><td>萩野さん</td><td>—</td><td>ex-Bizreach AI top</td><td>—</td></tr>
+      <tr><td>富岡さん</td><td>PDM</td><td>IPを多数排出</td><td>—</td></tr>
+      <tr><td>上澤さん</td><td>プロダクト戦略室</td><td>—</td><td>—</td></tr>
+      <tr><td>岩垣さん</td><td>—</td><td>ex-PiazzaBase</td><td>—</td></tr>
+      <tr><td>小出さん</td><td>—</td><td>ex-グノシー／レイヤーエックス周辺</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">経営・投資家・特殊系統</h3>
+  <table>
+    <thead><tr><th style="width:14%">氏名</th><th style="width:18%">役割</th><th style="width:68%">概要</th></tr></thead>
+    <tbody>
+      <tr><td>CEO</td><td>代表</td><td>日本版Sierraに賭ける意思決定。エージェンティックコマースへピボット推進。</td></tr>
+      <tr><td>CFO</td><td>ファイナンス</td><td>個人投資家＝店舗オーナー戦略の設計者。シリーズD準備中。</td></tr>
+      <tr><td>成田氏</td><td>個人投資家</td><td>店舗経営者。最初期からの個人投資家。買収対象店舗の供給源にもなる。</td></tr>
+      <tr><td>石井さん</td><td>投資家向け資料作成</td><td>コンサル出身。神田さんと並ぶ「コンサル系資料パワー」。</td></tr>
+      <tr><td>砂本さん</td><td>取締役クラス（要確認）</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <b>運用上の留意：</b>神田／矢沢／長谷川の関係性は政治含み。宮本の主直接ラインは藤林、コンテンツ実装は木下、ロードマップ握りは友近、上申は神田、と<b>役割別カウンターパートを分けて運用</b>するのが現実解。
+  </div>
+</section>
+
+<!-- ========================= 8. 株主構造 ========================= -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 8</span>株主構造とロックイン戦略<span class="h2-sub">「投資家＝顧客」のバンドル設計</span></h2>
+  <ul class="tight">
+    <li>メインVC：ジャフコ</li>
+    <li>個人投資家：店舗オーナー多数（町田商店・成田氏ら）</li>
+    <li>構造的意味：<b>「投資家が顧客でもある」=実質的に解約しづらいロックイン</b>。一蓮托生型バンドル。</li>
+    <li>9期以降の戦略：店舗そのものをロールアップ（M&A）し、自社運用＝自社事例化。PMI実績がカンリーの強みとして評価されている。</li>
+  </ul>
+  <div class="callout green">
+    <b>PMM活用機会：</b>「投資家＝顧客」の事例化は、Sierra・ローカル在庫の旗艦事例として最強の説得材料になりうる。経営陣プレゼン（7月）で言及候補。
+  </div>
+</section>
+
+<!-- ========================= 9. GTM Audit 10要素 診断アップデート ========================= -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 9</span>GTM Audit 10要素 診断アップデート<span class="h2-sub">4/15 → 5/24 の差分（マルチプロダクト統合視点）</span></h2>
+  <table>
+    <thead><tr><th style="width:8%">#</th><th style="width:18%">要素</th><th style="width:14%">4/15診断</th><th style="width:14%">5/24診断</th><th style="width:46%">変更理由・含意</th></tr></thead>
+    <tbody>
+      <tr><td>#1</td><td>Problem-Solution Fit</td><td>🟢</td><td>🟢</td><td>変化なし。ローカル在庫の問題定義は強固。Sierraは新規につき要再診断。</td></tr>
+      <tr><td>#2</td><td>ICP / Persona</td><td>🟡</td><td>🟡</td><td>Sierra側ICPがエンプラリテール大手に絞り込まれた。バンドル時のICP統合が課題。</td></tr>
+      <tr><td>#3</td><td>Competition</td><td>🟡</td><td>🟡</td><td>movへの個別勝敗→Sierra海外勢の参入。<b>競合定義が一段抽象化</b>（プロダクト単体 vs バンドル）。</td></tr>
+      <tr><td>#4</td><td>Pricing</td><td>🔴</td><td>🔴</td><td>変化なし。Sierra 1社1億の根拠（SI＋成果課金）の説明ロジック未整備。</td></tr>
+      <tr><td>#5</td><td>Positioning</td><td>🟡</td><td>🟠→🟡</td><td>案C直行から上位カテゴリ「エージェンティックコマース」への再整理が必要。<b>暫定的に🟠（要再構築）</b>に降格。</td></tr>
+      <tr><td>#6</td><td>Marketing Channels</td><td>🟡</td><td>🟠</td><td>ホワイトペーパー量産・LP放置解消が新規論点。コンテンツ実行体制（木下連携）次第。</td></tr>
+      <tr><td>#7</td><td>Sales Pitch</td><td>🔴</td><td>🔴</td><td>全プロダクト統合バトルカードが必要に。スコープ拡張で課題スケールも拡大。</td></tr>
+      <tr><td>#8</td><td>Sales Enablement</td><td>🔴</td><td>🔴</td><td>変化なし。藤林属人継続。マルチプロダクト化で属人リスクさらに増大。</td></tr>
+      <tr><td>#9</td><td>Product Adoption</td><td>🟡</td><td>🟡</td><td>店舗集客→ローカル在庫のクロスセル成立、A-3〜A-4も同経路。Sierraは未定。</td></tr>
+      <tr><td>#10</td><td>Organizational Alignment</td><td>🟡</td><td>🟠</td><td>マーケ／プロダクト戦略室／PdMの役割整理が未着手。矢沢さんとの被り懸念。</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========================= 10. Next Action / 次回MTG ========================= -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 10</span>Next Action — 5/29(木)MTGまで／中期<span class="h2-sub">合意したアクションと担当</span></h2>
+
+  <h3 class="sub">5/29（木）18:00–18:30 オンラインMTGまでに（宮本側）</h3>
+  <ol>
+    <li><b>全プロダクト × 4軸統合ボード v0.1</b>（カテゴリ／ポジ／メッセージング／競合）— Notion管理板のたたき台、Living Doc GTM OS規範に乗せる</li>
+    <li><b>エージェンティックコマース海外競合 初手リサーチ</b>（Sierra本家／Klevu／Bloomreach Discovery／Algolia AI／Constructor.io／Lily AI／Crossing Minds 等）</li>
+    <li><b>GTM Initial Deck 章立て確認</b>（7月経営陣プレゼン用、pmm-gotomarket-toolkit/gtm/gtm-initial-deck.md 準拠）</li>
+    <li>全商材バトルカード v0.1テンプレ（mov以外の競合も棚卸し）</li>
+  </ol>
+
+  <h3 class="sub">カンリー側（藤林さん）</h3>
+  <ul class="tight">
+    <li>各プロダクトの提案資料・申込書・サービス資料を整理して宮本に共有（PDFで送付）</li>
+    <li>Sierra関連の社内資料を宮本にシェア</li>
+    <li>会社全体PL／組織図を共有（5/24時点で一部送付済）</li>
+    <li>木下さん（マーケ実装）への宮本紹介・連携セット</li>
+  </ul>
+
+  <h3 class="sub">中期（6月〜7月）</h3>
+  <ul class="tight">
+    <li>Notion管理板の本実装（プロダクト × ロードマップ連携）</li>
+    <li>ホワイトペーパー量産パイプライン構築（木下さんと組む）</li>
+    <li>LP・サイト更新（A-3店舗検索ページ／A-2ローカル在庫の4年放置解消）</li>
+    <li>Sierra POC第1号として宮本会社の打診（CEO・現役者MTG設定待ち）</li>
+    <li><b>7月中：来期方針経営陣プレゼン（GTM Initial Deck形式）</b></li>
+  </ul>
+</section>
+
+<!-- ========================= 11. 持ち帰り判断保留 ========================= -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 11</span>持ち帰り・判断保留事項</h2>
+  <ul class="tight">
+    <li>Sierra POC subject 1で宮本会社を入れる件 → CEO・現役者MTG設定待ち</li>
+    <li>矢沢さん（プロダクト戦略室）とのPMM役割整理 → 関係構築後に判断</li>
+    <li>福利厚生／管理SMB（B-Pers）の宮本スコープ確定 → 当面は対象外、状況次第で再判断</li>
+    <li>会社業績数値（FR・1本表記）の正確値 → 次回MTGで確認</li>
+    <li>砂本さんの役職・関わり度合い → 要確認</li>
+  </ul>
+</section>
+
+<!-- ========================= 12. 今後の追加情報セクション ========================= -->
+<section>
+  <h2 class="section-title"><span class="badge">SECTION 12</span>今後の追加情報（マスタードキュメント拡張領域）<span class="h2-sub">藤林さんから順次共有される資料・情報の反映先</span></h2>
+  <p class="lead">本ドキュメントはキックオフ時点のv0.1。藤林さんから提供される下記資料が届き次第、該当セクションへマージし、CHANGELOGに記録する。</p>
+
+  <h3 class="sub">受領待ち資料リスト</h3>
+  <ul class="tight">
+    <li>会社全体PL・組織図（一部受領済 → §7に反映）</li>
+    <li>各プロダクト提案資料・申込書・サービス資料（全商材分）</li>
+    <li>Sierra関連社内資料・プレス原稿</li>
+    <li>シリーズD投資家向け資料（共有可能な範囲で）</li>
+    <li>商談データ・シェア／受注率データ</li>
+  </ul>
+
+  <h3 class="sub">反映ルール</h3>
+  <ul class="tight">
+    <li>個別プロダクト詳細 → §2プロダクト構造マップ＋§3干渉マトリクスを拡張</li>
+    <li>数値ファクト → §5に追記、誤値は訂正</li>
+    <li>競合情報 → §6に追記、海外Sierra系は専用サブセクション化を検討</li>
+    <li>組織人物詳細 → §7マップを更新</li>
+    <li>新規アクション・合意事項 → §10に追記、次回MTG議事録に分岐</li>
+  </ul>
+
+  <div class="placeholder">
+    [追加コンテンツ反映エリア／藤林さん共有資料 v0.2以降]
+  </div>
+</section>
+
+<footer>
+  <div class="changelog">
+    <b>CHANGELOG</b> ／ <code>v0.1 (2026-05-25)</code> 5/24キックオフ文字起こしから初版作成（宮本）
+  </div>
+  <div style="margin-top:8px">© 2026 PMM伴走 - Canly Project — Source: meeting_2026-05-24_kickoff transcript</div>
+</footer>
+
+</div>
+</body>
+</html>

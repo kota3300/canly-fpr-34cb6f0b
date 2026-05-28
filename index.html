@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>カンリーPMM伴走 内部共有 — Index</title>
+<style>
+  :root {
+    --canly-navy: #1B3A6B;
+    --canly-navy-deep: #1B2F5C;
+    --canly-blue: #2670D8;
+    --canly-cyan: #34BBFC;
+    --canly-cyan-light: #C9E6FE;
+    --canly-orange: #ff7e1c;
+    --canly-text: #1A1A2E;
+    --canly-gray: #6B7280;
+    --canly-light: #F5F7FB;
+    --canly-border: #E0E5EE;
+    --canly-red: #C62828;
+    --canly-green: #1B5E20;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Calibri", sans-serif;
+    color: var(--canly-text);
+    line-height: 1.6;
+    background: #F0F2F8;
+    padding: 32px 16px;
+    min-height: 100vh;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  header {
+    background: linear-gradient(135deg, var(--canly-navy-deep) 0%, var(--canly-blue) 60%, var(--canly-cyan) 130%);
+    color: white;
+    padding: 36px 48px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before, header::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  header::before { right: -80px; top: -80px; width: 300px; height: 300px; }
+  header::after { right: -150px; bottom: -120px; width: 400px; height: 400px; background: rgba(255,255,255,0.04); }
+  header .canly-logo {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    display: inline-block;
+  }
+  header .canly-logo::after { content: "•"; color: var(--canly-cyan); margin-left: 4px; font-size: 24px; }
+  header h1 { font-size: 30px; margin-bottom: 8px; }
+  header .sub { font-size: 14px; opacity: 0.9; }
+  header .meta { margin-top: 20px; display: flex; gap: 24px; font-size: 12px; opacity: 0.85; flex-wrap: wrap; }
+  header .meta b { display: inline; color: white; margin-right: 6px; }
+  .confidential {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    background: var(--canly-red);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    letter-spacing: 1px;
+    border-radius: 3px;
+  }
+  .recommended-bar {
+    background: linear-gradient(135deg, #FFF7E5 0%, #FFE9B0 100%);
+    border: 1.5px solid #B8860B;
+    padding: 14px 20px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+    font-size: 13px;
+  }
+  .recommended-bar b { color: #B8860B; }
+  .recommended-bar a {
+    display: inline-block;
+    margin-left: 10px;
+    background: var(--canly-navy);
+    color: white;
+    padding: 5px 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .recommended-bar a:hover { background: var(--canly-blue); }
+  .section-title {
+    font-size: 16px;
+    color: var(--canly-navy);
+    margin: 24px 0 12px;
+    padding-left: 10px;
+    border-left: 4px solid var(--canly-blue);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .section-title .count {
+    font-size: 11px;
+    color: var(--canly-gray);
+    font-weight: 400;
+  }
+  .doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+  .doc-card {
+    background: white;
+    border: 1px solid var(--canly-border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    transition: all 0.15s;
+    text-decoration: none;
+    color: var(--canly-text);
+    display: block;
+    border-left: 4px solid var(--canly-blue);
+  }
+  .doc-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(27,58,107,0.12); border-left-color: var(--canly-navy); }
+  .doc-card.gtm-a { border-left-color: var(--canly-blue); }
+  .doc-card.gtm-b { border-left-color: var(--canly-orange); }
+  .doc-card.gtm-c { border-left-color: var(--canly-green); }
+  .doc-card.tree { border-left-color: var(--canly-cyan); }
+  .doc-card.lp { border-left-color: var(--canly-red); }
+  .doc-card.meeting { border-left-color: var(--canly-gray); }
+  .doc-card.summary { border-left-color: #B8860B; background: linear-gradient(135deg, #FFFEFA 0%, #FFF7E5 100%); }
+  .doc-card .tag {
+    font-size: 9.5px;
+    font-weight: 700;
+    background: var(--canly-navy);
+    color: white;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+  .doc-card.gtm-a .tag { background: var(--canly-blue); }
+  .doc-card.gtm-b .tag { background: var(--canly-orange); }
+  .doc-card.gtm-c .tag { background: var(--canly-green); }
+  .doc-card.tree .tag { background: var(--canly-cyan); color: var(--canly-text); }
+  .doc-card.lp .tag { background: var(--canly-red); }
+  .doc-card.summary .tag { background: #B8860B; }
+  .doc-card h3 {
+    margin-top: 8px;
+    color: var(--canly-navy);
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  .doc-card p {
+    font-size: 12px;
+    color: var(--canly-gray);
+    line-height: 1.55;
+  }
+  .doc-card .arrow {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--canly-blue);
+    font-weight: 700;
+  }
+  .doc-card.gtm-b .arrow { color: var(--canly-orange); }
+  .doc-card.gtm-c .arrow { color: var(--canly-green); }
+  .doc-card.lp .arrow { color: var(--canly-red); }
+  .doc-card.summary .arrow { color: #B8860B; }
+  footer {
+    margin-top: 36px;
+    padding: 16px 24px;
+    background: white;
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--canly-gray);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="confidential">CONFIDENTIAL</div>
+  <div class="canly-logo">Canly</div>
+  <h1>カンリーPMM伴走 — 内部共有インデックス</h1>
+  <div class="sub">藤林さん × 宮本 / 二軸アプローチ（GTM-A 店舗集客土台 × GTM-B ローカル在庫個別深堀り）</div>
+  <div class="meta">
+    <div><b>更新</b>2026-05-28 v0.1</div>
+    <div><b>用途</b>5/29(木)18:00 定例MTG用</div>
+    <div><b>公開設定</b>noindex / temporary（MTG後撤去予定）</div>
+    <div><b>関連</b>https://local.can-ly.com / https://jp.can-ly.com</div>
+  </div>
+</header>
+
+<div class="recommended-bar">
+  <b>★ まずここから：</b> 5/29 MTG用のサマリ資料を13スライドにまとめました。
+  <a href="Canly_MTG_2026-05-29_Summary_v0.1.html">5/29 MTGサマリを開く →</a>
+</div>
+
+<div class="section-title">🎯 MTG用サマリ <span class="count">(1)</span></div>
+<div class="doc-grid">
+  <a href="Canly_MTG_2026-05-29_Summary_v0.1.html" class="doc-card summary">
+    <span class="tag">★ MTG MAIN</span>
+    <h3>5/29 MTGサマリ v0.1</h3>
+    <p>本日の話す資料。13スライド構成（カンリーNavyフォーマット）：前回振り返り→宿題→GTM-A/B/C 全体像→LP精査→方向性論点5項目→4Q ロードマップ→次のアクション</p>
+    <div class="arrow">→ 開く</div>
+  </a>
+</div>
+
+<div class="section-title">🏛️ GTM Audit Living Doc <span class="count">(3 + 横断ツリー)</span></div>
+<div class="doc-grid">
+  <a href="Canly_StoreMarketing_GTM_Audit_Living_v0.1.html" class="doc-card gtm-a">
+    <span class="tag">GTM-A 親</span>
+    <h3>店舗集客事業 GTM Audit</h3>
+    <p>EP/MID店舗集客本体＋丸投げBPO＋オプション群。10要素×5階層ドリルダウン。広く薄く・全社共通言語の土台。</p>
+    <div class="arrow">→ 開く</div>
+  </a>
+  <a href="Canly_LocalInventory_GTM_Audit_Living_v0.1.html" class="doc-card gtm-b">
+    <span class="tag">GTM-B 子 ★深堀り</span>
+    <h3>カンリーローカル在庫 GTM Audit</h3>
+    <p>戦略商材として独立扱い。藤林さん主軸／案C直行『公式ローカル在庫＝カンリー』／LP精査と直結。</p>
+    <div class="arrow">→ 開く</div>
+  </a>
+  <a href="Canly_Welfare_GTM_Audit_Living_v0.1.html" class="doc-card gtm-c">
+    <span class="tag">GTM-C 兄弟</span>
+    <h3>カンリー福利厚生 GTM Audit</h3>
+    <p>EP/MID/SMB横断別事業部。4Q ENP/MID合流予定／本体営業20名連携が4Q最大ミッション。</p>
+    <div class="arrow">→ 開く</div>
+  </a>
+  <a href="product_tree_v0_1.html" class="doc-card tree">
+    <span class="tag">📐 STRUCTURE</span>
+    <h3>プロダクト階層ツリー v0.1</h3>
+    <p>3階層レイヤー構造（事業軸×戦略商材軸×プロダクト体系軸）。product_catalog.xlsx 107行 完全展開。</p>
+    <div class="arrow">→ 開く</div>
+  </a>
+</div>
+
+<div class="section-title">🔍 個別深堀り <span class="count">(1)</span></div>
+<div class="doc-grid">
+  <a href="Canly_LocalInventory_LP_Audit_v0.1.html" class="doc-card lp">
+    <span class="tag">🔴 LP精査</span>
+    <h3>カンリーローカル在庫 LP精査 v0.1</h3>
+    <p>local.can-ly.com 現状分析（Playwright取得）× 改善ポイント7項目（🔴2件／🟠3件／🟡2件）× ファーストビューA/B/C案 × 新セクション構成提案 × vs mov対比。GTM-B #7 と紐付け。</p>
+    <div class="arrow">→ 開く</div>
+  </a>
+</div>
+
+<div class="section-title">📝 議事録・原資料 <span class="count">(1)</span></div>
+<div class="doc-grid">
+  <a href="kickoff_2026-05-24_meeting_master.html" class="doc-card meeting">
+    <span class="tag">議事録</span>
+    <h3>5/24 キックオフMTG マスター議事録</h3>
+    <p>藤林さん×宮本 5/24キックオフ全12セクション完全議事録。会社の賭けポイント／プロダクト構造マップ／組織・人物マップ／GTM Audit診断アップデート。</p>
+    <div class="arrow">→ 開く</div>
+  </a>
+</div>
+
+<footer>
+  © 2026 PMM伴走 / カンリー — Internal sharing, temporary noindex / Drafted by 宮本 (2026-05-28)
+</footer>
+
+</div>
+</body>
+</html>

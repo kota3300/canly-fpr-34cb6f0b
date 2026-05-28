@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>カンリーローカル在庫 GTM Audit — Living Document v0.1</title>
+<style>
+  :root {
+    --navy: #1B3A6B;
+    --navy-dark: #122749;
+    --navy-light: #2A4F8A;
+    --gold: #B8860B;
+    --gold-bg: #FFF7E5;
+    --gold-bg-strong: #FFE9B0;
+    --green: #1B5E20;
+    --green-bg: #E8F5E9;
+    --orange: #EF6C00;
+    --orange-bg: #FFF3E0;
+    --red: #C62828;
+    --red-bg: #FFEBEE;
+    --gray: #6B7280;
+    --gray-bg: #F5F5F5;
+    --border: #E0E5EE;
+    --text: #1A1A2E;
+    --bg: #FAFAFA;
+    --paper: #FAF7F2;
+    --accent-blue: #1976D2;
+    --teal: #00796B;
+    --light-subtitle: #C9D8EF;
+
+    --diff-add-bg: #E6F4EA;
+    --diff-add-border: #2E7D32;
+    --diff-del-bg: #FCE8E6;
+    --diff-del-border: #C62828;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif;
+    color: var(--text);
+    line-height: 1.55;
+    background: var(--bg);
+    padding: 24px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    color: white;
+    padding: 22px 28px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+  }
+  header .eyebrow { font-size: 11px; color: #C9D8EF; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+  header h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+  header .sub { font-size: 13px; color: #C9D8EF; margin-bottom: 10px; }
+  header .meta { display: flex; gap: 22px; font-size: 12px; color: #94B4D4; flex-wrap: wrap; }
+  header .meta b { color: white; font-weight: 600; }
+
+  /* Cover */
+  .cover {
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 36px 48px 32px;
+    margin-bottom: 26px;
+    position: relative;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #E8E1D0;
+  }
+  .cover .corner-tl { position: absolute; top: 18px; left: 22px; font-size: 10px; color: var(--navy); letter-spacing: 1.5px; font-weight: 700; }
+  .cover .corner-tr { position: absolute; top: 18px; right: 28px; font-size: 11px; color: var(--gray); font-style: italic; font-family: Georgia, serif; }
+  .cover .corner-br { position: absolute; bottom: 12px; right: 24px; font-size: 10px; color: var(--gray); font-style: italic; font-family: Georgia, serif; }
+  .cover h2.cover-title { font-size: 30px; color: var(--navy); font-weight: 400; margin: 18px 0 28px; letter-spacing: -0.3px; font-family: Georgia, "Hiragino Mincho ProN", serif; }
+  .cover-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 18px; }
+  .cover-block { background: white; border: 1.5px solid var(--navy); border-radius: 6px; padding: 18px 22px; }
+  .cover-block h3 { font-size: 17px; color: var(--navy); font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .cover-block ul { list-style: none; padding: 0; }
+  .cover-block ul li { display: flex; align-items: center; gap: 10px; padding: 7px 6px; font-size: 13.5px; color: var(--text); cursor: pointer; border-radius: 4px; transition: background 0.12s; }
+  .cover-block ul li:hover { background: var(--gold-bg); }
+  .cover-block ul li .li-num { font-weight: 700; color: var(--navy); min-width: 22px; text-align: right; }
+  .cover-block ul li .li-text { flex: 1; }
+  .li-status { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .li-status.confirmed { background: var(--green); }
+  .li-status.progress { background: var(--orange); }
+  .li-status.pending { background: #CCC; }
+  .cover-block ul li .li-ver { font-size: 10px; color: var(--gray); font-weight: 600; background: var(--gray-bg); padding: 1px 6px; border-radius: 3px; }
+  .cover-crossblock { background: white; border: 1.5px solid var(--navy); border-radius: 6px; padding: 12px 22px; display: flex; align-items: center; gap: 14px; font-size: 13.5px; cursor: pointer; transition: background 0.12s; }
+  .cover-crossblock:hover { background: var(--gold-bg); }
+  .cover-crossblock .li-num { font-weight: 700; color: var(--navy); min-width: 22px; }
+  .cover-crossblock .li-text { flex: 1; font-weight: 600; color: var(--navy); }
+  .cover-crossblock .li-ver { font-size: 10px; color: var(--gray); font-weight: 600; background: var(--gray-bg); padding: 1px 6px; border-radius: 3px; }
+
+  .legend { background: white; border-radius: 8px; padding: 12px 18px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); display: flex; gap: 22px; flex-wrap: wrap; align-items: center; font-size: 12px; }
+  .legend .title { font-weight: 700; color: var(--navy); letter-spacing: 0.5px; text-transform: uppercase; font-size: 10.5px; }
+  .legend .item { display: flex; align-items: center; gap: 6px; color: var(--text); }
+  .legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .legend .dot.confirmed { background: var(--green); }
+  .legend .dot.progress { background: var(--orange); }
+  .legend .dot.pending { background: var(--gray); }
+
+  .section-heading { font-size: 14px; color: var(--navy); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin: 26px 0 14px; padding-left: 8px; border-left: 4px solid var(--navy); }
+
+  .tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .tile { background: white; border-radius: 10px; padding: 16px 18px; cursor: pointer; border: 2px solid var(--border); transition: all 0.18s; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .tile:hover { border-color: var(--navy); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(27,58,107,0.15); }
+  .tile.confirmed { border-left: 4px solid var(--green); }
+  .tile.progress { border-left: 4px solid var(--orange); }
+  .tile.pending { border-left: 4px solid var(--gray); opacity: 0.7; }
+  .tile .head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .tile .num { font-size: 10px; color: var(--gray); letter-spacing: 1px; font-weight: 700; }
+  .tile .ver { font-size: 10px; background: var(--navy); color: white; padding: 2px 7px; border-radius: 3px; font-weight: 700; }
+  .tile.confirmed .ver { background: var(--green); }
+  .tile.progress .ver { background: var(--orange); }
+  .tile.pending .ver { background: var(--gray); }
+  .tile h3 { font-size: 15px; color: var(--navy); font-weight: 700; margin-bottom: 6px; }
+  .tile .summary { font-size: 12px; color: var(--text); line-height: 1.55; margin-bottom: 10px; min-height: 38px; }
+  .tile .footer-meta { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--gray); padding-top: 8px; border-top: 1px dashed var(--border); }
+  .tile .footer-meta .hcount { font-weight: 700; color: var(--navy); }
+
+  .detail-section { background: white; border-radius: 12px; padding: 0; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; display: none; border-top: 4px solid var(--navy); }
+  .detail-section.active { display: block; }
+  .detail-section.confirmed { border-top-color: var(--green); }
+  .detail-section.progress { border-top-color: var(--orange); }
+  .detail-section.pending { border-top-color: var(--gray); }
+
+  .detail-head { padding: 18px 24px; background: linear-gradient(180deg, #F8FAFC 0%, white 100%); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .detail-head .title-block .num { font-size: 10px; color: var(--gray); letter-spacing: 1.5px; font-weight: 700; }
+  .detail-head h2 { font-size: 20px; color: var(--navy); font-weight: 700; margin-top: 4px; }
+  .detail-head .close-btn { background: none; border: 1.5px solid var(--gray); color: var(--gray); padding: 5px 14px; border-radius: 16px; font-size: 11px; font-weight: 600; cursor: pointer; }
+  .detail-head .close-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .current-card { margin: 20px 24px; padding: 20px 24px; background: var(--green-bg); border: 2px solid var(--green); border-radius: 10px; position: relative; }
+  .detail-section.progress .current-card { background: var(--orange-bg); border-color: var(--orange); }
+  .detail-section.pending .current-card { background: var(--gray-bg); border-color: var(--gray); }
+  .current-card .badge { position: absolute; top: -10px; left: 18px; background: var(--green); color: white; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 4px; letter-spacing: 1px; }
+  .detail-section.progress .current-card .badge { background: var(--orange); }
+  .detail-section.pending .current-card .badge { background: var(--gray); }
+  .current-card .ver-info { display: flex; gap: 14px; font-size: 11px; color: var(--gray); margin-bottom: 10px; flex-wrap: wrap; }
+  .current-card .ver-info b { color: var(--text); font-weight: 700; }
+  .current-card .title-text { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .current-card .statement { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 12px; }
+
+  /* === LEVEL 3 RICH VIEW === */
+  .rich-wrap { margin: 0 24px 20px; }
+  .rich-toggle {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold-bg) 0%, var(--gold-bg-strong) 100%);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 14px 22px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    transition: all 0.15s;
+  }
+  .rich-toggle:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(184,134,11,0.2); }
+  .rich-toggle .arrow { transition: transform 0.2s; }
+  .rich-toggle.open .arrow { transform: rotate(90deg); }
+  .rich-content {
+    display: none;
+    margin-top: 14px;
+    padding: 20px;
+    background: var(--paper);
+    border: 1px solid #E8E1D0;
+    border-radius: 10px;
+  }
+  .rich-content.open { display: block; }
+  .rich-section-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 12px; letter-spacing: 0.5px; }
+  .rich-section { margin-bottom: 22px; }
+  .rich-section:last-child { margin-bottom: 0; }
+
+  /* TIER grid (ICP) */
+  .tier-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+  .tier-card { border: 2px solid var(--border); border-radius: 8px; padding: 14px 16px; background: white; position: relative; }
+  .tier-card.hero { border-color: var(--gold); background: var(--gold-bg); }
+  .tier-card.tier1 { border-color: var(--green); }
+  .tier-card .badge { position: absolute; top: -10px; left: 14px; background: var(--navy); color: white; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.5px; }
+  .tier-card.hero .badge { background: var(--gold); }
+  .tier-card.tier1 .badge { background: var(--green); }
+  .tier-card .label { font-size: 10.5px; color: var(--gray); margin-top: 4px; font-weight: 600; letter-spacing: 0.5px; }
+  .tier-card h4 { font-size: 14px; color: var(--navy); font-weight: 700; margin: 6px 0 8px; }
+  .tier-card.hero h4 { color: var(--gold); }
+  .tier-card.tier1 h4 { color: var(--green); }
+  .tier-card .companies { font-size: 11.5px; color: var(--text); line-height: 1.55; margin-bottom: 6px; }
+  .tier-card .strategy { font-size: 11px; color: var(--gray); padding-top: 8px; border-top: 1px dashed var(--border); margin-top: 6px; }
+
+  /* Persona grid */
+  .persona-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .persona { background: white; border: 1px solid var(--border); border-left: 4px solid var(--navy); border-radius: 8px; padding: 12px 14px; }
+  .persona.t3 { border-left-color: var(--gold); background: var(--gold-bg); }
+  .persona.t1 { border-left-color: var(--green); }
+  .persona.t2 { border-left-color: var(--gray); background: #FAFAFA; }
+  .persona-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed var(--border); }
+  .persona-head .tier-tag { font-size: 9.5px; font-weight: 700; color: white; background: var(--navy); padding: 2px 7px; border-radius: 3px; letter-spacing: 0.3px; }
+  .persona.t3 .tier-tag { background: var(--gold); }
+  .persona.t1 .tier-tag { background: var(--green); }
+  .persona.t2 .tier-tag { background: var(--gray); }
+  .persona-head .role { font-size: 10px; font-weight: 700; color: var(--red); background: #FFE5E5; padding: 2px 6px; border-radius: 3px; }
+  .persona-head .name { font-size: 13.5px; font-weight: 700; color: var(--navy); }
+  .persona.t3 .persona-head .name { color: var(--gold); }
+  .persona-head .title { font-size: 11px; color: var(--gray); }
+  .persona-body .row { margin-bottom: 6px; font-size: 11.5px; }
+  .persona-body .row b { color: var(--navy); }
+  .persona-body .msg { background: var(--light-subtitle); padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; color: var(--navy); border-left: 2px solid var(--navy); margin-top: 6px; }
+  .persona.t3 .msg { background: var(--gold-bg-strong); border-left-color: var(--gold); color: #5B4500; }
+
+  /* Narrative legend (4 boxes) */
+  .narrative-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .narr-box { background: white; border-radius: 8px; padding: 12px 14px; border-left: 3px solid var(--navy); }
+  .narr-box.gold { border-left-color: var(--gold); background: var(--gold-bg); }
+  .narr-box.green { border-left-color: var(--green); background: var(--green-bg); }
+  .narr-box h4 { font-size: 13px; color: var(--navy); font-weight: 700; margin-bottom: 4px; }
+  .narr-box.gold h4 { color: var(--gold); }
+  .narr-box.green h4 { color: var(--green); }
+  .narr-box p { font-size: 11.5px; color: var(--text); line-height: 1.5; }
+  .narr-box .ag { font-size: 10.5px; color: var(--gray); margin-top: 4px; }
+
+  /* Category 3 layers */
+  .category-layers { display: flex; flex-direction: column; gap: 8px; max-width: 600px; margin: 0 auto; }
+  .layer-row { background: white; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
+  .layer-row.market { border-color: var(--gray); }
+  .layer-row.category { border-color: var(--gold); background: var(--gold-bg); }
+  .layer-row.positioning { border-color: var(--navy); background: #F0F4FA; }
+  .layer-row .lname { font-size: 12px; font-weight: 700; color: var(--navy); }
+  .layer-row.category .lname { color: var(--gold); }
+  .layer-row .ltext { font-size: 13px; font-weight: 600; color: var(--text); }
+
+  /* Sales pitch leaves */
+  .leaf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .leaf-mini { background: white; border-left: 4px solid var(--navy); border-radius: 6px; padding: 10px 12px; }
+  .leaf-mini.hero { border-left-color: var(--gold); background: var(--gold-bg); }
+  .leaf-mini .pri { font-size: 10px; font-weight: 700; color: var(--orange); margin-bottom: 4px; letter-spacing: 0.5px; }
+  .leaf-mini.hero .pri { color: var(--gold); }
+  .leaf-mini .lname { font-size: 12.5px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .leaf-mini.hero .lname { color: var(--gold); }
+  .leaf-mini .core { font-size: 11px; color: var(--text); line-height: 1.5; }
+  .leaf-mini .core b { color: var(--navy); }
+
+  /* ROI formula */
+  .roi-formula { background: white; padding: 16px 18px; border-radius: 10px; border: 2px solid var(--green); margin-bottom: 14px; }
+  .roi-formula .ftitle { font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: 1px; margin-bottom: 6px; }
+  .roi-formula .fstep { display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 600; color: var(--text); padding: 6px 0; }
+  .roi-formula .fstep .arr { color: var(--green); font-weight: 700; }
+  .roi-formula .fstep b { color: var(--green); }
+
+  /* Competitor table */
+  .comp-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 11.5px; }
+  .comp-table th { background: var(--navy); color: white; text-align: left; padding: 10px 12px; font-weight: 700; font-size: 11px; letter-spacing: 0.3px; }
+  .comp-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table tr:hover { background: var(--paper); }
+  .comp-table .cname { font-weight: 700; color: var(--navy); }
+  .comp-table .weak { color: var(--red); }
+
+  /* Link to external */
+  .external-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--navy); color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; margin-top: 14px; transition: background 0.15s; }
+  .external-link:hover { background: var(--navy-light); }
+  .external-link::after { content: "↗"; }
+
+  /* Timeline / History (継承) */
+  .timeline-wrap { padding: 0 24px; margin-bottom: 20px; }
+  .timeline-wrap .label, .history-wrap .label { font-size: 10.5px; font-weight: 700; color: var(--gray); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+  .timeline { display: flex; align-items: center; gap: 0; position: relative; padding: 14px 8px; background: #F8FAFC; border-radius: 8px; overflow-x: auto; }
+  .timeline .node { flex: 0 0 auto; text-align: center; cursor: pointer; min-width: 110px; padding: 0 6px; position: relative; }
+  .timeline .node:not(:last-child)::after { content: ""; position: absolute; top: 22px; right: -50%; width: 100%; height: 2px; background: var(--border); z-index: 0; }
+  .timeline .node .circle { width: 18px; height: 18px; border-radius: 50%; background: white; border: 3px solid var(--gray); margin: 0 auto 8px; position: relative; z-index: 1; transition: transform 0.15s; }
+  .timeline .node:hover .circle { transform: scale(1.2); }
+  .timeline .node.current .circle { background: var(--green); border-color: var(--green); box-shadow: 0 0 0 4px var(--green-bg); }
+  .timeline .node .ver { font-size: 11px; font-weight: 700; color: var(--navy); }
+  .timeline .node.current .ver { color: var(--green); }
+  .timeline .node .date { font-size: 9.5px; color: var(--gray); margin-top: 2px; }
+
+  .history-wrap { padding: 0 24px 24px; }
+  .history-list { display: flex; flex-direction: column; gap: 10px; }
+  .history-item { border: 1.5px solid var(--border); border-radius: 8px; background: white; overflow: hidden; transition: border-color 0.15s; }
+  .history-item:hover { border-color: var(--navy-light); }
+  .history-item.open { border-color: var(--navy); }
+  .history-summary { padding: 12px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .history-summary .left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+  .history-summary .ver-tag { font-size: 11px; font-weight: 700; color: white; background: var(--navy); padding: 3px 9px; border-radius: 3px; flex-shrink: 0; }
+  .history-summary .date-tag { font-size: 11px; color: var(--gray); flex-shrink: 0; }
+  .history-summary .title-text { font-size: 13px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .history-summary .toggle { font-size: 16px; color: var(--gray); transition: transform 0.2s; flex-shrink: 0; }
+  .history-item.open .history-summary .toggle { transform: rotate(90deg); color: var(--navy); }
+  .history-detail { display: none; padding: 16px 18px; background: #FAFBFC; border-top: 1px dashed var(--border); }
+  .history-item.open .history-detail { display: block; }
+
+  .history-block { margin-bottom: 14px; }
+  .history-block:last-child { margin-bottom: 0; }
+  .history-block .blabel { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; color: var(--gray); text-transform: uppercase; margin-bottom: 6px; }
+  .history-block .btext { font-size: 12.5px; color: var(--text); line-height: 1.6; padding: 8px 12px; background: white; border-radius: 6px; border-left: 3px solid var(--navy); }
+  .history-block.trigger .btext { border-left-color: var(--orange); }
+  .history-block.why .btext { border-left-color: var(--gold); background: var(--gold-bg); }
+
+  .diff-block { background: white; border-radius: 6px; padding: 10px 12px; font-size: 12px; line-height: 1.65; border: 1px solid var(--border); }
+  .diff-add { background: var(--diff-add-bg); border-left: 3px solid var(--diff-add-border); padding: 4px 8px; margin: 3px 0; border-radius: 3px; color: #1B5E20; }
+  .diff-add::before { content: "+ "; font-weight: 700; }
+  .diff-del { background: var(--diff-del-bg); border-left: 3px solid var(--diff-del-border); padding: 4px 8px; margin: 3px 0; border-radius: 3px; color: var(--red); text-decoration: line-through; }
+  .diff-del::before { content: "− "; font-weight: 700; text-decoration: none; display: inline-block; }
+  .diff-unchanged { padding: 4px 8px; color: var(--gray); font-size: 11.5px; }
+
+  .placeholder-note { margin: 20px 24px; padding: 16px; background: var(--gray-bg); border: 1px dashed var(--gray); border-radius: 8px; text-align: center; font-size: 12.5px; color: var(--gray); }
+  .placeholder-note b { color: var(--navy); }
+
+  /* === PMA Q&A === */
+  .pma-block { background: white; border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; border: 1px solid var(--border); }
+  .pma-block .pma-group-name { font-size: 12px; font-weight: 700; color: var(--navy); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1.5px solid var(--navy); display: flex; align-items: center; gap: 8px; }
+  .pma-block .pma-group-name .gtag { font-size: 9.5px; font-weight: 600; background: var(--navy); color: white; padding: 2px 7px; border-radius: 3px; letter-spacing: 0.5px; }
+  .qna-list { display: flex; flex-direction: column; gap: 8px; }
+  .qna-item { padding: 10px 12px; border-radius: 6px; border-left: 4px solid var(--gray); background: var(--gray-bg); cursor: pointer; transition: all 0.12s; }
+  .qna-item:hover { transform: translateX(2px); }
+  .qna-item.answered { border-left-color: var(--green); background: var(--green-bg); }
+  .qna-item.partial { border-left-color: var(--orange); background: var(--orange-bg); }
+  .qna-item.no_data { border-left-color: var(--gray); background: var(--gray-bg); }
+  .qna-item .qrow { display: flex; align-items: flex-start; gap: 10px; font-size: 12.5px; }
+  .qna-item .qicon { font-size: 14px; flex-shrink: 0; }
+  .qna-item .qtext { flex: 1; font-weight: 600; color: var(--text); line-height: 1.5; }
+  .qna-item .arow { font-size: 11.5px; color: var(--text); line-height: 1.55; padding: 8px 0 0 24px; border-top: 1px dashed rgba(0,0,0,0.08); margin-top: 8px; display: none; }
+  .qna-item.open .arow { display: block; }
+  .qna-item .arow b { color: var(--navy); }
+  .qna-item.answered .arow b { color: var(--green); }
+  .qna-item.partial .arow b { color: var(--orange); }
+  .qna-item.no_data .arow b { color: var(--red); }
+  .qna-summary-bar { display: flex; gap: 14px; margin-bottom: 12px; font-size: 11.5px; flex-wrap: wrap; }
+  .qna-stat { padding: 4px 10px; border-radius: 12px; font-weight: 600; }
+  .qna-stat.a { background: var(--green-bg); color: var(--green); }
+  .qna-stat.p { background: var(--orange-bg); color: var(--orange); }
+  .qna-stat.n { background: var(--gray-bg); color: var(--gray); }
+  .pma-methods { background: var(--paper); padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 11.5px; color: var(--gray); border-left: 3px solid var(--gold); }
+  .pma-methods b { color: var(--navy); }
+
+  footer { margin-top: 32px; padding: 14px 20px; text-align: center; color: var(--gray); font-size: 11px; }
+  footer b { color: var(--navy); }
+
+  @media print {
+    .legend, .detail-head .close-btn, .rich-toggle { display: none; }
+    .detail-section, .detail-section.active { display: block; page-break-inside: avoid; }
+    .history-detail, .rich-content { display: block !important; }
+    .tile { break-inside: avoid; }
+  }
+
+  /* === Cross-GTM Navigation === */
+  .gtm-nav {
+    background: linear-gradient(135deg, #FFF7E5 0%, #FFE9B0 100%);
+    border: 1.5px solid #B8860B;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin: 0 0 20px;
+    font-size: 12.5px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .gtm-nav-label { font-weight: 700; color: #B8860B; letter-spacing: 0.5px; }
+  .gtm-nav-link {
+    color: #1B3A6B;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 4px 10px;
+    background: white;
+    border-radius: 4px;
+    border: 1.5px solid #1B3A6B;
+    transition: all 0.15s;
+    font-size: 12px;
+  }
+  .gtm-nav-link:hover { background: #1B3A6B; color: white; }
+  .gtm-nav-link.self { background: #1B3A6B; color: white; cursor: default; opacity: 0.7; }
+  .gtm-nav-link.product-tree { border-color: #00796B; color: #00796B; }
+  .gtm-nav-link.product-tree:hover { background: #00796B; color: white; }
+
+  .gtm-nav {
+    background: linear-gradient(135deg, #FFF7E5 0%, #FFE9B0 100%);
+    border: 1.5px solid #B8860B;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin: 0 0 20px;
+    font-size: 12.5px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .gtm-nav-label { font-weight: 700; color: #B8860B; letter-spacing: 0.5px; }
+  .gtm-nav-link {
+    color: #1B3A6B;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 4px 10px;
+    background: white;
+    border-radius: 4px;
+    border: 1.5px solid #1B3A6B;
+    transition: all 0.15s;
+    font-size: 12px;
+  }
+  .gtm-nav-link:hover { background: #1B3A6B; color: white; }
+  .gtm-nav-link.product-tree { border-color: #00796B; color: #00796B; }
+  .gtm-nav-link.product-tree:hover { background: #00796B; color: white; }
+
+  /* === Positioning Layers Extension === */
+  .layer-row.vision { background: linear-gradient(135deg, #E7F4E9 0%, #C9E5CD 100%); border-color: #1B5E20; }
+  .layer-row.vision .lname { background: #1B5E20; color: white; }
+  .parent-ref-box {
+    background: #F5F8FC;
+    border: 1.5px dashed #1976D2;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 8px 0 16px;
+    font-size: 12px;
+    color: #1A1A2E;
+  }
+  .parent-ref-box b { color: #1976D2; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">カンリーローカル在庫 / GTM Audit — Living Document</div>
+  <h1>GTM Audit Living Doc v0.1 — Questions × カンリーローカル在庫回答</h1>
+  <div class="sub">5階層ドリルダウン: 目次 → タイル → CURRENT/Timeline/History → リッチ構造ビュー → ★ Questions×答え</div>
+  <div class="meta">
+    <span><b>Client:</b> カンリーローカル在庫</span>
+    <span><b>Last Updated:</b> 2026-05-27</span>
+    <span><b>Version:</b> v0.1</span>
+    <span><b>Source:</b> PMA Go-to-market audit 全Questions / カンリーローカル在庫成果物</span>
+  </div>
+</header>
+  <div class="gtm-nav">
+    <span class="gtm-nav-label">📎 関連GTM Audit / 資料</span>
+    <a href="Canly_StoreMarketing_GTM_Audit_Living_v0.1.html" class="gtm-nav-link">▶ GTM-A：店舗集客事業</a>
+    <span class="gtm-nav-link self">● GTM-B：ローカル在庫（現在）</span>
+    <a href="Canly_Welfare_GTM_Audit_Living_v0.1.html" class="gtm-nav-link">▶ GTM-C：福利厚生</a>
+    <a href="product_tree_v0_1.html" class="gtm-nav-link product-tree">📐 プロダクト階層ツリー</a>
+    <a href="Canly_LocalInventory_LP_Audit_v0.1.html" class="gtm-nav-link" style="border-color:#EF6C00;color:#EF6C00;">📐 LP精査 v0.1（GTM-B紐付）</a>
+  </div>
+
+<div class="cover">
+  <div class="corner-tl">PMA / BLUE WONDER 準拠</div>
+  <div class="corner-tr">GTM audit</div>
+  <h2 class="cover-title">The 10 key elements of a GTM audit</h2>
+  <div class="cover-grid">
+    <div class="cover-block">
+      <h3>Foundation</h3>
+      <ul id="foundationList"></ul>
+    </div>
+    <div class="cover-block">
+      <h3>Execution</h3>
+      <ul id="executionList"></ul>
+    </div>
+  </div>
+  <div class="cover-crossblock" id="crossItem"></div>
+  <div class="corner-br">カンリーローカル在庫 GTM Audit Living Doc · 2026-05-27</div>
+</div>
+
+<div class="legend">
+  <span class="title">凡例:</span>
+  <span class="item"><span class="dot confirmed"></span>確定</span>
+  <span class="item"><span class="dot progress"></span>進行中</span>
+  <span class="item"><span class="dot pending"></span>未着手</span>
+  <span class="item" style="margin-left:auto;color:var(--gray);">目次番号 / タイル → 詳細展開 / リッチ詳細トグル → 構造化ビュー</span>
+</div>
+
+<div class="section-heading">Foundation — 戦略の土台</div>
+<div class="tile-grid" id="foundationTiles"></div>
+
+<div class="section-heading">Execution — 実行</div>
+<div class="tile-grid" id="executionTiles"></div>
+
+<div class="section-heading">Cross-cutting — 横断</div>
+<div class="tile-grid" id="crossTiles"></div>
+
+<div id="detailContainer"></div>
+
+<footer>
+  <b>カンリーローカル在庫 GTM Audit Living Doc v0.1</b> · 10要素 × Questions×回答 × 5階層ドリルダウン · 2026-05-27
+</footer>
+
+<script>
+/* ============ DATA ============ */
+/*
+ * ▼ USAGE
+ * 1. metadata.client / lastUpdated を埋める
+ * 2. 各カテゴリの current / history / pmaQuestions を埋める
+ * 3. リッチビューを使う場合は richType を設定（icp_personas / problem_solution / positioning_messaging / pricing / competition / sales_pitch / sales_enablement）
+ * 4. リッチビュー本体は renderRich***() 関数を書き換える（下記）
+ * ▼ ステータス
+ *  - status: "confirmed" | "progress" | "pending"
+ *  - Q&A status: "answered" | "partial" | "no_data"
+ * ▼ リファレンス例: ~/Dropbox/PMM/projects/casematch/deliverables/CaseMatch_GTM_Audit_Living_v0.4.html
+ */
+const gtmAudit = {
+  metadata: { client: "カンリーローカル在庫", lastUpdated: "2026-05-27" },
+  categories: [
+    /* ===== 01. ICP & Personas ===== */
+    {
+      id: "icp", num: "01", group: "foundation",
+      name: "ICP & Personas",
+      status: "progress",
+      summary: "小売×店舗在庫多SKU業態が主軸。Tier1=ローンチ顧客（嘉穂無線/ビジョナリーHD/ムラサキ）／Tier2=既存店舗集客契約社からのクロスセル。藤林さん属人化🔴",
+      current: {
+        version: "v1.0", date: "2026-05-27",
+        title: "ローカル在庫 ICP（2026Q3版）— 実店舗×EC両運営・在庫SKU多めの小売チェーン",
+        statement: "Tier1コア（最優先）：実店舗とECを両運営し在庫SKUが多い中〜大規模小売チェーン（嘉穂無線HD/グッデイ・ビジョナリーHD/メガネスーパー・ムラサキスポーツ等ローンチ顧客）。Tier2準コア：店舗数が多く『店頭在庫が検索で見える』ことが来店動機になる業種（HC／家電／アパレル／スポーツ／アイウェア／ドラッグ）。Tier3ターゲット：既存『カンリー店舗集客』契約社（クロスセル／アップセル）→ 親GTM-A（Canly_StoreMarketing）参照。担当：藤林さん（PMMオーナー）／既存セールス20名への移管が4Q重点。",
+        source: "press_release_2025-10_local_inventory.md / 4/15藤林dinner議事録 / company-profile.md / 中期計画 p.61（マルチバーティカル拡大の小売軸）"
+      },
+      history: [],
+      richType: "icp_personas",
+      pmaQuestions: {
+        methods: "ローンチ顧客VoC（嘉穂無線HD・ビジョナリーHD・ムラサキスポーツ）/ CRM分析（既存店舗集客客の小売Tier1） / 営業ヒアリング（藤林さん）",
+        groups: [
+          { name: "マーケティング", questions: [
+            { q: "イベント・広告・コンテンツ・リードは、定義されたICP／ターゲットペルソナに整合しているか？", status: "partial", answer: "ローンチ顧客のロゴ活用済。LP（local.can-ly.com）コンテンツは小売向けに最適化中（藤林要望）" },
+            { q: "社内ドキュメント（ICP・ペルソナ）は、他チームの認識と一致しているか？", status: "partial", answer: "本Living Doc＋親GTM-A で正規化中" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "購買委員会のキーメンバーは、ターゲットペルソナに含まれているか？", status: "partial", answer: "マーケ部長／オムニチャネル責任者は把握。実店舗オペレーション部長／EC事業責任者の関与度は要追加調査" },
+            { q: "ICP案件は、非ICP案件より受注率が高いか？", status: "no_data", answer: "藤林さんの直営業のため統計データなし。属人解消後にCRM分析" },
+            { q: "SDRはターゲットICP／ペルソナへのアウトリーチで成果を出せているか？", status: "no_data", answer: "（要分析）" }
+          ]},
+          { name: "カスタマーサクセス", questions: [
+            { q: "ICP顧客は、非ICP顧客よりプロダクト導入が早いか？", status: "no_data", answer: "（要分析）" },
+            { q: "ICP顧客はNPS/CSATが非ICPより高いか？", status: "no_data", answer: "NPS未実施" },
+            { q: "ICP顧客はChurnが低く、Renewal/Upsell/ACVが高いか？", status: "no_data", answer: "（要追跡開始）" },
+            { q: "バイヤー・ユーザー・実装担当者は、ターゲットペルソナと一致しているか？", status: "no_data", answer: "（要調査）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 02. Problem / Solution ===== */
+    {
+      id: "problem", num: "02", group: "foundation",
+      name: "Problem / Solution",
+      status: "progress",
+      summary: "店頭在庫がオンラインで可視化されず機会損失／問合せ対応負荷／OMOのROI可視化難。Agentic Commerce時代に『今、ここにある在庫』をAIが判断できる鮮度で渡せるかが勝敗",
+      current: {
+        version: "v1.0", date: "2026-05-27",
+        title: "Agentic Commerce時代のCV層『動的在庫データ』が新たな分水嶺",
+        statement: "ペイン①：消費者が検索した瞬間に『近くの店に在庫がある』を伝えられず、機会損失が常態化／ペイン②：店頭への在庫問い合わせ対応工数の肥大化／ペイン③：OMO施策のROIが可視化できず投資判断停滞。ソリューション：Google公式LFP（Local Feed Partner Program）Trusted Partnerとして、店舗の在庫情報をリアルタイムにGoogle検索・マップ・ショッピングに表示。中期計画上は『Agentic Commerce CV層装置』として位置付け、汎用AI（Gemini/ChatGPT/Perplexity）が『今、ここにある在庫』を判断できる鮮度で多面的にデータ供給することが勝敗を分ける。",
+        source: "中期計画 p.39（Agentic Commerce対応・購買エージェント）／p.43-44（来店型集客導線）／4/15藤林dinner（Google年1万店舗コミット）"
+      },
+      history: [],
+      richType: "problem_solution",
+      pmaQuestions: {
+        methods: "顧客インタビュー（ローンチ3社） / 営業ヒアリング（藤林さん） / プレス文献（嘉穂無線・ビジョナリーHD・ムラサキ）",
+        groups: [
+          { name: "問題／ソリューション", questions: [
+            { q: "ICPに対してプロダクトが解決する具体的な課題は何か？（トップ3の痛点）", status: "answered", answer: "①店頭在庫オンライン非可視化による機会損失／②問合せ対応負荷／③OMO ROI可視化難" },
+            { q: "課題を解決しないと、どんな影響／結果が起きるか？（なぜ重要か）", status: "answered", answer: "AI購買時代にAIから選ばれない=店舗送客激減。Google Gemini／ChatGPT／Perplexity等が在庫鮮度で店を選び始める" },
+            { q: "既存の代替手段に対して、自社のソリューションはどう優れているか？", status: "answered", answer: "Google LFP国内2社目認定（25/10）の独占ポジ／日本で運用可能2社のみ／広告代理店はLFP取得不可で全員カンリーを担ぐ契約に集約（4/15 dinner判明）" },
+            { q: "この課題を解くことのメリット・価値は？", status: "answered", answer: "嘉穂無線HD（グッデイ）：『自店舗の在庫データをGoogle検索結果に掲載できる有用性』／ビジョナリーHD：『今すぐ買える安心感と近くで手に入る利便性』／ムラサキ：『検索起点の消費動向を捉え在庫情報で店舗へダイレクト誘導』" },
+            { q: "このプロダクトで解くことの固有のメリット・価値は？", status: "answered", answer: "LFP公式独占 × カンリーのMEO/GBP一括管理基盤との統合運用 = LIA非依存でリアル店舗OMOを最速構築" }
+          ]},
+          { name: "プロダクト", questions: [
+            { q: "ユーザーはプロダクトのどこから価値を得ているか？", status: "partial", answer: "Google検索/マップ/ショッピングへの在庫露出。最も評価ポイントは『代替手段の不在＝LFP独占』" },
+            { q: "プロダクト利用は、社員／見込客／顧客が定義する価値と一致しているか？", status: "no_data", answer: "（要VoC調査）" },
+            { q: "顧客が評価しているが訴求不足の機能・ベネフィットはあるか？", status: "partial", answer: "問合せ削減工数の数値訴求は弱い。LP/コンテンツ精査で強化候補" },
+            { q: "それらはプロダクトロードマップの方向性と整合しているか？", status: "partial", answer: "ローカル在庫広告（準備中）でアップセル設計／Agentic Commerce包含で進化" },
+            { q: "バイヤーが求めるものと、開発しているものにギャップはないか？", status: "no_data", answer: "（要調査）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 03. Positioning & Messaging ===== */
+    {
+      id: "positioning", num: "03", group: "foundation",
+      name: "Positioning & Messaging",
+      status: "progress",
+      summary: "ポジショニング3層：カテゴリー『公式ローカル在庫＝カンリー』／ビジョン『在庫の鮮度供給』／ポジ『LFP独占×代理店集約×統合運用』",
+      current: {
+        version: "v1.0", date: "2026-05-27",
+        title: "ポジショニング3層：公式ローカル在庫（カテゴリー）→ 在庫の鮮度供給（ビジョン）→ LFP独占×統合運用（ポジ）",
+        statement: "【カテゴリー（最上位）】『公式ローカル在庫＝カンリー』（案C直行・藤林さん合意）。指名検索獲得が狙い。藤林さん発言『このサービスはマーケット独占、オールオアナッシング』『Google公式ローカル在庫といえばカンリーで指名検索取りたい』。親GTM-Aの最上位カテゴリ『エージェンティックコマース＝カンリー』のCV層装置として位置付け（SierraがECに対してやることを、カンリーは来店型でリアル店舗の在庫データ供給で抑える）。【ビジョン（中間・10年スパン）】Agentic Commerce時代に『今、ここにある在庫』をAIが判断できる鮮度で多面的に供給し続ける。【ポジショニング・メッセージング（具体的訴求）】差別化3軸：①Google LFP国内2社目認定独占（25/10）／②カンリー店舗集客（13万店舗）との統合運用／③広告代理店はカンリーLFPを担ぐ契約に集約済（4/15判明）。バトルカードv1（vs mov）完成済（宮本作）。",
+        source: "中期計画 p.39（Agentic Commerce CV層）／p.43（『ローカル在庫／Google予約連携』）／4/15藤林dinner（案C合意）／battlecard-mov.md（v1完成）"
+      },
+      history: [
+        { version: "v0.5", date: "4/15以前",
+          title: "案A『LFP認定前面』 → 案C『公式ローカル在庫』段階移行",
+          trigger: "4/15藤林さんdinner議事録：『このサービスはマーケット独占、オールオアナッシング』『案C直行が藤林コミット度と整合』",
+          statement: "案A（LFP認定前面）を入口、案C（カテゴリ創出）を中期で移行",
+          why_changed: "藤林さんのコミット度／LFP独占の堅さ／代理店契約集約／応援団株主の店舗ネットワーク活用で案C直行が現実的",
+          diff: [
+            { type: "del", text: "段階移行（案A→案C）" },
+            { type: "add", text: "案C直行（公式ローカル在庫＝カンリー）" }
+          ]
+        }
+      ],
+      richType: "positioning_messaging",
+      pmaQuestions: {
+        methods: "メッセージング・フレームワーク / ポジショニング・ステートメント / 顧客知覚調査未実施 / 藤林さん週次相談",
+        groups: [
+          { name: "マーケ＆セールス", questions: [
+            { q: "提供価値を定義できているか？", status: "answered", answer: "案C『公式ローカル在庫といえばカンリー』＋Agentic Commerce CV装置として2層定義済" },
+            { q: "プロダクトの語り方について社内アラインメントが取れているか？", status: "partial", answer: "藤林さん×宮本では合意済。神田／木下／既存営業20名への浸透は4Q課題" },
+            { q: "パッケージング／プライシング戦略は、プロダクトナラティブを支えているか？", status: "no_data", answer: "ローカル在庫の独立プライシング設計が未着手" },
+            { q: "マーケチーム全体が、このドキュメントの保管場所を把握しているか？", status: "no_data", answer: "本Living Doc共有予定" },
+            { q: "営業資料・コンテンツ・Webで一貫してポジショニングされているか？", status: "partial", answer: "LP（local.can-ly.com）は4年放置課題で更新待ち。藤林さんから精査依頼あり" },
+            { q: "営業チームは一貫したピッチを持っているか？", status: "no_data", answer: "藤林属人化中。バトルカードv1のみ" },
+            { q: "最も成果を出す営業はどんなストーリーを語っているか？", status: "partial", answer: "藤林さん本人のピッチ録音／顧客提案資料の標準化が要" }
+          ]},
+          { name: "見込客・顧客の認識", questions: [
+            { q: "バイヤーの頭の中で、自社はどんなポジションを占めているか？", status: "no_data", answer: "（指名検索／ブランド調査未実施）" },
+            { q: "ポジショニング／メッセージは明確で差別化されているか？", status: "partial", answer: "ローンチ顧客VoCでは『Googleとの連携』『今すぐ買える安心感』が刺さる軸として表面化" },
+            { q: "見込客／顧客の認識・体験と合致しているか？", status: "no_data", answer: "（要VoC調査）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 04. Pricing & Packaging ===== */
+    {
+      id: "pricing", num: "04", group: "foundation",
+      name: "Pricing & Packaging",
+      status: "pending",
+      summary: "独立プライシング未設計🔴。原価優位構造あり（mov比）／コンペで値引き圧力／LFP独占で差別化ロジック必要。ローカル在庫広告は準備中",
+      current: {
+        version: "v0.1", date: "2026-05-27",
+        title: "ローカル在庫プライシング（要設計）",
+        statement: "現状：プライシング非公開（応相談）。コンペになれば原価優位で勝てる（4/15藤林）が値引き圧力あり。LFP独占ポジを生かした『差別化ロジック』のプライシング設計が課題。商品体系：（a）ローカル在庫本体（販売中／申込書準備中）（b）ローカル在庫広告（準備中）。アップセル候補：店舗集客本体顧客→ローカル在庫→ローカル在庫広告。要検討：①店舗数ベース vs 在庫データ量ベース vs 成果報酬型（CV課金）／②カンリー店舗集客とのバンドル割引設計／③Sierra本家のEC側Agentic Commerceに対するBtoBtoC成果報酬モデル参考。",
+        source: "4/15藤林dinner（原価優位／値引き圧力）／product_catalog.xlsx（参考価格非公開）"
+      },
+      history: [],
+      richType: "pricing",
+      pmaQuestions: {
+        methods: "競合ベンチマーク（mov等） / Win-Loss定性分析（藤林さんから） / 海外Agentic Commerce勢の課金モデル調査",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "プライシング／パッケージング／値引きについて、社内に『一つの正解』があるか？", status: "no_data", answer: "独立プライシング未設計" },
+            { q: "主要ステークホルダーは、プライシング／パッケージングについて同じ理解か？", status: "no_data", answer: "（要藤林さん×神田で再設計）" }
+          ]},
+          { name: "知覚（Perception）", questions: [
+            { q: "選んだバリューメトリクスは、本当に『価値』と相関しているか？", status: "no_data", answer: "（バリューメトリクス未定義）" },
+            { q: "プライシングモデルはポジショニングと整合しているか？", status: "no_data", answer: "（独立ポジに対する独立プライシング未設計）" },
+            { q: "価格は、見込客／顧客／営業の品質知覚と整合しているか？", status: "no_data", answer: "（要営業ヒアリング）" },
+            { q: "価格は競合と比べてどうか？提供価値と整合しているか？", status: "partial", answer: "mov比で原価優位（藤林発言）／LFP独占の希少性プレミアム要素も検討対象" }
+          ]},
+          { name: "更新／Churn", questions: [
+            { q: "X%自動値上げを含む、標準化された更新プロセスがあるか？", status: "no_data", answer: "（要設計）" },
+            { q: "Churn理由の15%超で、価格が単独／主要因として挙がっているか？", status: "no_data", answer: "（販売中だがChurn実績データ蓄積待ち）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 05. Competition ===== */
+    {
+      id: "competition", num: "05", group: "foundation",
+      name: "Competition",
+      status: "progress",
+      summary: "主敵=mov（口コミコム）。LFP認定なし／『ローカルインベントリーマーケティング』ネーミング戦略。代理店は全員カンリー集約。将来脅威=海外Agentic Commerce勢",
+      current: {
+        version: "v1.0", date: "2026-05-27",
+        title: "mov中心の競合定義 × 代理店集約 × 海外勢の将来脅威",
+        statement: "【mov（株式会社mov / 口コミコム）】設立2015/9・渋谷・資本金1億円・代表 渡邊誠／関連事業『訪日ラボ』／統合プラットフォーム（口コミAI×MEO×在庫×インバウンド）として訴求／GBPエキスパート監修のみで『LFP認定なし』（26-04時点）／直近：2026-04-09 二木ゴルフ導入プレス／『ローカルインベントリーマーケティング』語彙で攻勢／導入：BOOKOFF・ロフト・アンダーアーマー・ビックカメラ・ダイアナ・スギ薬局・二木ゴルフ等。【代理店】全員カンリーLFPを担ぐ契約に集約（4/15判明）／オフサイバーは負け認めて下りた／残るは『モブ』のみ。【将来脅威】海外Agentic Commerce勢：Sierra本家（EC側）／Klevu／Bloomreach Discovery／Algolia AI／Constructor.io／Lily AI／Crossing Minds 等→当面はEC側だが、来店型に進出する可能性は要監視。",
+        source: "battlecard-mov.md（v1） / competitor_mov_press_2026-04-09.md / competitor_mov_forretail_lp.md / 4/15藤林dinner / 中期計画 p.30-31"
+      },
+      history: [],
+      richType: "competition",
+      pmaQuestions: {
+        methods: "competitor_mov_*.md（モニタリング継続） / バトルカードv1（vs mov） / Win-Loss / SNS・PR露出分析 / 海外Agentic Commerce勢のリサーチ（4Q重点）",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "現在および近い将来の最大の脅威について、社内合意はあるか？", status: "answered", answer: "①mov：直接競合・認知戦／②海外Agentic Commerce勢：将来脅威／③Googleのアルゴリズム変動：構造リスク" },
+            { q: "それら競合を上回るためのプランがあるか？", status: "answered", answer: "①LFP独占＋代理店契約集約／②カンリー店舗集客顧客基盤（13万店舗）からのクロスセル／③Agentic Commerceサミットで先行ポジ" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "営業はバトルカード／反論処理コンテンツで武装されており、それは有効か？", status: "partial", answer: "バトルカードv1（vs mov）完成済・宮本作。藤林属人で他営業展開は未" },
+            { q: "競合はレビューサイト（G2／Capterra／TrustPilot）でどう評価されているか？", status: "no_data", answer: "（要モニタリング開始）" }
+          ]},
+          { name: "更新／Churn", questions: [
+            { q: "Churn会話で最も頻出する競合トップ5は？", status: "no_data", answer: "（販売中につきChurn実績データ蓄積待ち）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 06. Sales Pitch ===== */
+    {
+      id: "sales_pitch", num: "06", group: "execution",
+      name: "Sales Pitch",
+      status: "progress",
+      summary: "藤林さんの『案C直行』ナラティブを軸に統一化中。バトルカードv1（vs mov）完成済。既存営業20名への展開＝属人化解消が4Q重点",
+      current: {
+        version: "v1.0", date: "2026-05-27",
+        title: "案C直行ナラティブ：『公式 × LFP独占 × Agentic Commerce CV装置』",
+        statement: "ピッチ3層：（1）HOOK：『AIが買う店を決める時代、店頭在庫が見えない店は選ばれない』（NRF26テーマ）／（2）SOLUTION：『Google公式LFP国内2社目認定パートナーとして、店頭在庫をリアルタイムでGoogle検索／マップ／ショッピングに連携。日本で運用可能なのはカンリーを含む2社のみ』／（3）CLOSE：『（既存店舗集客顧客には）すでに使っているMEO/GBP管理基盤と統合運用で最速ローンチ／（新規には）店舗集客本体とセットでOMO最速構築』。バトルカードv1（vs mov）：『LFP公式 vs 監修のみ』『代理店契約集約 vs 残るはモブのみ』『13万店舗のCS実績 vs 飲食バーティカル特化』。",
+        source: "battlecard-mov.md（v1） / 親GTM-A #6 RAG基盤連動 / 4/15藤林dinner"
+      },
+      history: [],
+      richType: "sales_pitch",
+      pmaQuestions: {
+        methods: "藤林さん商談録音 / バトルカードv1検証 / Win-Loss / RAG基盤への統合",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "セールスピッチについて社内合意があるか？", status: "partial", answer: "藤林さん中心で案C直行に統一中。神田／既存営業20名への展開は4Q" },
+            { q: "経営層／営業／CSM／サポートまで、ピッチの主要要素を共有できているか？", status: "partial", answer: "8P4Qキックオフでローカル在庫の戦略商材ポジは共有済" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "営業は自社ナラティブの語り方を知っているか？", status: "partial", answer: "藤林さんはマスター済。他営業への展開＝属人化解消が4Q最大課題" },
+            { q: "最も成果を出す営業はどんなストーリー／事例を語るか？", status: "partial", answer: "藤林さんが嘉穂無線HD／ビジョナリーHD／ムラサキの3つの顧客VoCを軸に語っている（要他営業へ移植）" },
+            { q: "どの営業でも一貫したナラティブを語れるか？", status: "no_data", answer: "属人化🔴。AIロープレ標準化候補（親GTM-A の RAG基盤に統合）" },
+            { q: "顧客タイプによって、効くナラティブは違うか？", status: "partial", answer: "小売（在庫公開／OMO ROI）vs HC（店舗誘導）vs アパレル（季節商品×在庫鮮度）でナラティブ分岐余地" }
+          ]},
+          { name: "マーケティング", questions: [
+            { q: "セールスピッチは、Web／営業資料／コンテンツのメッセージと整合しているか？", status: "partial", answer: "LP（local.can-ly.com）と藤林さんピッチの整合度は要精査（藤林さん要望）" },
+            { q: "マーケコンテンツはバイヤーに前提知識／参照枠を提供しているか？", status: "no_data", answer: "ホワイトペーパー等の前提知識整備は4Q重点（木下さんと連携）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 07. Marketing Channels & Partnerships ===== */
+    {
+      id: "channels", num: "07", group: "execution",
+      name: "Marketing Channels & Partnerships",
+      status: "pending",
+      summary: "🔴最優先：藤林さんからLP/コンテンツ精査依頼 → 詳細はLP精査v0.1（別ファイル）。movのネーミング戦略に認知で押されぎみ。ホワイトペーパー量産が4Q重点",
+      current: {
+        version: "v0.5", date: "2026-05-27",
+        title: "LP/コンテンツ刷新 ＋ ホワイトペーパー量産（4Q最重点）",
+        statement: "現状：①LP（local.can-ly.com）は本体LPに比べて整備不足／②ホワイトペーパー・資料DL・セミナーは本体に追いついていない／③movが『ローカルインベントリーマーケティング』という独自ネーミングで認知取りに来ている（カンリーは『ローカル在庫』Google公式名そのまま）／④広告代理店ルートはカンリー集約済で攻めに時間を使える環境。4Q取組（藤林さん要望）：（a）LP刷新（local.can-ly.comの構成・コンテンツ精査）／（b）ホワイトペーパー量産パイプライン（木下さん連携／週次1本ペース目標）／（c）SEO『ローカル在庫』『公式LFP』『店頭在庫オンライン公開』等の指名検索獲得設計／（d）Agentic Commerceサミット連携でAgentic Commerce文脈の認知獲得。",
+        source: "5/24藤林さんMTG（LP/コンテンツ精査依頼）／4/15藤林dinner／competitor_mov_forretail_lp.md／【深堀り】Canly_LocalInventory_LP_Audit_v0.1.html"
+      },
+      history: [],
+      richType: null,
+      pmaQuestions: {
+        methods: "顧客VoC（ローンチ3社）／LP/コンテンツ監査／競合mov LP/コンテンツモニタリング／SEO/AEO/AIO分析",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "どのチャネル／パートナーが最も質の高いリードを生み出しているか？（データ基準）", status: "no_data", answer: "現状は藤林さんの直営業＋既存店舗集客客への提案が主。デジタル流入は弱い" },
+            { q: "その結果に基づき、その投資を倍掛けしているか？", status: "no_data", answer: "（マーケ予算ロジック未整備・4/15藤林さん自認）" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "営業は主要パートナーのコミュニティ／技術／流通を理解しているか？", status: "partial", answer: "Google LFPの優位性は社内浸透中" },
+            { q: "これらパートナーと明確なコミュニケーション／連携があるか？", status: "answered", answer: "Google年1万店舗コミット＋LFP独占で明確" }
+          ]},
+          { name: "マーケティング", questions: [
+            { q: "ターゲットペルソナの学習方法（情報源）を顧客調査で把握しているか？", status: "no_data", answer: "（要VoC調査）" },
+            { q: "どこで情報／紹介を得ているか？", status: "no_data", answer: "（要調査）" },
+            { q: "どのイベント／コミュニティ／インフルエンサーを信頼しているか？", status: "no_data", answer: "（要調査）" },
+            { q: "どのチャネル／パートナーシップが最も質の高いリードを生み出すか？", status: "no_data", answer: "（要分析）" },
+            { q: "未開拓の新規パートナーシップ／チャネル機会はあるか？", status: "partial", answer: "Agentic Commerceサミット動線／応援団株主小売チェーンからの紹介ルート" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 08. Sales Enablement ===== */
+    {
+      id: "sales_enablement", num: "08", group: "execution",
+      name: "Sales Enablement",
+      status: "pending",
+      summary: "🔴最優先：藤林さん属人化＝既存営業20名への移管が最大課題。バトルカードv1（vs mov）完成済。LP/ホワイトペーパー量産が前提整備",
+      current: {
+        version: "v0.5", date: "2026-05-27",
+        title: "藤林属人化解消 ＋ 既存営業20名への展開",
+        statement: "現状：藤林さんが直営業／他セールスが同じように売れる状態になっていない（属人化🔴／藤林さん自認＝4/15）。バトルカードv1（vs mov）完成済（宮本作）。ローンチ顧客3社のケーススタディ素材あり。4Q取組：（a）バトルカードv1の他営業展開（営業20名向けロープレ／AIロープレへの統合）／（b）ローンチ3社ケーススタディの完成形化（嘉穂無線HD／ビジョナリーHD／ムラサキ）／（c）営業向け1pager作成／（d）Q&A集／オブジェクションハンドリング集／（e）動画デモコンテンツ。藤林さん→既存営業20名への移管が完了 = ローカル在庫GTM v1.0 達成のマイルストーン。",
+        source: "4/15藤林dinner（営業の言語化／イネーブルメント🔴自認）／battlecard-mov.md（v1完成）"
+      },
+      history: [],
+      richType: "sales_enablement",
+      pmaQuestions: {
+        methods: "藤林さんインタビュー継続 / バトルカードv1検証 / 営業ロープレ / ローンチ顧客ケーススタディ深掘り",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "営業／CSが顧客フィードバックをCRM／プロダクト／マーケに共有する仕組みがあるか？", status: "partial", answer: "藤林さん経由でVoCが宮本に集約。仕組み化は4Q" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "営業はプロダクト／競合／市場を理解し、ピッチ・デモの研修に納得しているか？", status: "no_data", answer: "既存営業20名への研修未実施（属人化中）" },
+            { q: "必要な営業資料を持っており、保管場所を把握しているか？", status: "partial", answer: "バトルカードv1あり。1pager／Q&A／デモ動画は要作成" },
+            { q: "理想を言えば、他にどんなコンテンツが欲しいか？", status: "no_data", answer: "（要営業現場ヒアリング）" }
+          ]},
+          { name: "マーケティング", questions: [
+            { q: "営業資料は一箇所に集約され、利用状況が追跡されているか？", status: "no_data", answer: "（RAG基盤＝親GTM-Aへの統合候補）" },
+            { q: "営業はある程度カスタマイズ可能か？", status: "no_data", answer: "（要確認）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 09. Product Adoption ===== */
+    {
+      id: "product_adoption", num: "09", group: "execution",
+      name: "Product Adoption",
+      status: "progress",
+      summary: "Google年1万店舗コミット（4ヶ月で3,000店舗達成）。既存カンリー店舗集客客からのクロスセル動線が主。CS体制整備が藤林さん次なる課題",
+      current: {
+        version: "v1.0", date: "2026-05-27",
+        title: "Google年1万店舗コミット ＋ 既存客クロスセル",
+        statement: "アダプション最優先KPI：Google年1万店舗コミット（4ヶ月で3,000店舗達成済・4/15時点／1万店舗超でGoogleへの投資回収見えてくる／未達はGoogle側の認定・投資関係に影響）。導入経路：既存カンリー店舗集客契約社からのクロスセルが主（既存営業20名のアカウントネットワーク経由）。実装：クライアントに自社フォーマットで在庫を送らせるモデル（LFPルール／日本企業は自社在庫の可視化・システム化未着手が多くカンリー側が泥臭く取りに行く）。CS：藤林さんが直接サポート（属人）／親GTM-Aの『ハイタッチサクセス』ノウハウを移植中。",
+        source: "4/15藤林dinner（Google年1万店舗コミット・契約モデル詳細）／中期計画 p.66"
+      },
+      history: [],
+      richType: null,
+      pmaQuestions: {
+        methods: "Google契約データ追跡 / 既存店舗集客客のクロスセル率分析 / 藤林さんCSコール聴取",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "ユーザーが導入後にスムーズに活用できるオンボーディングプロセスがあるか？", status: "partial", answer: "藤林さん直サポート中。標準化は親GTM-Aの『脱GBP専門』CS PJと連動" },
+            { q: "ユーザー単位／アカウント単位の指標で『Product Adoption』が明確に定義されているか？", status: "partial", answer: "Google年1万店舗が外部KPI／内部Adoption指標は要設計" },
+            { q: "その定義はチーム横断で共通理解されているか？", status: "no_data", answer: "（藤林属人）" }
+          ]},
+          { name: "プロダクト / CS / マーケティング", questions: [
+            { q: "更新につながる『最低限の活用度・エンゲージメント水準』を把握しているか？", status: "no_data", answer: "（実績データ蓄積待ち）" },
+            { q: "活用度を段階的に引き上げる仕組み（プログレッシブ・アダプション）はあるか？", status: "partial", answer: "ローカル在庫広告（準備中）でアップセル設計" },
+            { q: "ユーザー行動に応じたトリガーメール／ポップアップ／CSMアウトリーチが整備されているか？", status: "no_data", answer: "（要設計）" },
+            { q: "ドキュメントサイト／プロダクトツアー／LMS／プロダクト内事例／コミュニティはあるか？", status: "no_data", answer: "（4Q重点）" },
+            { q: "早期警戒システムを伴うアカウントヘルススコアがあるか？", status: "no_data", answer: "（要設計）" },
+            { q: "PBR（Periodic Business Review）と更新プロセスは整備されているか？", status: "no_data", answer: "（藤林直サポート中）" }
+          ]}
+        ]
+      }
+    },
+    /* ===== 10. Internal Alignment ===== */
+    {
+      id: "internal_alignment", num: "10", group: "cross",
+      name: "Internal Alignment",
+      status: "progress",
+      summary: "藤林（オーナー）×宮本（伴走）×木下（コンテンツ）の3角形。週1定例（次回5/29木18:00）／親GTM-Aと相互リンク／属人化解消が4Q最大ミッション",
+      current: {
+        version: "v1.0", date: "2026-05-27",
+        title: "藤林×宮本×木下の3角形 ＋ 親GTM-A連携",
+        statement: "意思決定構造：藤林さん（PMM／ローカル在庫オーナー）／神田さん（マーケ責任者・PMMユニット長兼任・宮本上司ライン）／木下さん（マーケ実装・コンテンツ実行部隊）／長谷川さん（事業本部長・最上位）。週次定例：藤林さん×宮本 木曜18:00オンライン（次回5/29）。中期狙い：（a）藤林属人化解消＝既存営業20名への移管／（b）親GTM-Aとの相互参照（戦略商材としてのローカル在庫の位置付け明確化）／（c）木下さんとのコンテンツ量産パイプライン構築／（d）Sierra POC subject 1（宮本会社）の打診継続待ち（CEO・現役者MTG設定）。",
+        source: "5/24キックオフMTG（次回MTG確定）／4/15藤林dinner（組織・支援スコープ）"
+      },
+      history: [],
+      richType: null,
+      pmaQuestions: {
+        methods: "週次藤林さん×宮本定例 / 木下さん連携 / 親GTM-A（Canly_StoreMarketing） との相互リンク確認",
+        groups: [
+          { name: "クロスファンクショナル・アラインメント", questions: [
+            { q: "標準化された社内アラインメントの定例（週次／月次）があるか？", status: "answered", answer: "藤林さん×宮本週1（木18:00）／親GTM-Aとの月次同期予定" },
+            { q: "PMM／Sales／Product／CS の間で、ポジショニング・プライシング・ナラティブの認識が揃っているか？", status: "partial", answer: "案C直行は藤林さん×宮本で確定。他チーム展開は4Q" },
+            { q: "チーム横断のコンフリクトを表面化し解決する仕組みがあるか？", status: "partial", answer: "藤林さん経由で表面化中。仕組み化は4Q" },
+            { q: "重要なローンチで Internal Alignment Demo型FW を適用しているか？", status: "partial", answer: "6/1 MEOエージェントプレス（親GTM-A側）でInternal Alignment Demo型FW適用候補。ローカル在庫の正式版申込書リリース時にも適用候補" }
+          ]}
+        ]
+      }
+    }
+  ]
+};
+
+/* ============ RICH VIEW RENDERERS ============ */
+/*
+ * ▼ リッチビューについて
+ * 下記7つの renderRich***() は CaseMatch v0.4 の実例コードです。
+ * クライアントごとに以下を書き換えて使ってください：
+ *   - renderRichICP        : Tier区分・ペルソナ4種
+ *   - renderRichProblem    : 課題A/B × 解A/B（2×2）
+ *   - renderRichPositioning: 市場/カテゴリ/ポジ 三層 + 4ナラティブ
+ *   - renderRichPricing    : ROI公式 + 稟議ロジック + 残論点
+ *   - renderRichCompetition: 競合4社テーブル + 撃ち返しメッセージ
+ *   - renderRichSalesPitch : 判定ロジック + 5リーフカード
+ *   - renderRichSalesEnablement: 資材インベントリ + 運用ルール
+ *
+ * CSSクラスはそのまま流用可能（.tier-grid, .persona-grid, .narrative-legend,
+ * .category-layers, .roi-formula, .comp-table, .leaf-grid 等）。
+ * リファレンス: ~/Dropbox/PMM/projects/casematch/deliverables/CaseMatch_GTM_Audit_Living_v0.4.html
+ */
+function renderRichView(cat) {
+  switch (cat.richType) {
+    case "icp_personas": return renderRichICP();
+    case "problem_solution": return renderRichProblem();
+    case "positioning_messaging": return renderRichPositioning();
+    case "pricing": return renderRichPricing();
+    case "competition": return renderRichCompetition();
+    case "sales_pitch": return renderRichSalesPitch();
+    case "sales_enablement": return renderRichSalesEnablement();
+    default: return null;
+  }
+}
+
+function renderRichICP() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">🎯 Tier別 ターゲット戦略（3カラム）— 小売×店舗在庫多SKU軸</div>
+      <div class="tier-grid">
+        <div class="tier-card hero">
+          <div class="badge">★★★ 最優先</div>
+          <div class="label">TIER ① コア</div>
+          <h4>実店舗×EC両運営の小売チェーン</h4>
+          <div class="companies">嘉穂無線HD（グッデイ・HC）<br>ビジョナリーHD（メガネスーパー・アイウェア）<br>ムラサキスポーツ（スポーツ）<br>※2025/10ローンチ顧客</div>
+          <div class="strategy">ローンチ実績ロゴ／VoC公表済／旗艦事例として深堀り（Case Study化が4Q重点）</div>
+        </div>
+        <div class="tier-card tier1">
+          <div class="badge">拡大</div>
+          <div class="label">TIER ② 準コア</div>
+          <h4>店頭在庫が来店動機になる業種</h4>
+          <div class="companies">HC（コメリ・ビット・エイ） / 家電 / アパレル（しまむら・GLOBAL WORK） / スポーツ / アイウェア（パリミキ） / ドラッグ（Tomod's・ゴダイ）</div>
+          <div class="strategy">既存カンリー店舗集客客の中で小売Tier2を抽出→クロスセル推進</div>
+        </div>
+        <div class="tier-card">
+          <div class="badge">クロスセル</div>
+          <div class="label">TIER ③ ターゲット</div>
+          <h4>既存カンリー店舗集客契約社</h4>
+          <div class="companies">514社（26/1時点）／ ARPA 22.5万円<br>うち小売・在庫保有業態を抽出</div>
+          <div class="strategy">親GTM-A（店舗集客本体）からのアップセル動線／統合運用訴求／LIA非依存</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">👥 バイヤーペルソナ 4種（2×2グリッド）</div>
+      <div class="persona-grid">
+        <div class="persona t3">
+          <div class="persona-head">
+            <span class="tier-tag">T1 小売</span>
+            <span class="role">意思決定者</span>
+            <span class="name">マーケ／オムニチャネル責任者（40-55）</span>
+          </div>
+          <div class="persona-body">
+            <div class="row">中〜大規模小売チェーン / 実店舗+EC両運営 / OMO推進統括</div>
+            <div class="row"><b>Challenge:</b> 店頭在庫オンライン非可視化／OMO ROI測定難／Agentic Commerce対応の遅れ／LIA運用コスト</div>
+            <div class="msg">「Google公式LFP国内2社目認定。LIA非依存で店頭在庫をGoogle検索／マップ／ショッピングに連携」</div>
+          </div>
+        </div>
+        <div class="persona t3">
+          <div class="persona-head">
+            <span class="tier-tag">T1 小売</span>
+            <span class="role">チャンピオン</span>
+            <span class="name">EC事業責任者（35-45）</span>
+          </div>
+          <div class="persona-body">
+            <div class="row">EC運営／店舗連携・商品DB管理／OMO実装責任</div>
+            <div class="row"><b>Challenge:</b> 在庫データ送信フォーマット／店舗POSとの連携負荷／検索→店舗送客のCV計測</div>
+            <div class="msg">「カンリー側が自社フォーマットへの泥臭い変換も担う。Google年1万店舗コミットの実装ノウハウ蓄積済」</div>
+          </div>
+        </div>
+        <div class="persona t1">
+          <div class="persona-head">
+            <span class="tier-tag">T3 クロスセル</span>
+            <span class="role">既存窓口</span>
+            <span class="name">カンリー店舗集客導入企業 担当者（30-50）</span>
+          </div>
+          <div class="persona-body">
+            <div class="row">既にMEO/GBP一括管理SaaSを利用中／カンリーCSと月次定例</div>
+            <div class="row"><b>Challenge:</b> 店舗集客本体の効果を更に伸ばしたい／追加投資の社内稟議</div>
+            <div class="msg">「既存基盤×ローカル在庫で最速ローンチ。Tier1ロゴ（嘉穂無線/ビジョナリー/ムラサキ）の事例で稟議突破」</div>
+          </div>
+        </div>
+        <div class="persona t2">
+          <div class="persona-head">
+            <span class="tier-tag">将来</span>
+            <span class="role">海外勢警戒層</span>
+            <span class="name">経営層／DX推進統括（45-60）</span>
+          </div>
+          <div class="persona-body">
+            <div class="row">Agentic Commerce動向に感度高い経営層／NRF26フォロー組</div>
+            <div class="row"><b>Challenge:</b> 海外勢（Sierra・Klevu・Bloomreach等）のリアル店舗進出を警戒／日本での先行ポジ獲得</div>
+            <div class="msg">「日本でのAgentic Commerce『来店型』はカンリーが先行。LFP独占＋代理店契約集約で堀を作っている」</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <a class="external-link" href="Canly_StoreMarketing_GTM_Audit_Living_v0.1.html" target="_blank">▶ 親GTM-A（店舗集客事業）のICPで上位カテゴリの全体像を確認</a>
+    </div>
+  `;
+}
+
+function renderRichProblem() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">⚠️ Agentic Commerce時代の3大ペイン（小売×店舗在庫）</div>
+      <div class="narrative-legend">
+        <div class="narr-box" style="border-left-color: var(--red); background: #FFF4F0;">
+          <h4 style="color: var(--red);">課題A: 店頭在庫オンライン非可視化</h4>
+          <p>消費者が検索した瞬間に『近くの店に在庫がある』を伝えられず、機会損失が常態化。EC流出と店舗の機会損失の両面リスク。</p>
+        </div>
+        <div class="narr-box" style="border-left-color: var(--red); background: #FFF4F0;">
+          <h4 style="color: var(--red);">課題B: 店頭への在庫問合せ対応負荷</h4>
+          <p>『〇〇店にこの商品ありますか？』への電話／メール対応がCS現場の負荷源。問合せ削減ニーズあり。</p>
+        </div>
+        <div class="narr-box" style="border-left-color: var(--red); background: #FFF4F0;">
+          <h4 style="color: var(--red);">課題C: OMO ROIの可視化難</h4>
+          <p>EC×実店舗のOMO施策投資判断が停滞。検索→来店→購買のフルファネル計測が難しい。</p>
+        </div>
+      </div>
+    </div>
+    <div class="rich-section">
+      <div class="rich-section-title">✅ 提供するソリューション（LFP公式独占）</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>解A: Google検索／マップ／ショッピング露出</h4>
+          <p>Google LFP国内2社目認定パートナーとして、店舗の在庫情報をリアルタイム露出。LIA非依存で『今、ここにある在庫』をAIに供給。</p>
+        </div>
+        <div class="narr-box gold">
+          <h4>解B: 統合運用×ハイタッチサクセス</h4>
+          <p>カンリー店舗集客（13万店舗・MEO/GBP基盤）と統合運用。Tier1事例（嘉穂無線HD/ビジョナリーHD/ムラサキ）のCS伴走モデル展開。</p>
+        </div>
+        <div class="narr-box gold">
+          <h4>解C: Agentic Commerce時代のCV装置</h4>
+          <p>汎用AI（Gemini／ChatGPT／Perplexity）に『今、ここにある在庫』を多面的に供給。来店型エージェンティックコマースの基盤として位置付け。</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderRichPositioning() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">🔗 親GTM-A カテゴリーの中での位置付け</div>
+      <div class="parent-ref-box">
+        <b>📎 親GTM-A の最上位カテゴリ</b>：『エージェンティックコマース ＝ カンリー（来店型 × マルチチャネル横断）』<br>
+        <b>📎 その中でローカル在庫の役割</b>：Agentic Commerce『CV層装置』として、汎用AI（Gemini/ChatGPT/Perplexity）に『今、ここにある在庫』を供給する独占的ポジ
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">🎯 ポジショニング3層構造（カテゴリー → ビジョン → ポジショニング・メッセージング）</div>
+      <div class="category-layers">
+        <div class="layer-row category">
+          <span class="lname">カテゴリー</span>
+          <span class="ltext">公式ローカル在庫 ＝ カンリー（案C直行）</span>
+        </div>
+        <div class="layer-row vision">
+          <span class="lname">ビジョン</span>
+          <span class="ltext">『今、ここにある在庫』をAIが判断できる鮮度で、多面的に供給し続ける</span>
+        </div>
+        <div class="layer-row positioning">
+          <span class="lname">ポジショニング</span>
+          <span class="ltext">Google LFP独占（国内2社のみ） × 代理店契約集約 × カンリー店舗集客との統合運用</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">📣 4ナラティブ案（案C直行を支える訴求角度）</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>A案: 公式 × LFP独占 — カテゴリ第一想起確立</h4>
+          <p>『Google公式ローカル在庫 ＝ カンリー』の指名検索獲得。代理店契約集約（残るはモブのみ）も裏付け。</p>
+          <div class="ag">強い相手: 小売エンプラ・OMO推進企業・Google連動施策検討層</div>
+        </div>
+        <div class="narr-box">
+          <h4>B案: 検索の終わり、AI購買時代 — NRF26連動</h4>
+          <p>NRF26テーマ『The AI platform shift』『検索の終わり、AI購買の時代へ』との文脈連動。動的在庫データが分水嶺。</p>
+          <div class="ag">強い相手: グローバル動向感度高い経営層・先進小売</div>
+        </div>
+        <div class="narr-box">
+          <h4>C案: 機会損失からの脱出 — 来店・OMO ROI可視化</h4>
+          <p>店頭在庫オンライン非可視化による機会損失／問合せ対応負荷／OMO ROI不可視化からの解放。</p>
+          <div class="ag">強い相手: マーケ部長・オムニチャネル責任者（実務層）</div>
+        </div>
+        <div class="narr-box green">
+          <h4>D案: 統合運用 — カンリー店舗集客との二重便益</h4>
+          <p>既にMEO/GBPで使っている基盤×ローカル在庫で最速ローンチ。LIA非依存。Tier3 既存顧客クロスセル動線。</p>
+          <div class="ag">強い相手: カンリー店舗集客既存顧客（クロスセル）・最速ローンチ希望層</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">🛡️ 競合mov対抗ポジ（vs ローカルインベントリーマーケティング）</div>
+      <div class="parent-ref-box">
+        <b>movのネーミング戦略</b>：『ローカルインベントリーマーケティング』で独自カテゴリ訴求／2026-04-09 二木ゴルフ導入プレス／導入：BOOKOFF・ロフト・アンダーアーマー・ビックカメラ・ダイアナ・スギ薬局等。<br>
+        <b>カンリーの撃ち返し</b>：『公式LFP国内2社目認定 ＝ Google公式ルートはカンリー』『広告代理店契約全員カンリー集約済』『LIA非依存』。バトルカードv1（vs mov・宮本作）で実装済。
+      </div>
+    </div>
+  `;
+}
+
+function renderRichPricing() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">💰 ローカル在庫プライシング — 設計中（独立プライシング未確定）</div>
+      <div class="roi-formula">
+        <div class="ftitle">CURRENT STATE</div>
+        <div class="fstep">本体価格 <b>非公開</b>（応相談・原価優位）</div>
+        <div class="fstep"><span class="arr">→</span> ローカル在庫広告 <b>準備中</b>（オプション）</div>
+        <div class="fstep"><span class="arr">→</span> 商材構成: 親商材＝ローカル在庫本体 / 子＝ローカル在庫広告</div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">⚔️ 競合との価格構造（vs mov）</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>原価優位 + LFP独占の希少性プレミアム</h4>
+          <p>原価ベースではmov比で優位（藤林・4/15）。コンペになれば勝てる構造。一方で、LFP独占ポジを生かした『公式パートナーだけの特別価格』として希少性プレミアムを設定する選択肢あり。</p>
+        </div>
+        <div class="narr-box">
+          <h4>値引き圧力</h4>
+          <p>競合発生で値引きされる傾向あり（藤林）。LFP独占の差別化ロジック整備が必要。代理店契約集約済（残るはモブのみ）の堀を価格戦略にも転換可能。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">🔧 4Q要検討論点</div>
+      <div class="narrative-legend">
+        <div class="narr-box" style="border-left-color: var(--orange); background: var(--orange-bg);">
+          <h4 style="color: var(--orange);">課金モデル選択</h4>
+          <p>①店舗数ベース（カンリー店舗集客と整合）／②在庫データ量ベース（送信SKU数連動）／③成果報酬型（CV課金／Sierra本家参考）</p>
+        </div>
+        <div class="narr-box" style="border-left-color: var(--orange); background: var(--orange-bg);">
+          <h4 style="color: var(--orange);">バンドル設計</h4>
+          <p>カンリー店舗集客とのバンドル割引／統合運用ディスカウント／Tier1顧客向け特別プラン</p>
+        </div>
+        <div class="narr-box" style="border-left-color: var(--orange); background: var(--orange-bg);">
+          <h4 style="color: var(--orange);">海外Agentic Commerce勢の価格モデル調査</h4>
+          <p>Klevu／Bloomreach Discovery／Constructor.io等の課金モデルから学べる構造を抽出（4Q宮本リサーチ重点）</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderRichCompetition() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">🏆 ローカル在庫領域 競合マップ（mov深堀り）</div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th style="width:18%;">競合</th>
+            <th style="width:32%;">ポジション</th>
+            <th style="width:14%;">LFP認定</th>
+            <th>キー導入</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="cname">カンリー（自社）</td>
+            <td>公式LFP国内2社目認定（25/10）／カンリー店舗集客統合運用</td>
+            <td><span style="color:#1B5E20;font-weight:700">✓ 公式</span></td>
+            <td>嘉穂無線HD（グッデイ）／ビジョナリーHD／ムラサキスポーツ</td>
+          </tr>
+          <tr>
+            <td class="cname">mov（口コミコム）</td>
+            <td>『ローカルインベントリーマーケティング』独自ネーミング／統合プラットフォーム訴求</td>
+            <td><span style="color:#C62828;font-weight:700">✗ なし（GBPエキスパート監修のみ）</span></td>
+            <td>BOOKOFF／ロフト／アンダーアーマー／ビックカメラ／ダイアナ／スギ薬局／二木ゴルフ（2026-04-09）</td>
+          </tr>
+          <tr>
+            <td class="cname">広告代理店</td>
+            <td>個別実装／旧来のLIA運用代行</td>
+            <td><span style="color:#C62828;font-weight:700">✗ 全員カンリーLFPを担ぐ契約に集約済（4/15判明）</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="cname">海外Agentic Commerce勢</td>
+            <td>Sierra（米EC側）／Klevu／Bloomreach Discovery／Constructor.io 等</td>
+            <td>—（米国Google LIA中心・日本未進出）</td>
+            <td>主にEC事業者向け</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">⚔️ vs mov 主戦場の撃ち返しメッセージ（バトルカードv1）</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>① 公式性で勝つ</h4>
+          <p>「カンリー＝Google LFP国内2社目認定『公式』パートナー。mov＝GBPエキスパート監修のみ／LFP認定なし。Google公式ルートで在庫を流せるのは2社のみ」</p>
+        </div>
+        <div class="narr-box">
+          <h4>② 代理店契約集約で勝つ</h4>
+          <p>「広告代理店は全員カンリーLFPを担ぐ契約に集約済（4/15判明）。残るはmovのみで、代理店経由の競争は実質消滅」</p>
+        </div>
+        <div class="narr-box">
+          <h4>③ 統合運用で勝つ</h4>
+          <p>「カンリー店舗集客（13万店舗）×LFP公式の統合運用。MEO/GBP基盤と統合してLIA非依存で最速ローンチ」</p>
+        </div>
+        <div class="narr-box green">
+          <h4>④ 顧客実績で勝つ</h4>
+          <p>「嘉穂無線HD・ビジョナリーHD・ムラサキスポーツのVoC公表済。movのBOOKOFF/ロフト/二木ゴルフに対し、ハイタッチサクセスの再現性で差別化」</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">📌 mov攻勢への対策（4Q重点）</div>
+      <div class="narr-box" style="border-left-color: var(--orange); background: var(--orange-bg);">
+        <h4 style="color: var(--orange);">『ローカルインベントリーマーケティング』ネーミング戦への対抗</h4>
+        <p>movは独自ネーミングで認知取りに来ている。カンリーは『ローカル在庫』Google公式名そのまま使用で認知では押されぎみ（藤林自認・4/15）。4Q対応：（a）LP/コンテンツ刷新で『公式LFP』の希少性訴求／（b）ホワイトペーパー量産で『LFP独占＝公式ルート』を浸透／（c）Agentic Commerceサミット連動でカテゴリ自体を上位概念に昇華（→案C直行）。</p>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <a class="external-link" href="competitor_mov_press_2026-04-09.md" target="_blank">📄 競合mov プレスモニタリング（2026-04-09 二木ゴルフ）</a>
+    </div>
+  `;
+}
+
+function renderRichSalesPitch() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">🎯 ローカル在庫 統合ピッチ（HOOK → SOLUTION → CLOSE）</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>HOOK（質問形式のサウンドバイト）</h4>
+          <p>「AIが買う店を決める時代、貴社の店頭在庫は『AIに見える状態』になっていますか？」<br>（『今、ここにある在庫』をAIが判断できる鮮度で渡せるかが勝敗の分水嶺）</p>
+        </div>
+        <div class="narr-box">
+          <h4>SOLUTION</h4>
+          <p>「カンリー＝Google公式LFP国内2社目認定パートナー。日本で運用可能なのは2社のみ。店頭在庫をリアルタイムでGoogle検索／マップ／ショッピングに連携し、LIA非依存で実装。広告代理店は全員カンリーLFPを担ぐ契約に集約済。movとはコンペになれば勝てる原価優位構造（藤林・4/15）」</p>
+        </div>
+        <div class="narr-box green">
+          <h4>CLOSE</h4>
+          <p>「（既存カンリー店舗集客顧客）既にMEO/GBPで使っている基盤×ローカル在庫で最速ローンチ／（新規）店舗集客本体とセットでOMO最速構築／（Tier1旗艦）嘉穂無線HD・ビジョナリーHD・ムラサキスポーツの3社実績で経営稟議を後押し」</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">🛡️ バトルカードv1（vs mov）— 3つの撃ち返し</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>① 公式性で勝つ</h4>
+          <p>「カンリー＝Google LFP公式国内2社目認定。mov＝GBPエキスパート監修のみ／LFP認定なし」</p>
+        </div>
+        <div class="narr-box">
+          <h4>② 代理店契約集約で勝つ</h4>
+          <p>「広告代理店は全員カンリー集約済。残るはmovのみ」</p>
+        </div>
+        <div class="narr-box">
+          <h4>③ 統合運用で勝つ</h4>
+          <p>「カンリー店舗集客13万店舗×LFP公式の統合運用。LIA非依存で最速ローンチ」</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">⚠️ 4Q重点：藤林属人化解消ステップ</div>
+      <div class="narr-box" style="border-left-color: var(--orange); background: var(--orange-bg);">
+        <h4 style="color: var(--orange);">商談録音 → RAG統合 → 他営業ロープレ展開</h4>
+        <p>藤林さんの商談を録音→親GTM-AのRAG基盤に統合→他営業へAIロープレ展開→他営業からの初成約 = ローカル在庫GTM v1.0達成のマイルストーン。</p>
+      </div>
+    </div>
+  `;
+}
+
+function renderRichSalesEnablement() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">📚 営業資材インベントリ（藤林属人化解消が4Q最大ミッション）</div>
+      <div class="leaf-grid">
+        <div class="leaf-mini hero">
+          <div class="pri">★ 完成</div>
+          <div class="lname">バトルカードv1（vs mov）</div>
+          <div class="core">宮本作・LFP公式×代理店契約集約×統合運用の3軸／藤林さん属人で他営業展開未</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">既存資料</div>
+          <div class="lname">プレスリリース（2025/10提供開始）</div>
+          <div class="core">ローンチ3社（嘉穂無線HD・ビジョナリーHD・ムラサキ）VoC公表済</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">4Q要作成</div>
+          <div class="lname">ローンチ3社ケーススタディ完成形</div>
+          <div class="core">嘉穂無線HD/ビジョナリーHD/ムラサキの数値成果＋業務変革ストーリー化</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">4Q要作成</div>
+          <div class="lname">営業向け1pager</div>
+          <div class="core">案C直行『公式ローカル在庫＝カンリー』を1枚で語れる版</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">4Q要作成</div>
+          <div class="lname">Q&A集 / オブジェクションハンドリング</div>
+          <div class="core">『LFPって何？』『movとの違いは？』『価格は？』等の頻出疑問への即答集</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">4Q要作成</div>
+          <div class="lname">動画デモコンテンツ</div>
+          <div class="core">Google検索 → マップ → ショッピング表示の体験を動画化</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">⚠️ 藤林属人化解消の3ステップ</div>
+      <div class="narrative-legend">
+        <div class="narr-box red">
+          <h4>Step 1：商談録音 → ナレッジ化（4Q前半）</h4>
+          <p>藤林さんの商談を録音→RAG基盤に統合（親GTM-A連動）。VoC・FAB・反論処理の暗黙知を構造化する</p>
+        </div>
+        <div class="narr-box">
+          <h4>Step 2：他営業へロープレ展開（4Q中盤）</h4>
+          <p>営業20名向けに AIロープレ＋バトルカードv1で研修。藤林さんと同等のピッチを誰でも語れる状態化</p>
+        </div>
+        <div class="narr-box green">
+          <h4>Step 3：他営業からの成約創出（4Q末・26/8）</h4>
+          <p>藤林さん以外からの初成約 = 属人化解消の証明 = ローカル在庫GTM v1.0達成のマイルストーン</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">📌 藤林さん要望（5/24 MTG）の反映状況</div>
+      <div class="narr-box" style="border-left-color: var(--orange); background: var(--orange-bg);">
+        <h4 style="color: var(--orange);">LP（local.can-ly.com）／コンテンツ精査が最重点</h4>
+        <p>藤林さんから明示要望：『LP・コンテンツも精査してほしい』。バトルカードv1は完成済だが、その手前の認知獲得（LP・WP・コンテンツ）が弱い（mov『ローカルインベントリーマーケティング』ネーミング戦に押されぎみ）。GTM-B #7 Marketing Channels で連動深堀り。</p>
+      </div>
+    </div>
+  `;
+}
+
+/* ============ PMA Q&A RENDERER ============ */
+function renderPMAQuestions(cat) {
+  if (!cat.pmaQuestions) return '';
+  const pma = cat.pmaQuestions;
+
+  // 統計
+  let cnt = { answered: 0, partial: 0, no_data: 0, total: 0 };
+  pma.groups.forEach(g => g.questions.forEach(q => {
+    cnt[q.status]++; cnt.total++;
+  }));
+  const pct = (n) => cnt.total ? Math.round(n / cnt.total * 100) : 0;
+
+  const icon = s => ({ answered: '✅', partial: '🟡', no_data: '❌' }[s] || '⚪');
+  const slabel = s => ({ answered: '回答済', partial: '部分回答', no_data: '未回答' }[s] || s);
+
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">📋 Questions × CaseMatchの答え（${cnt.total}問）</div>
+
+      <div class="qna-summary-bar">
+        <span class="qna-stat a">✅ 回答済 ${cnt.answered} / ${cnt.total} (${pct(cnt.answered)}%)</span>
+        <span class="qna-stat p">🟡 部分回答 ${cnt.partial} (${pct(cnt.partial)}%)</span>
+        <span class="qna-stat n">❌ 未回答 ${cnt.no_data} (${pct(cnt.no_data)}%)</span>
+      </div>
+
+      <div class="pma-methods">
+        <b>調査メソッド:</b> ${pma.methods}
+      </div>
+
+      ${pma.groups.map(g => `
+        <div class="pma-block">
+          <div class="pma-group-name">
+            <span class="gtag">${g.name}</span>
+            <span>(${g.questions.length}問)</span>
+          </div>
+          <div class="qna-list">
+            ${g.questions.map(q => `
+              <div class="qna-item ${q.status}" onclick="this.classList.toggle('open')">
+                <div class="qrow">
+                  <span class="qicon">${icon(q.status)}</span>
+                  <span class="qtext">${q.q}</span>
+                </div>
+                <div class="arow"><b>[${slabel(q.status)}] CaseMatch:</b> ${q.answer}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+/* ============ RENDER ============ */
+const detailContainer = document.getElementById('detailContainer');
+
+function statusLabel(s) {
+  return { confirmed: '🟢 確定', progress: '🟠 進行中', pending: '⚪ 未着手' }[s] || s;
+}
+
+function renderCoverList() {
+  const fnd = document.getElementById('foundationList');
+  const exc = document.getElementById('executionList');
+  gtmAudit.categories.filter(c => c.group === 'foundation').forEach(c => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="li-num">${parseInt(c.num)}.</span><span class="li-text">${c.name}</span><span class="li-status ${c.status}"></span><span class="li-ver">${c.current.version}</span>`;
+    li.addEventListener('click', () => openDetail(c.id));
+    fnd.appendChild(li);
+  });
+  gtmAudit.categories.filter(c => c.group === 'execution').forEach(c => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="li-num">${parseInt(c.num)}.</span><span class="li-text">${c.name}</span><span class="li-status ${c.status}"></span><span class="li-ver">${c.current.version}</span>`;
+    li.addEventListener('click', () => openDetail(c.id));
+    exc.appendChild(li);
+  });
+  const cross = gtmAudit.categories.find(c => c.group === 'cross');
+  const ci = document.getElementById('crossItem');
+  ci.innerHTML = `<span class="li-num">10.</span><span class="li-text">${cross.name}</span><span class="li-status ${cross.status}"></span><span class="li-ver">${cross.current.version}</span>`;
+  ci.addEventListener('click', () => openDetail(cross.id));
+}
+
+function renderTiles() {
+  const groups = { foundation: 'foundationTiles', execution: 'executionTiles', cross: 'crossTiles' };
+  Object.entries(groups).forEach(([g, containerId]) => {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    gtmAudit.categories.filter(c => c.group === g).forEach(cat => {
+      const tile = document.createElement('div');
+      tile.className = `tile ${cat.status}`;
+      tile.innerHTML = `
+        <div class="head">
+          <div class="num">${cat.num}. ${cat.group.toUpperCase()}</div>
+          <span class="ver">${cat.current.version}</span>
+        </div>
+        <h3>${cat.name}</h3>
+        <div class="summary">${cat.summary}</div>
+        <div class="footer-meta">
+          <span>${statusLabel(cat.status)}</span>
+          <span>履歴 <span class="hcount">${cat.history.length}</span> 件 ・ ${cat.current.date}</span>
+        </div>
+      `;
+      tile.addEventListener('click', () => openDetail(cat.id));
+      container.appendChild(tile);
+    });
+  });
+}
+
+function renderDiff(diff) {
+  if (!diff || diff.length === 0) return '<div class="diff-unchanged">差分データなし（初版）</div>';
+  return diff.map(d => {
+    const cls = d.type === 'add' ? 'diff-add' : d.type === 'del' ? 'diff-del' : 'diff-unchanged';
+    return `<div class="${cls}">${d.text}</div>`;
+  }).join('');
+}
+
+function openDetail(id) {
+  let section = document.getElementById(`detail-${id}`);
+  if (section) {
+    section.classList.add('active');
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  const cat = gtmAudit.categories.find(c => c.id === id);
+  if (!cat) return;
+
+  section = document.createElement('section');
+  section.className = `detail-section active ${cat.status}`;
+  section.id = `detail-${id}`;
+
+  const timelineNodes = [...cat.history, { version: cat.current.version, date: cat.current.date, isCurrent: true }];
+  const richHTMLBase = renderRichView(cat) || '';
+  const pmaHTML = renderPMAQuestions(cat);
+  const richHTML = richHTMLBase + pmaHTML;
+
+  section.innerHTML = `
+    <div class="detail-head">
+      <div class="title-block">
+        <div class="num">ELEMENT ${cat.num} / ${cat.group.toUpperCase()} / ${statusLabel(cat.status)}</div>
+        <h2>${cat.name}</h2>
+      </div>
+      <button class="close-btn" onclick="document.getElementById('detail-${id}').classList.remove('active')">閉じる ×</button>
+    </div>
+
+    <div class="current-card">
+      <span class="badge">CURRENT — ${cat.current.version}</span>
+      <div class="ver-info">
+        <span>📅 <b>${cat.current.date}</b></span>
+        <span>📍 <b>${cat.current.source}</b></span>
+      </div>
+      <div class="title-text">${cat.current.title}</div>
+      <div class="statement">${cat.current.statement}</div>
+    </div>
+
+    ${richHTML ? `
+    <div class="rich-wrap">
+      <button class="rich-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
+        <span>📂 リッチ詳細＋Q&A を見る — 構造化ビュー / 質問への回答</span>
+        <span class="arrow">▶</span>
+      </button>
+      <div class="rich-content">
+        ${richHTML}
+      </div>
+    </div>` : ''}
+
+    ${cat.history.length > 0 ? `
+    <div class="timeline-wrap">
+      <div class="label">⏱ Timeline — クリックで該当バージョンへジャンプ</div>
+      <div class="timeline">
+        ${timelineNodes.map(n => `
+          <div class="node ${n.isCurrent ? 'current' : ''}" data-ver="${n.version}">
+            <div class="circle"></div>
+            <div class="ver">${n.version}</div>
+            <div class="date">${n.date}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="history-wrap">
+      <div class="label">📜 History — ${cat.history.length}件 / 古い順</div>
+      <div class="history-list">
+        ${cat.history.map(h => `
+          <div class="history-item" data-ver="${h.version}">
+            <div class="history-summary">
+              <div class="left">
+                <span class="ver-tag">${h.version}</span>
+                <span class="date-tag">${h.date}</span>
+                <span class="title-text">${h.title}</span>
+              </div>
+              <span class="toggle">▶</span>
+            </div>
+            <div class="history-detail">
+              <div class="history-block"><div class="blabel">📝 確定文（当時）</div><div class="btext">${h.statement || '—'}</div></div>
+              <div class="history-block trigger"><div class="blabel">⚡ Trigger</div><div class="btext">${h.trigger || '—'}</div></div>
+              <div class="history-block"><div class="blabel">🔀 Diff（直前との差分）</div><div class="diff-block">${renderDiff(h.diff)}</div></div>
+              <div class="history-block why"><div class="blabel">💡 なぜ変えたか</div><div class="btext">${h.why_changed || '—'}</div></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    ` : `<div class="placeholder-note">${cat.status === 'pending' ? '<b>未着手要素</b> — 履歴データなし。今後蓄積予定。' : '履歴データなし — このバージョンが初版'}</div>`}
+  `;
+
+  detailContainer.appendChild(section);
+  section.querySelectorAll('.history-summary').forEach(s => {
+    s.addEventListener('click', () => s.parentElement.classList.toggle('open'));
+  });
+  section.querySelectorAll('.timeline .node').forEach(n => {
+    n.addEventListener('click', () => {
+      const ver = n.dataset.ver;
+      const item = section.querySelector(`.history-item[data-ver="${ver}"]`);
+      if (item) { item.classList.add('open'); item.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    });
+  });
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+renderCoverList();
+renderTiles();
+</script>
+</body>
+</html>
