@@ -127,6 +127,7 @@
   .doc-card.lp { border-left-color: var(--canly-red); }
   .doc-card.meeting { border-left-color: var(--canly-gray); }
   .doc-card.summary { border-left-color: #B8860B; background: linear-gradient(135deg, #FFFEFA 0%, #FFF7E5 100%); }
+  .doc-card.sierra { border-left-color: #0B5E3B; background: linear-gradient(135deg, #FFFFFF 0%, #E8F3EC 100%); border-left-width: 5px; }
   .doc-card .tag {
     font-size: 9.5px;
     font-weight: 700;
@@ -142,6 +143,8 @@
   .doc-card.tree .tag { background: var(--canly-cyan); color: var(--canly-text); }
   .doc-card.lp .tag { background: var(--canly-red); }
   .doc-card.summary .tag { background: #B8860B; }
+  .doc-card.sierra .tag { background: #0B5E3B; }
+  .doc-card.sierra .arrow { color: #0B5E3B; }
   .doc-card h3 {
     margin-top: 8px;
     color: var(--canly-navy);
@@ -181,18 +184,40 @@
   <div class="confidential">CONFIDENTIAL</div>
   <div class="canly-logo">Canly</div>
   <h1>カンリーPMM伴走 — 内部共有インデックス</h1>
-  <div class="sub">藤林さん × 宮本 / 二軸アプローチ（GTM-A 店舗集客土台 × GTM-B ローカル在庫個別深堀り）</div>
+  <div class="sub">藤林さん × 宮本 / シエラエージェント主軸（Sparkly内製版）＋ GTM-A/B/C 配信先</div>
   <div class="meta">
-    <div><b>更新</b>2026-05-28 v0.1</div>
-    <div><b>用途</b>5/29(木)18:00 定例MTG用</div>
-    <div><b>公開設定</b>noindex / temporary（MTG後撤去予定）</div>
+    <div><b>更新</b>2026-06-02 v0.2</div>
+    <div><b>方向転換 v2</b>シエラ最上位＋ローカル在庫＋チャット下属</div>
+    <div><b>公開設定</b>noindex / temporary</div>
     <div><b>関連</b>https://local.can-ly.com / https://jp.can-ly.com</div>
   </div>
 </header>
 
 <div class="recommended-bar">
-  <b>★ まずここから：</b> 5/29 MTG用のサマリ資料を13スライドにまとめました。
-  <a href="Canly_MTG_2026-05-29_Summary_v0.1.html">5/29 MTGサマリを開く →</a>
+  <b>★ 6/2 更新：</b> シエラエージェント（カンリー版Sparkly）が最上位主軸に。ICP Living Doc v0.1 を新規追加。
+  <a href="Canly_Sierra_ICP_LivingDoc_v0.1.html">シエラ ICP Living Doc を開く →</a>
+</div>
+
+<div class="section-title">🎯 SIERRA AGENT 主軸 <span class="count">(1 + 追加予定2)</span></div>
+<div class="doc-grid">
+  <a href="Canly_Sierra_ICP_LivingDoc_v0.1.html" class="doc-card sierra">
+    <span class="tag">★ シエラ主軸 / NEW</span>
+    <h3>シエラエージェント ICP Living Doc v0.1</h3>
+    <p>カンリー版Sparkly内製版。誰に売るか × 業態×在庫連携深度×CV単価で5階層スコアリング。2階建て見せ方（外向き=拡張レイヤー／内向き=戦略OS）／PoC2社マッピング（カインズ★・キタムラ★・上新HOLD）／Walmart Sparky教訓 Why Now／Open Questions Q1-Q6 藤林さんレビュー必須項目。</p>
+    <div class="arrow">→ 開く</div>
+  </a>
+  <a href="#" class="doc-card sierra" style="opacity:0.55; cursor: not-allowed;" onclick="event.preventDefault(); alert('準備中：Sparkly事例×ICPプログラム別タブ（Walmart/Sonos/Casper/OluKai/Sun&Ski/Madison Reedの6型）');">
+    <span class="tag">準備中</span>
+    <h3>Sparkly事例 × ICPプログラム別タブ</h3>
+    <p>Walmart Sparky型／Sun&Ski Sunny型／Casper Luna 2.0型／OluKai Aloha型／Sonos Time-to-Music型／Madison Reed Madi型 の6パターン × ICP Tier 1-3 マッピング。各型のソリューション割当ロジック。</p>
+    <div class="arrow">準備中（次の更新で公開）</div>
+  </a>
+  <a href="#" class="doc-card sierra" style="opacity:0.55; cursor: not-allowed;" onclick="event.preventDefault(); alert('準備中：カメラのキタムラ向け PoC 1pager');">
+    <span class="tag">準備中</span>
+    <h3>カメラのキタムラ PoC 1pager</h3>
+    <p>カインズPDF（15p）と同フォーマットでキタムラ向けに作成。カメラ専門マニア接客AI＋写真プリント＋スタジオ予約＋修理対応のマルチサービスシナリオ。</p>
+    <div class="arrow">準備中（藤林さん経由ヒアリング後）</div>
+  </a>
 </div>
 
 <div class="section-title">🎯 MTG用サマリ <span class="count">(1)</span></div>
@@ -208,15 +233,15 @@
 <div class="section-title">🏛️ GTM Audit Living Doc <span class="count">(3 + 横断ツリー)</span></div>
 <div class="doc-grid">
   <a href="Canly_StoreMarketing_GTM_Audit_Living_v0.1.html" class="doc-card gtm-a">
-    <span class="tag">GTM-A 親</span>
+    <span class="tag">GTM-A（シエラ配信先）</span>
     <h3>店舗集客事業 GTM Audit</h3>
-    <p>EP/MID店舗集客本体＋丸投げBPO＋オプション群。10要素×5階層ドリルダウン。広く薄く・全社共通言語の土台。</p>
+    <p>EP/MID店舗集客本体＋丸投げBPO＋オプション群。10要素×5階層ドリルダウン。<b>6/2方向転換：シエラエージェントの配信先ソリューションへ再配置</b>。</p>
     <div class="arrow">→ 開く</div>
   </a>
   <a href="Canly_LocalInventory_GTM_Audit_Living_v0.1.html" class="doc-card gtm-b">
-    <span class="tag">GTM-B 子 ★深堀り</span>
+    <span class="tag">GTM-B（シエラ実行レイヤー基盤）</span>
     <h3>カンリーローカル在庫 GTM Audit</h3>
-    <p>戦略商材として独立扱い。藤林さん主軸／案C直行『公式ローカル在庫＝カンリー』／LP精査と直結。</p>
+    <p>戦略商材として独立扱い。藤林さん主軸／案C直行『公式ローカル在庫＝カンリー』／LP精査と直結。<b>6/2方向転換：シエラエージェントの実行レイヤー基盤として接続</b>。</p>
     <div class="arrow">→ 開く</div>
   </a>
   <a href="Canly_Welfare_GTM_Audit_Living_v0.1.html" class="doc-card gtm-c">
@@ -260,7 +285,7 @@
 </div>
 
 <footer>
-  © 2026 PMM伴走 / カンリー — Internal sharing, temporary noindex / Drafted by 宮本 (2026-05-28)
+  © 2026 PMM伴走 / カンリー — Internal sharing, temporary noindex / Drafted by 宮本 / v0.2 update 2026-06-02（シエラ主軸化）
 </footer>
 
 </div>
