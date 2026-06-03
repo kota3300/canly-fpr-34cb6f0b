@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>カンリー GTM-D：シエラエージェント — ICP Living Doc v0.1</title>
+<title>カンリー GTM-D：シエラエージェント — ICP Living Doc v0.2</title>
 <style>
   :root {
     --canly-navy: #1B3A6B;
@@ -68,6 +68,13 @@
     letter-spacing: 1px; border-radius: 3px; z-index: 2;
   }
 
+  /* Version pill */
+  .version-update {
+    display: inline-block; background: var(--sierra-green); color: white;
+    padding: 4px 12px; font-size: 11px; font-weight: 700; border-radius: 12px;
+    letter-spacing: 0.5px; margin-left: 8px;
+  }
+
   /* Section */
   .section-title {
     font-size: 20px; font-weight: 700; color: var(--canly-navy-deep);
@@ -78,6 +85,9 @@
     display: inline-block; background: var(--canly-navy-deep); color: white;
     font-size: 11px; padding: 3px 8px; border-radius: 3px;
     margin-right: 10px; vertical-align: middle; letter-spacing: 1px;
+  }
+  .section-title.new .num {
+    background: var(--sierra-green);
   }
   .section-sub {
     font-size: 13px; color: var(--canly-gray); margin: -8px 0 18px 19px;
@@ -107,9 +117,7 @@
   }
   .tier-box.outer { background: linear-gradient(135deg, var(--canly-blue) 0%, var(--canly-cyan) 100%); }
   .tier-box.inner { background: linear-gradient(135deg, var(--sierra-green) 0%, #1A8A5A 100%); }
-  .tier-box .label {
-    font-size: 11px; letter-spacing: 1.5px; opacity: 0.85; margin-bottom: 8px;
-  }
+  .tier-box .label { font-size: 11px; letter-spacing: 1.5px; opacity: 0.85; margin-bottom: 8px; }
   .tier-box h3 { font-size: 17px; margin-bottom: 12px; }
   .tier-box .desc { font-size: 13px; line-height: 1.6; opacity: 0.95; }
   .tier-box .layers {
@@ -159,9 +167,7 @@
   .tier-card.tier-2 .tier-label { background: var(--canly-orange); }
   .tier-card.tier-3 .tier-label { background: var(--canly-gray); }
   .tier-card h4 { font-size: 14px; color: var(--canly-navy-deep); margin-bottom: 8px; }
-  .tier-card .criteria {
-    font-size: 12px; color: var(--canly-gray); margin-bottom: 10px; line-height: 1.55;
-  }
+  .tier-card .criteria { font-size: 12px; color: var(--canly-gray); margin-bottom: 10px; line-height: 1.55; }
   .tier-card .examples {
     background: var(--canly-light); padding: 8px 10px; border-radius: 5px;
     font-size: 11.5px; line-height: 1.5;
@@ -173,7 +179,50 @@
     border-left: 3px solid var(--sierra-green);
   }
 
-  /* PoC候補マッピング */
+  /* Existing customer matrix */
+  .existing-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 12px;
+  }
+  .existing-card {
+    background: white; border-radius: 10px; padding: 18px 20px;
+    border-left: 4px solid var(--sierra-green);
+    position: relative;
+  }
+  .existing-card.lead { border-left-color: var(--canly-red); background: linear-gradient(135deg, #FFFFFF 0%, #FFF4F4 100%); }
+  .existing-card.scale { border-left-color: var(--canly-orange); }
+  .existing-card.early { border-left-color: var(--sierra-green); }
+  .existing-card .biz {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    color: var(--canly-gray); margin-bottom: 4px;
+  }
+  .existing-card h4 {
+    font-size: 16px; color: var(--canly-navy-deep); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .existing-card .pill {
+    font-size: 10px; padding: 2px 8px; border-radius: 10px;
+    font-weight: 700; letter-spacing: 0.3px;
+  }
+  .pill.expand { background: var(--canly-red); color: white; }
+  .pill.live { background: var(--sierra-green); color: white; }
+  .existing-card .stats {
+    background: var(--canly-light); padding: 10px 12px; border-radius: 5px;
+    font-size: 11.5px; margin: 10px 0; line-height: 1.7;
+  }
+  .existing-card .stats b { color: var(--canly-navy-deep); }
+  .existing-card .quote {
+    font-size: 11.5px; color: var(--canly-gray); font-style: italic;
+    border-left: 2px solid var(--canly-border); padding-left: 10px; margin-top: 8px;
+    line-height: 1.55;
+  }
+  .existing-card .impact {
+    margin-top: 10px; padding: 8px 11px; background: var(--sierra-green-light);
+    border-radius: 5px; font-size: 11.5px; color: var(--canly-navy-deep);
+    border-left: 3px solid var(--sierra-green);
+  }
+  .existing-card .impact b { color: var(--sierra-green); }
+
+  /* PoC候補マッピング (legacy / now expansion map) */
   .poc-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 12px;
   }
@@ -182,7 +231,7 @@
     border-radius: 10px; padding: 18px; position: relative;
   }
   .poc-card.active { border-color: var(--canly-red); }
-  .poc-card.hold { border-color: var(--canly-gray); opacity: 0.65; }
+  .poc-card.hold { border-color: var(--canly-gray); opacity: 0.7; }
   .poc-card .status-pill {
     position: absolute; top: 12px; right: 12px;
     font-size: 10px; padding: 3px 8px; border-radius: 10px;
@@ -197,9 +246,7 @@
     font-size: 11.5px; margin-bottom: 10px; line-height: 1.65;
   }
   .poc-card .facts b { color: var(--canly-navy-deep); }
-  .poc-card .why {
-    font-size: 12px; color: var(--canly-text); line-height: 1.55;
-  }
+  .poc-card .why { font-size: 12px; color: var(--canly-text); line-height: 1.55; }
   .poc-card .next {
     margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--canly-border);
     font-size: 11.5px;
@@ -222,7 +269,26 @@
   table.pattern td.t3 { background: var(--canly-light); }
   table.pattern .ref { color: var(--canly-blue); font-weight: 600; font-size: 11px; }
 
-  /* Sparky teach-back */
+  /* Data spec table */
+  table.spec {
+    width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12.5px;
+  }
+  table.spec th, table.spec td {
+    padding: 9px 12px; border: 1px solid var(--canly-border);
+    text-align: left;
+  }
+  table.spec th {
+    background: var(--canly-light); color: var(--canly-navy-deep);
+    font-weight: 600;
+  }
+  table.spec td code {
+    background: #F4F6FA; padding: 2px 6px; border-radius: 3px;
+    font-family: Menlo, Consolas, monospace; font-size: 11.5px;
+    color: var(--canly-blue);
+  }
+  table.spec .req { color: var(--canly-red); font-weight: 700; font-size: 10px; }
+
+  /* Why Now */
   .why-now {
     background: linear-gradient(135deg, #FFF7E5 0%, #FFE9B0 100%);
     border: 1.5px solid var(--gold); padding: 18px 22px;
@@ -235,15 +301,16 @@
   .why-now p { font-size: 12.5px; color: #4A3700; }
   .why-now .source { font-size: 10.5px; color: #6B5500; margin-top: 6px; opacity: 0.85; }
 
-  /* Footer / status */
-  .status-pill-inline {
-    display: inline-block; padding: 2px 8px; font-size: 10px; font-weight: 700;
-    border-radius: 3px; letter-spacing: 0.5px; margin-left: 6px;
+  /* Resolved */
+  .resolved {
+    background: var(--sierra-green-light); border-left: 4px solid var(--sierra-green);
+    padding: 14px 18px; border-radius: 6px; margin: 10px 0;
+    font-size: 13px;
   }
-  .status-pill-inline.draft { background: var(--canly-orange); color: white; }
-  .status-pill-inline.tba { background: var(--canly-gray); color: white; }
-  .status-pill-inline.confirmed { background: var(--sierra-green); color: white; }
+  .resolved b { color: var(--sierra-green); }
+  .resolved .answer { margin-top: 6px; color: var(--canly-text); }
 
+  /* Footer / status */
   footer {
     margin-top: 36px; padding: 22px 26px; background: var(--canly-light);
     border-radius: 8px; font-size: 12px; color: var(--canly-gray);
@@ -264,8 +331,34 @@
   }
   .critical-note b { color: var(--canly-red); }
 
+  /* KPI tiles */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 12px 0;
+  }
+  .kpi-tile {
+    background: white; border: 1px solid var(--canly-border);
+    border-radius: 8px; padding: 14px 16px; text-align: center;
+  }
+  .kpi-tile .label { font-size: 11px; color: var(--canly-gray); margin-bottom: 6px; }
+  .kpi-tile .value { font-size: 22px; color: var(--sierra-green); font-weight: 700; }
+  .kpi-tile .unit { font-size: 11px; color: var(--canly-gray); }
+
+  /* Diff block */
+  .diff-block {
+    background: white; border: 1px solid var(--canly-border);
+    border-radius: 8px; padding: 14px 18px; margin: 10px 0; font-size: 12px;
+  }
+  .diff-block .del {
+    background: #FFE9E9; padding: 2px 6px; border-radius: 3px;
+    text-decoration: line-through; color: #8B0000; margin-right: 6px;
+  }
+  .diff-block .add {
+    background: #E8F3EC; padding: 2px 6px; border-radius: 3px;
+    color: var(--sierra-green); font-weight: 600;
+  }
+
   @media (max-width: 900px) {
-    .two-tier, .tier-grid, .poc-grid, .grid-2 { grid-template-columns: 1fr; }
+    .two-tier, .tier-grid, .poc-grid, .grid-2, .existing-grid, .kpi-grid { grid-template-columns: 1fr; }
     header { padding: 28px 22px; }
     header h1 { font-size: 24px; }
   }
@@ -278,38 +371,41 @@
     <span class="confidential">CONFIDENTIAL</span>
     <span class="badge-top">GTM-D · SIERRA AGENT × CANLY</span>
     <h1>GTM-D：シエラエージェント — ICP Living Doc</h1>
-    <div class="sub">カンリー版Sparkly内製版 / 誰に・なぜ・どう売るかの構造化された生きた仕様書</div>
+    <div class="sub">カンリー版Sparkly内製版 / 既存顧客カタログ × Tier × Sparky型実装パターン を1ファイルに集約</div>
     <div class="meta">
-      <span><b>VERSION</b>v0.1</span>
-      <span><b>LAST UPDATED</b>2026-06-02</span>
+      <span><b>VERSION</b>v0.2 <span class="version-update">+ 既存顧客実データ反映</span></span>
+      <span><b>LAST UPDATED</b>2026-06-03</span>
       <span><b>OWNER</b>宮本 × 藤林さん</span>
-      <span><b>UPSTREAM</b>5/29 定例 v2 方向転換</span>
-      <span><b>NEXT REVIEW</b>次回定例</span>
+      <span><b>UPSTREAM</b>6/2 方向転換v2 ＋ 6/3 ローカル在庫6資料</span>
     </div>
   </header>
 
-  <!-- 0. Why this doc -->
+  <!-- 0. Why this doc / v0.2 update -->
   <div class="card">
-    <h3>📌 このドキュメントの位置付け</h3>
-    <p>シエラエージェント（カンリー版Sparkly内製版）の<b>「誰に売るか」</b>を、業態 × 在庫連携深度 × CV単価 の3軸で<b>5階層スコアリング</b>したLiving Doc。
-    PoC候補・ソリューション割当・既存資産との接続関係を1ファイルで追える。<b>更新頻度＝週次／藤林さんレビューで版上げ</b>。</p>
+    <h3>📌 v0.2 アップデート概要</h3>
+    <p>v0.1 から以下4点を更新。<b>「PoC候補のICP定義」から「既存顧客カタログ × 拡張優先順位」への構造転換</b>が最大の変更点。</p>
+    <div class="diff-block">
+      <span class="del">PoC候補3社の仮説マッピング</span><span class="add">既存7社の実データカタログ＋拡張優先順位</span><br><br>
+      <span class="del">米国仮説ROI</span><span class="add">国内実績 304-912万円/月（3業界実データ）</span><br><br>
+      <span class="del">Q1〜Q6 オープン論点</span><span class="add">Q1〜Q3 を ✅Resolved（公式仕様反映）／Q4-Q6 引き続き要レビュー</span><br><br>
+      <span class="del">Agentic Commerce 言及なし</span><span class="add">既存提案資料 slide 34-37 引用で「既に組み込み済の方向の本格化」と位置付け</span>
+    </div>
     <div class="callout">
       📚 <b>関連ドキュメント</b>：
-      Sparkly事例×ICPプログラム別タブ（Walmart/Sonos/Casper/OluKai/Sun&Ski/Madison Reedの6型）／
-      カインズ・カメラのキタムラ PoC 1pager ／
-      シエラ提案資料v0.1（CAINZ×Sierra / JOSHIN×Sierra=保留）
+      <a href="Canly_Sierra_Sparkly_Programs_v0.1.html">Sparkly事例×ICPプログラム別タブ →</a> ／
+      カインズPoC資料v0.1 ／ キタムラ月次レポート(2026-05-12) ／ アーバンリサーチ提案(2026-05-27)
     </div>
   </div>
 
   <!-- 1. 2階建て見せ方 -->
   <h2 class="section-title"><span class="num">01</span>2階建て見せ方（外向き／内向き）</h2>
-  <p class="section-sub">既存6,000店舗の応援団株主＋13万店舗ベースを混乱させずに「シエラ最上位」を成立させる構造</p>
+  <p class="section-sub">既存7社・13万店舗ベースを混乱させずに「シエラ最上位」を成立させる構造</p>
 
   <div class="two-tier">
     <div class="tier-box outer">
       <div class="label">EXTERNAL · 外向き（営業・LP・既存顧客）</div>
       <h3>シエラ＝既存資産の「拡張レイヤー」</h3>
-      <div class="desc">店舗集客／GBP管理／ローカル在庫／LFP――カンリーの既存ソリューションを<b>会話で実行する新しい器</b>として説明。既存契約顧客の混乱を回避し、追加価値として訴求。</div>
+      <div class="desc">既存ローカル在庫／GBP管理／LFPは継続。シエラは<b>「会話で実行する追加価値」</b>として訴求。既存契約顧客（7社+α）を貶めず、自然な拡張として提案できる。</div>
       <div class="layers">
         <div class="layer-row top-layer">＋ シエラエージェント（会話実行レイヤー／追加価値）</div>
         <div class="layer-row">ローカル在庫 / GBP管理 / 店舗集客 / LFP（既存・継続）</div>
@@ -318,7 +414,7 @@
     <div class="tier-box inner">
       <div class="label">INTERNAL · 内向き（経営層・PdM・社内）</div>
       <h3>シエラ＝戦略OS</h3>
-      <div class="desc">シエラエージェントを<b>戦略OSとして最上位</b>に配置。ローカル在庫・チャット・GBP管理・店舗集客は<b>配信先のソリューション</b>として整理。リソース配分・ロードマップ設計の基準軸。</div>
+      <div class="desc">シエラエージェントを<b>戦略OS</b>として最上位。ローカル在庫・チャット・GBP管理・店舗集客は<b>配信先のソリューション</b>として整理。リソース配分の基準軸。</div>
       <div class="layers">
         <div class="layer-row top-layer">シエラエージェント（戦略OS／Planner-Executor-Validator）</div>
         <div class="layer-row">↳ ローカル在庫 ＋ チャット（在庫×OMS実行）</div>
@@ -328,193 +424,331 @@
   </div>
 
   <div class="critical-note">
-    <b>運用ルール：</b>外向き資料（LP／カインズ・キタムラPoC1pager）では「拡張レイヤー」表現を使い、シエラを「追加機能」と位置付ける。
-    内向き資料（経営層／PdMレビュー）では「戦略OS」表現を使い、最上位レイヤーとして配置する。<b>2つの表現を混在させない</b>。
+    <b>運用ルール：</b>外向き資料（LP／PoC1pager／既存顧客向け）では「拡張レイヤー」表現を使う。
+    内向き資料（経営層／PdMレビュー）では「戦略OS」表現を使う。<b>2つの表現を混在させない</b>。
   </div>
 
-  <!-- 2. ICP定義 -->
-  <h2 class="section-title"><span class="num">02</span>ICP定義 — 定量・定性条件</h2>
-  <p class="section-sub">シエラエージェントが「実行型」として最大価値を発揮する企業像</p>
+  <!-- 2. 既存顧客カタログ NEW -->
+  <h2 class="section-title new"><span class="num">02</span>既存顧客カタログ ★NEW（実データ）</h2>
+  <p class="section-sub">2026-06-03時点で「カンリーローカル在庫」を既に運用中の企業群。シエラエージェントの第一手は<b>既存顧客の拡張</b>。</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-tile">
+      <div class="label">既存顧客（社）</div>
+      <div class="value">7+</div>
+      <div class="unit">カタログ確認済</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="label">連携店舗合計</div>
+      <div class="value">~880</div>
+      <div class="unit">店舗（推定）</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="label">日次連携SKU数</div>
+      <div class="value">86万+</div>
+      <div class="unit">SKU/日</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="label">地図経由売上試算</div>
+      <div class="value">~2,000万</div>
+      <div class="unit">円/月（3社合計）</div>
+    </div>
+  </div>
+
+  <div class="existing-grid">
+    <div class="existing-card lead">
+      <div class="biz">アパレル業界</div>
+      <h4>アーバンリサーチ <span class="pill expand">シエラ拡張候補#1</span></h4>
+      <div class="stats">
+        <b>展開：</b>250店舗以上（2025年3月16日〜）<br>
+        <b>連携SKU：</b>日次70万（店舗×商品）<br>
+        <b>GBP閲覧（4月）：</b>848,198（前年同月+9.43%）<br>
+        <b>通話 / 経路：</b>3,217 / 25,236（+19.99%）
+      </div>
+      <div class="impact">
+        💰 <b>地図経由売上推定 約862万円/月</b>（4,205件×76%×1.5万円×18%）
+      </div>
+    </div>
+
+    <div class="existing-card lead">
+      <div class="biz">専門小売 / カメラ・写真</div>
+      <h4>カメラのキタムラ <span class="pill expand">シエラ拡張候補#2</span></h4>
+      <div class="stats">
+        <b>展開：</b>30店舗（2026年2月〜）→ 全国約500店舗へ拡張余地<br>
+        <b>純増効果：</b>未連携店舗 vs 連携店舗 = 閲覧+20.94% / 経路+14.42%<br>
+        <b>無料リスティング全社：</b>2026年4月 表示+225% / クリック+159%（前年比）<br>
+        <b>運用：</b>月次レポート稼働中（最新 2026-05-12）
+      </div>
+      <div class="impact">
+        💰 <b>地図経由売上推定 約304万円/月</b>（30店舗ベース）<br>
+        🎯 <b>全店舗拡張で約5,000万円/月規模</b>のポテンシャル
+      </div>
+    </div>
+
+    <div class="existing-card lead">
+      <div class="biz">リユース業界</div>
+      <h4>ハードオフ／駿河屋 <span class="pill expand">シエラ拡張候補#3</span></h4>
+      <div class="stats">
+        <b>展開：</b>300店舗以上（2026年2月〜）<br>
+        <b>連携SKU：</b>日次16万（店舗×商品）<br>
+        <b>EC売上：</b>導入初月49万円 → 2ヶ月目105万円（<b>約3倍</b>）<br>
+        <b>経路案内：</b>10万 → 14万回（前年同月比1.4倍）
+      </div>
+      <div class="impact">
+        💰 <b>地図経由売上推定 約912万円/月</b>（4万件×76%×3千円×10%）<br>
+        🎯 駿河屋「ニンテンドースイッチ」検索でTOP表示実績
+      </div>
+    </div>
+
+    <div class="existing-card scale">
+      <div class="biz">ホームセンター</div>
+      <h4>嘉穂無線HD（グッデイ） <span class="pill live">運用中</span></h4>
+      <div class="stats">
+        <b>業界TOPキーワード露出：</b>「ハンドソープ」検索でイソップを差し置きトップ表示<br>
+        <b>GBP流入TOP10検索ワード：</b>「グッデイ」71万 / 「ホームセンター」37万 / 「近くのホームセンター」3.4万
+      </div>
+      <div class="quote">「カンリーによって変化にいち早く対応でき、効率的に自店のWEB上の存在感を強められている」(マーケ部 課長)</div>
+    </div>
+
+    <div class="existing-card scale">
+      <div class="biz">ホームセンター</div>
+      <h4>カインズ <span class="pill live">運用中</span></h4>
+      <div class="stats">
+        <b>年商：</b>5,738億円（2025年2月期）<br>
+        <b>店舗：</b>256店 / 29都道府県<br>
+        <b>アプリ：</b>573万人（レジ通過の40%）<br>
+        <b>PickUp比率：</b>EC注文の33.3%
+      </div>
+      <div class="impact">
+        🎯 <b>シエラ拡張：</b>DIYコンシェルジュ（Sun&Ski型）＋PickUp会話実行＋PB商品アドバイザー
+      </div>
+    </div>
+
+    <div class="existing-card scale">
+      <div class="biz">メガネ / コンタクト</div>
+      <h4>ビジョナリーHD（メガネスーパー） <span class="pill live">運用中</span></h4>
+      <div class="quote">「即日購入が可能な豊富な在庫と駅前立地という強みを活かし、コンタクトレンズ販売のさらなる認知拡大に取り組んでいる」（マネージングディレクター）</div>
+      <div class="impact">
+        🎯 <b>シエラ拡張：</b>「今すぐ買える安心感」「近くで手に入る利便性」を会話で即実行
+      </div>
+    </div>
+
+    <div class="existing-card scale">
+      <div class="biz">スポーツ用品</div>
+      <h4>ムラサキスポーツ <span class="pill live">運用中</span></h4>
+      <div class="quote">「検索からはじまる消費動向を捉えるには、GBP活用＋在庫情報でユーザーを店舗にダイレクト誘導が必要」（営業統括本部 副本部長）</div>
+      <div class="impact">
+        🎯 <b>シエラ拡張：</b>Sun&Ski Sports型プリセールス相談を直接転用可能（同業態）
+      </div>
+    </div>
+
+    <div class="existing-card early">
+      <div class="biz">家電量販</div>
+      <h4>上新電機 <span class="pill" style="background:var(--canly-gray);color:white;">HOLD（保留）</span></h4>
+      <div class="stats">
+        <b>EC売上：</b>590億円（前年比+20.0% 過去最高）<br>
+        <b>EC化率：</b>18.2%<br>
+        <b>既存AI：</b>LINE WORKS AiCall ／ TDI KWA ／ バーチャルリフォーム
+      </div>
+      <div class="impact">
+        🔒 <b>Phase 2以降で再活性化候補</b>（カインズ＋キタムラの実績後）
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. ICP定義（既存実データで再強化） -->
+  <h2 class="section-title"><span class="num">03</span>ICP定義（既存7社のパターン抽出）</h2>
+  <p class="section-sub">「既存顧客の共通条件」から逆算したICP — シエラエージェントが効く企業像</p>
 
   <div class="card">
     <table class="icp-def">
       <tr>
         <th>業態</th>
-        <td>マルチストア小売（自社EC＋実店舗）／DIY・家電・専門品・カメラ・アパレル・耐久消費財／在庫×物流が差別化軸の業態</td>
+        <td>マルチストア小売（アパレル／カメラ・写真／リユース／ホームセンター／メガネ／スポーツ／家電量販）= <b>既存7業界カバー済</b></td>
       </tr>
       <tr>
         <th>店舗数</th>
-        <td>50店舗以上（理想100店舗以上）／実店舗ネットワークが「ローカル在庫の同期価値」を生むこと</td>
+        <td>30店舗〜500店舗（最小キタムラ30、最大アーバンリサーチ250+、ハードオフ300+）</td>
       </tr>
       <tr>
-        <th class="must">必須① EC連携</th>
-        <td>自社EC運営（GMV 100億円以上）／楽天・Amazon併売だけは対象外</td>
+        <th class="must">必須① GMC運用</th>
+        <td>Google Merchant Center 運用済（offerId 把握） / カンリーアカウント（mca@can-ly.com）に読取権限付与可能</td>
       </tr>
       <tr>
-        <th class="must">必須② 在庫API</th>
-        <td>店舗別在庫の<b>リアルタイムAPI</b>または準リアルタイム連携が可能（OMS/ERP/POS）</td>
+        <th class="must">必須② GBP整備</th>
+        <td>Google Business Profile オーナー確認済 / 店舗コード（storeCode）保有 / GMCと整合性あり</td>
       </tr>
       <tr>
-        <th class="must">必須③ ロイヤルティ基盤</th>
-        <td>自社アプリ／会員基盤（100万人以上）／購買履歴×住所×家族構成データの統合理解</td>
+        <th class="must">必須③ 在庫データ連携</th>
+        <td>自社基幹システムから <b>API（推奨）or SFTP</b> で日次連携可能 / 必須5カラム（storeCode/offerId/price/availability/quantity）を出せる</td>
       </tr>
       <tr>
         <th>CV単価帯</th>
-        <td>中〜高単価（1万円以上の検討商品）／コンサル型接客が売上に直結する商品群</td>
+        <td>中〜高単価（カメラ 数万円〜数十万 / 家電 数万〜 / マットレス 数万〜 / DIY 数千〜 / アパレル 1.5万平均）</td>
       </tr>
       <tr>
         <th>定性条件</th>
         <td>
-          ・「店舗を増やさず売上を伸ばす」DX意欲<br>
-          ・既存AI投資（チャットボット/音声AI）があり、補完設計を受け入れる柔軟性<br>
-          ・コンタクトセンター人件費 / 機会損失（カゴ落ち・在庫照会の電話）を経営課題と認識<br>
-          ・成果報酬型課金（解決した分だけ）の説明が稟議に通る組織体力
+          ・「店舗を増やさず売上を伸ばす」DX意欲（カインズ「ホームセンターからIT小売企業へ」、上新電機「まごころサービス」）<br>
+          ・既存AI投資（音声AI / 店舗ナレッジAI）があり<b>補完設計</b>を受け入れる柔軟性<br>
+          ・成果報酬型課金（解決した分だけ）の説明が稟議に通る組織体力<br>
+          ・「Agentic Commerce時代の到来」に対応する意思（既存提案資料 slide 34-37 既に組み込み済）
         </td>
       </tr>
       <tr>
         <th>除外</th>
-        <td>EC無し／在庫API無し／単一商品D2C（複数商品まとめ買いシナリオ無し）／プラットフォーム依存型（楽天・Amazonのみ）</td>
+        <td>EC無し／在庫API連携不可／単店D2C（複数店舗まとめ買いシナリオ無し）／プラットフォーム依存型（楽天・Amazonのみ）</td>
       </tr>
     </table>
   </div>
 
   <div class="why-now">
-    <h4>⚡ Why Now — Walmart Sparky 教訓</h4>
-    <p>2025/9 OpenAI Instant Checkout（Walmart統合）は<b>「単品ごとチェックアウト」モデル</b>でCVRが既存サイトの<b>1/3</b>に低下。
-    根本原因は「消費者は日替わりに複数商品をカートに追加し最終的にまとめてチェックアウトする」という実購買行動との不一致。
-    Walmartは<b>Sparky（アプリ/Web/ChatGPT/Geminiのバスケット同期）</b>を投入して再構築中。<b>カンリー版Sparklyは初手から「バスケット同期＋まとめ取り置き」を必須要件として設計</b>すべき。</p>
-    <div class="source">出典：ppc.land / Walmart Daniel Danker (2026-03) ／ Universal Commerce Protocol (Google×Walmart×Target)</div>
+    <h4>⚡ Why Now — Walmart Sparky 教訓 ＋ アーバンリサーチ既存組み込みの符合</h4>
+    <p>米国：Walmart Instant Checkout（2025/9 OpenAI×Walmart）は<b>「単品ごとチェックアウト」モデル</b>でCVRが既存サイト1/3に低下。Walmartは<b>Sparky（アプリ/Web/ChatGPT/Geminiのバスケット同期）</b>で再構築中。<br>
+    日本：アーバンリサーチ向け提案資料（2026-05-27）slide 34-37 で<b>「Agentic Commerce時代の到来」「将来的にgemini内でEC購買完結」</b>が既に組み込まれている。<br>
+    → <b>シエラエージェントは "新規方向の提案" ではなく "既に発信した方向の具体的な実装層"</b>。藤林さん側のメッセージとも完全に整合。</p>
+    <div class="source">出典：ppc.land / アーバンリサーチ向け提案資料(2026-05-27) slide 34-37</div>
   </div>
 
-  <!-- 3. Tier 3階層 -->
-  <h2 class="section-title"><span class="num">03</span>Tier 3階層 スコアリング</h2>
-  <p class="section-sub">ICP定義の充足度 × 在庫連携深度 × CV単価で3階層に分類</p>
+  <!-- 4. Tier 3階層（既存実データ反映） -->
+  <h2 class="section-title"><span class="num">04</span>Tier 3階層（既存顧客実データで再分類）</h2>
+  <p class="section-sub">既存顧客×シエラ拡張優先順位を3階層で整理</p>
 
   <div class="tier-grid">
     <div class="tier-card tier-1">
-      <span class="tier-label">TIER 1 · CORE</span>
-      <h4>マルチストア × 自社EC × リアルタイム在庫API</h4>
-      <div class="criteria">必須3条件全て充足。100店舗以上＋自社EC GMV 100億円以上＋会員基盤500万人以上＋リアルタイム在庫API。</div>
+      <span class="tier-label">TIER 1 · 既存×拡張優先</span>
+      <h4>マルチストア + 既存カンリーローカル在庫稼働中 + 月次CSあり</h4>
+      <div class="criteria">既存契約あり／信頼関係あり／月次レポート運用済／30店以上稼働。シエラ拡張提案が最短で通る層。</div>
       <div class="examples">
-        <b>対象業態：</b>大型ホームセンター / 大型家電量販 / 全国カメラチェーン / 大型アパレル <br>
-        <b>該当企業：</b>カインズ・上新電機・カメラのキタムラ・ニトリ・ヨドバシ・ビックカメラ
+        <b>該当：</b>カインズ・カメラのキタムラ・ハードオフ・アーバンリサーチ・嘉穂無線HD・ビジョナリーHD・ムラサキスポーツ
       </div>
-      <div class="ltv">期待LTV：年$200K–$1.5M+（Phase 1→3で段階移行）／アプローチ：AE直接 / ハイタッチ</div>
+      <div class="ltv">期待LTV：年$200K–$1.5M+（Phase 1→3で段階移行） / アプローチ：<b>既存CS経由でシエラβ提案</b></div>
     </div>
 
     <div class="tier-card tier-2">
-      <span class="tier-label">TIER 2 · NEAR-CORE</span>
-      <h4>マルチストア × 自社EC × 準リアルタイム在庫</h4>
-      <div class="criteria">EC連携あり・在庫API遅延あり（日次・時間次同期）／50店舗〜100店舗／単一カテゴリ専門小売</div>
+      <span class="tier-label">TIER 2 · 新規ICP適合</span>
+      <h4>マルチストア + 自社EC + 在庫API連携可能 + Tier 1類似業態</h4>
+      <div class="criteria">既存未契約だがICP条件充足／Tier 1事例で巻き取り可能／30-100店舗規模／単一カテゴリ専門小売</div>
       <div class="examples">
-        <b>対象業態：</b>中堅小売チェーン / カテゴリ専門店 / 地域チェーン<br>
-        <b>該当企業：</b>嘉穂無線HD・ビジョナリーHD・ムラサキスポーツ・百貨店中規模ライン
+        <b>該当候補：</b>中堅家電量販／ホームセンター（コメリ・ナフコ・コーナン等）／メガネチェーン（JINS等）／カメラ系（ヨドバシ・ビック）／スポーツ専門
       </div>
-      <div class="ltv">期待LTV：年$100K–$350K／アプローチ：SDR+コンテンツ／Tier1事例で巻き取り</div>
+      <div class="ltv">期待LTV：年$100K–$350K / アプローチ：<b>Tier 1の事例コンテンツでInbound</b></div>
     </div>
 
     <div class="tier-card tier-3">
-      <span class="tier-label">TIER 3 · TARGET</span>
-      <h4>少数店 × 自社EC中心 × 在庫管理外注</h4>
-      <div class="criteria">店舗数20以下／EC比率が高い／在庫管理は3PL／単店D2Cブランド</div>
+      <span class="tier-label">TIER 3 · ボリュームターゲット</span>
+      <h4>少数店 + 自社EC中心 + 在庫管理3PL + 単店D2C</h4>
+      <div class="criteria">店舗数20以下／EC比率が高い／在庫管理は3PL／単店D2Cブランド／成果報酬で量を獲得</div>
       <div class="examples">
-        <b>対象業態：</b>単店D2C / フラッグシップ型小売 / オムニチャネル黎明<br>
-        <b>該当企業：</b>カテゴリーキング型D2C・ホビー専門単店・スポーツ専門単店
+        <b>該当：</b>カテゴリーキング型D2C・ホビー専門単店・スポーツ専門単店
       </div>
-      <div class="ltv">期待LTV：年$50K–$150K／アプローチ：インバウンド／LPからセルフサーブ</div>
+      <div class="ltv">期待LTV：年$50K–$150K / アプローチ：<b>インバウンド／LPからセルフサーブ</b></div>
     </div>
   </div>
 
-  <!-- 4. PoC候補マッピング -->
-  <h2 class="section-title"><span class="num">04</span>PoC候補 マッピング</h2>
-  <p class="section-sub">2026-06-02時点 — 2社注力（上新電機は保留）</p>
+  <!-- 5. 既存実績ROI -->
+  <h2 class="section-title"><span class="num">05</span>既存実績ROI（米国仮説 → 国内実データ）</h2>
+  <p class="section-sub">3業界×実数値の地図経由売上インパクト</p>
 
-  <div class="poc-grid">
-    <div class="poc-card active">
-      <span class="status-pill">ACTIVE</span>
-      <h4>カインズ</h4>
-      <div class="industry">DIY・ホームセンター / Tier 1 Core</div>
-      <div class="facts">
-        <b>年商：</b>5,738億円（2025年2月期）<br>
-        <b>店舗：</b>256店 / 29都道府県<br>
-        <b>アプリ：</b>573万人（レジ通過の40%）<br>
-        <b>PickUp比率：</b>EC注文の33.3%<br>
-        <b>既存資産：</b>DIY Square 10万人／となりのカインズさん 1億PV
-      </div>
-      <div class="why">
-        <b>ICPフィット理由：</b>必須3条件全充足。PickUp 33.3%は<b>「在庫×店頭受取」が既に巨大導線</b>＝シエラの実行レイヤーが直接効く。DIY商品選定相談（ウッドデッキ等）はSun&Ski型コンシェルジュの直接転用。
-      </div>
-      <div class="next">
-        <b>NEXT：</b>既存提案資料v0.1（CAINZ×Sierra 15p）／90日PoC Phase 1で PickUp関連FAQ自動化からスタート／投資3,000–5,250万円 → 11.5億円リターン試算
-      </div>
+  <div class="card">
+    <table class="pattern">
+      <thead>
+        <tr>
+          <th>業界</th>
+          <th>店舗数</th>
+          <th>連携SKU/日</th>
+          <th>地図経由売上推定</th>
+          <th>計算ロジック</th>
+          <th>シエラ拡張ポテンシャル</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>アパレル</b><br>アーバンリサーチ</td>
+          <td class="t1">250+</td>
+          <td>70万</td>
+          <td class="t1"><b>約862万円/月</b></td>
+          <td>4,205件×76%×1.5万円×18%</td>
+          <td>+チャット商品コーディネート提案で客単価×1.5想定</td>
+        </tr>
+        <tr>
+          <td><b>専門小売</b><br>カメラのキタムラ</td>
+          <td class="t1">30 → 500</td>
+          <td>30店ベース</td>
+          <td class="t1"><b>約304万円/月</b><br>→ 約5,000万円/月（全店）</td>
+          <td>純増効果14.42%ベース</td>
+          <td>マニア接客AI＋写真プリント＋スタジオ予約＋修理マルチ受付</td>
+        </tr>
+        <tr>
+          <td><b>リユース</b><br>ハードオフ／駿河屋</td>
+          <td class="t1">300+</td>
+          <td>16万</td>
+          <td class="t1"><b>約912万円/月</b><br>+ EC売上3倍</td>
+          <td>4万件×76%×3千円×10%</td>
+          <td>商品検索→在庫即提示→取り置きまで会話完結</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. データ連携仕様 -->
+  <h2 class="section-title"><span class="num">06</span>データ連携仕様（公式マニュアル要約）</h2>
+  <p class="section-sub">シエラがチャットで在庫確認するときの必須仕様</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>📥 連携方式（推奨：API）</h3>
+      <table class="spec">
+        <tr><th>項目</th><th>仕様</th></tr>
+        <tr><td>方式</td><td>API（★推奨）or SFTP</td></tr>
+        <tr><td>推奨頻度</td><td><b>日次連携</b>（公式）</td></tr>
+        <tr><td>API上限</td><td>秒間100リクエスト</td></tr>
+        <tr><td>1ファイル</td><td>5GB以内（超過時マルチパート）</td></tr>
+        <tr><td>IP制限</td><td>国内のみ</td></tr>
+        <tr><td>GMC権限</td><td>mca@can-ly.com に「読取以上」</td></tr>
+      </table>
     </div>
-
-    <div class="poc-card active">
-      <span class="status-pill">ACTIVE</span>
-      <h4>カメラのキタムラ</h4>
-      <div class="industry">カメラ・写真専門 / Tier 1 Core</div>
-      <div class="facts">
-        <b>店舗：</b>全国800店超（業界最大）<br>
-        <b>EC：</b>カメラのキタムラオンラインショップ<br>
-        <b>専門性：</b>カメラ機材＋写真プリント＋スタジオ撮影＋修理<br>
-        <b>在庫連携：</b>店舗別在庫表示あり（リアルタイム性TBD）<br>
-        <b>会員基盤：</b>キタムラ会員カード・スタジオマリオ会員
-      </div>
-      <div class="why">
-        <b>ICPフィット理由：</b>カメラはマニア性が極めて高くSierraの<b>「ホビー専門マニア接客AI」</b>と完全合致（上新電機の鉄道模型シナリオ同型）。写真プリント＋スタジオ予約＋カメラ修理の<b>マルチサービス受付</b>はOluKai型「グレーゾーン判断」が効く。
-      </div>
-      <div class="next">
-        <b>NEXT：</b>キタムラ向け1pager作成（カインズPDF踏襲）／在庫API仕様確認／藤林さん経由ヒアリング設定
-      </div>
-    </div>
-
-    <div class="poc-card hold">
-      <span class="status-pill">HOLD</span>
-      <h4>上新電機</h4>
-      <div class="industry">家電量販 / Tier 1 Core（保留）</div>
-      <div class="facts">
-        <b>EC売上：</b>590億円（前年比+20.0% 過去最高）<br>
-        <b>EC化率：</b>18.2%（+1.5pt）<br>
-        <b>既存AI：</b>LINE WORKS AiCall（2021年〜）／TDI KWAシリーズ／バーチャルリフォーム<br>
-        <b>差別化軸：</b>「まごころサービス」設置・工事・ホビー専門
-      </div>
-      <div class="why">
-        <b>ICPフィット理由：</b>必須3条件全充足。AiCall既存稼働＋ホビー領域（鉄道模型・ラジコン）はSierraと相性極めて良い。<b>ただし2026-06-02時点でPoC優先度を下げ保留</b>（K&Kに集中）。
-      </div>
-      <div class="next">
-        <b>STATUS：</b>提案資料v0.1（JOSHIN×Sierra 15p）作成済・凍結／<b>Phase 2以降で再活性化候補</b>
-      </div>
+    <div class="card">
+      <h3>📦 在庫フィード 必須5カラム</h3>
+      <table class="spec">
+        <tr><th>カラム</th><th>説明</th><th>例</th></tr>
+        <tr><td><code>storeCode</code><span class="req"> 必須</span></td><td>GBP店舗コード</td><td>11111111</td></tr>
+        <tr><td><code>offerId</code><span class="req"> 必須</span></td><td>GMC商品ID</td><td>SKU-001</td></tr>
+        <tr><td><code>price</code><span class="req"> 必須</span></td><td>価格</td><td>3980</td></tr>
+        <tr><td><code>availability</code><span class="req"> 必須</span></td><td>在庫有無</td><td><code>in_stock</code> / <code>limited_availability</code> / <code>out_of_stock</code></td></tr>
+        <tr><td><code>quantity</code><span class="req"> 必須</span></td><td>在庫数</td><td>0以上の整数</td></tr>
+      </table>
     </div>
   </div>
 
-  <!-- 5. 既存資産との接続関係 -->
-  <h2 class="section-title"><span class="num">05</span>既存資産との接続関係</h2>
+  <!-- 7. 既存資産との接続関係 -->
+  <h2 class="section-title"><span class="num">07</span>既存資産との接続関係</h2>
   <p class="section-sub">シエラエージェントは既存4資産にどう乗るか</p>
 
   <div class="grid-2">
     <div class="card">
       <h3>🔗 カンリー既存資産との接続</h3>
       <ul>
-        <li><b>ローカル在庫（GTM-B）</b>：Sierraの実行レイヤー基盤。店舗別在庫×Google検索の即時引当てがコアアセット</li>
+        <li><b>ローカル在庫（GTM-B）</b>：Sierraの実行レイヤー基盤。store×offer×price×availability×quantityの5カラムをチャット内で即時提示</li>
         <li><b>GBP管理（一括返信／クチコミ）</b>：SierraがGEO（生成AI最適化）に基づくブランドボイス返信を24h以内で自動化</li>
         <li><b>店舗集客（GTM-A）</b>：来店前のチャット相談→店頭「Magic Links」引き継ぎ。CVR +25〜40%（仮説）</li>
-        <li><b>LFP（公式ローカルフィード）</b>：Universal Commerce Protocol（Google×Walmart×Target）への将来接続性を確保</li>
+        <li><b>LFP（公式ローカルフィード）</b>：Google認定パートナー認定＝Sparky型 Universal Commerce Protocol への接続性確保済</li>
       </ul>
     </div>
     <div class="card">
-      <h3>⚠️ Sierraと「重複しない」既存AI整理</h3>
+      <h3>⚠️ Sparky型「リアルタイム同期」と公式日次の差分</h3>
       <ul>
-        <li><b>音声AI（LINE WORKS AiCall等）</b>：電話入口は既存／Sierraは<b>その前段のチャット・LINE経路</b>を担当（補完設計）</li>
-        <li><b>店舗向け生成AI（TDI KWA等）</b>：店舗ナレッジを学習→Sierraがそれを顧客向けに開放する逆方向データ流通</li>
-        <li><b>既存FAQボット</b>：Sierraに置き換え（FAQ回答型→実行型エージェント）</li>
-        <li><b>Sierraは置き換えではなく補完</b>：3層構造（Sierra＝フロント／音声＝AiCall／店舗＝KWA）で稟議が通りやすい</li>
+        <li>公式運用は<b>日次連携</b>がベース → カゴ落ち防止にはタイムラグ大</li>
+        <li>API秒間100回までは技術的可能 → <b>「シエラ専用リアルタイム層」</b>の別開発が必要</li>
+        <li>既存ベンダー連携（CSVバッチ）の上にSierra専用の差分同期APIを載せる設計</li>
+        <li>これは藤林さん×PdM議論の必須論点（Open Question #4 参照）</li>
       </ul>
     </div>
   </div>
 
-  <!-- 6. ソリューションパターン マッピング -->
-  <h2 class="section-title"><span class="num">06</span>ソリューションパターン × ICP Tier マトリクス</h2>
-  <p class="section-sub">Sparkly事例6型をICP Tierに割当（詳細は別タブ「Sparkly事例×ICPプログラム」参照）</p>
+  <!-- 8. Sparky 6型 × ICP Tier マトリクス -->
+  <h2 class="section-title"><span class="num">08</span>Sparky 6型 × ICP Tier × 既存顧客 マトリクス</h2>
+  <p class="section-sub">米国Sparky事例6型をICP Tier別に割当（詳細は<a href="Canly_Sierra_Sparkly_Programs_v0.1.html" style="color:var(--canly-blue);">Sparkly事例別タブ</a>参照）</p>
 
   <div class="card">
     <table class="pattern">
@@ -523,9 +757,7 @@
           <th>パターン</th>
           <th>米国リファレンス</th>
           <th>解決軸</th>
-          <th>Tier 1 適用</th>
-          <th>Tier 2 適用</th>
-          <th>Tier 3 適用</th>
+          <th>既存顧客 適用候補</th>
         </tr>
       </thead>
       <tbody>
@@ -533,79 +765,83 @@
           <td><b>Sparky型</b><br><span class="ref">バスケット同期＋まとめ取り置き</span></td>
           <td>Walmart Sparky</td>
           <td>マルチチャネル統合購買</td>
-          <td class="t1">★★★ 必須<br>カインズ／キタムラ</td>
-          <td class="t2">★★ 推奨</td>
-          <td class="t3">★</td>
+          <td class="t1">★★★ カインズ／キタムラ／ハードオフ（リアルタイム層が必要）</td>
         </tr>
         <tr>
           <td><b>Sunny型</b><br><span class="ref">プリセールス相談</span></td>
           <td>Sun & Ski Sports</td>
           <td>商品選定コンシェルジュ</td>
-          <td class="t1">★★★ カインズDIY／キタムラカメラ選定</td>
-          <td class="t2">★★★</td>
-          <td class="t3">★★</td>
+          <td class="t1">★★★ ムラサキスポーツ（同業態直接転用）／カインズDIY／キタムラカメラ選定</td>
         </tr>
         <tr>
           <td><b>Luna 2.0型</b><br><span class="ref">高単価検討商品コンサル</span></td>
           <td>Casper</td>
           <td>高関与度商品の意思決定支援</td>
-          <td class="t1">★★★ 上新電機(保留)／キタムラ高級機</td>
-          <td class="t2">★★</td>
-          <td class="t3">★★★</td>
+          <td class="t1">★★★ アーバンリサーチ（高単価コーデ）／キタムラ高級機／ビジョナリー（メガネ・コンタクト）</td>
         </tr>
         <tr>
           <td><b>Aloha型</b><br><span class="ref">グレーゾーン判断</span></td>
           <td>OluKai</td>
           <td>ポリシー柔軟運用＋ブランド体験</td>
-          <td class="t1">★★ カインズPickUp変更／キタムラ修理対応</td>
-          <td class="t2">★★</td>
-          <td class="t3">★★★</td>
+          <td class="t2">★★ カインズPickUp変更／キタムラ修理対応／ハードオフ買取判断</td>
         </tr>
         <tr>
           <td><b>Time-to-Music型</b><br><span class="ref">セットアップ最大化</span></td>
           <td>Sonos</td>
           <td>購入後初期体験の質的転換</td>
-          <td class="t1">★★ 上新電機設置工事(保留)</td>
-          <td class="t2">★★★</td>
-          <td class="t3">★</td>
+          <td class="t3">★★ 上新電機(保留)／カインズDIY組立支援</td>
         </tr>
         <tr>
           <td><b>Madi型</b><br><span class="ref">解約抑止＋会員エンゲージ</span></td>
           <td>Madison Reed</td>
           <td>サブスク/リピートLTV最大化</td>
-          <td class="t1">★★ アプリ会員リテンション</td>
-          <td class="t2">★</td>
-          <td class="t3">★★★</td>
+          <td class="t2">★★ アーバンリサーチ会員リテンション／カインズアプリ会員（573万人）</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- 7. 次の意思決定論点 -->
-  <h2 class="section-title"><span class="num">07</span>次の意思決定 — Open Questions</h2>
-  <p class="section-sub">藤林さんレビュー必須項目</p>
+  <!-- 9. Open Questions (一部Resolved) -->
+  <h2 class="section-title"><span class="num">09</span>Open Questions（v0.2で3問Resolved）</h2>
+  <p class="section-sub">藤林さんレビュー必須項目 — 6/3資料で3問解決済</p>
+
+  <div class="resolved">
+    <b>✅ Q1（在庫API粒度）— Resolved</b>
+    <div class="answer">公式は<b>日次連携が推奨</b>／API利用時のみ秒間100リクエストまで／1ファイル5GB以内／国内IPのみ。<br>
+    → シエラ Sparky型「バスケット同期＋まとめ取り置き」は<b>既存日次連携の上にシエラ専用リアルタイム層を別開発</b>する設計が必要。</div>
+  </div>
+
+  <div class="resolved">
+    <b>✅ Q2（PoC1社目アプローチルート）— Resolved</b>
+    <div class="answer">カインズ・キタムラとも<b>既存顧客（カンリーローカル在庫を運用中）</b>と判明。新規PoCではなく<b>既存CS経由のシエラ拡張β提案</b>が最短。月次レポート運用が稼働しているキタムラから先行が現実的。</div>
+  </div>
+
+  <div class="resolved">
+    <b>✅ Q3（必須データ仕様）— Resolved</b>
+    <div class="answer">在庫フィード必須5カラム（storeCode/offerId/price/availability/quantity）。これがシエラチャット応答の最小データ単位。シエラ側Output生成のスキーマもこれに準拠。</div>
+  </div>
 
   <div class="card">
+    <h3>🔄 引き続き要レビュー（Q4-Q6）</h3>
     <ul>
-      <li><b>Q1.</b> Tier 1 の "リアルタイム在庫API" は<b>分単位 / 秒単位 / 5分以内</b>のどれを必須にするか？（PoC候補のフィルタ精度に直結）</li>
-      <li><b>Q2.</b> カメラのキタムラへのアプローチルート（藤林さん経由 / 直接 / 紹介）— PoC着手スケジュール</li>
-      <li><b>Q3.</b> 「Sparky型 バスケット同期」をPhase 1で実装するか、Phase 2以降に倒すか — カンリー側Sparkly内製開発スケジュールとの整合</li>
-      <li><b>Q4.</b> 外向き／内向き表現の<b>2階建てルール</b>を、LP・営業資材・社内資料すべてで運用するためのチェックリスト整備</li>
-      <li><b>Q5.</b> 上新電機 HOLD の解除条件（Phase 1完了KPIゲート × カインズ＋キタムラ実績）</li>
-      <li><b>Q6.</b> MEO Agent との関係整理（独立タブだが、シエラの「クチコミGEO返信」と機能重複の可能性）</li>
+      <li><b>Q4.</b> 「Sparky型 リアルタイム同期層」の開発スコープ — カンリー側Sparkly内製と既存ベンダー連携の役割分担</li>
+      <li><b>Q5.</b> 外向き／内向き2階建てルールを LP・営業資材・社内資料すべてで運用するためのチェックリスト整備</li>
+      <li><b>Q6.</b> 上新電機 HOLD の解除条件（Phase 1完了KPIゲート × カインズ＋キタムラ実績）</li>
+      <li><b>Q7.</b> MEO Agent との関係整理（独立タブだが、シエラの「クチコミGEO返信」と機能重複の可能性）</li>
     </ul>
   </div>
 
   <footer>
-    <div><b>このLiving Docの更新ルール：</b>藤林さんレビュー → 確定文を current 上書き／変更履歴は history に append／週次見直し</div>
+    <div><b>このLiving Docの更新ルール：</b>藤林さんレビュー → 確定文を current 上書き／変更履歴は <code>history</code> に append／週次見直し</div>
     <div style="margin-top: 10px;" class="links">
       <b>関連リンク：</b>
+      <a href="Canly_Sierra_Sparkly_Programs_v0.1.html">Sparkly事例×ICPプログラム別タブ →</a>
       <a href="Canly_LocalInventory_GTM_Audit_Living_v0.1.html">GTM-B ローカル在庫 →</a>
       <a href="Canly_StoreMarketing_GTM_Audit_Living_v0.1.html">GTM-A 店舗集客 →</a>
       <a href="product_tree_v0_1.html">プロダクト階層ツリー →</a>
       <a href="index.html">インデックスに戻る →</a>
     </div>
-    <div style="margin-top: 10px; opacity: 0.7;">© Canly PMM 伴走 internal / v0.1 / 2026-06-02 / 藤林さん × 宮本</div>
+    <div style="margin-top: 10px; opacity: 0.7;">© Canly PMM 伴走 internal / v0.2 / 2026-06-03 / 藤林さん × 宮本</div>
   </footer>
 
 </div>

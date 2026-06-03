@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>カンリー GTM-D：Sparkly事例 × ICPプログラム別タブ v0.1</title>
+<style>
+  :root {
+    --canly-navy: #1B3A6B;
+    --canly-navy-deep: #1B2F5C;
+    --canly-blue: #2670D8;
+    --canly-cyan: #34BBFC;
+    --canly-cyan-light: #C9E6FE;
+    --canly-orange: #FF7E1C;
+    --sierra-green: #0B5E3B;
+    --sierra-green-light: #E8F3EC;
+    --sierra-accent: #C4E97A;
+    --canly-text: #1A1A2E;
+    --canly-gray: #6B7280;
+    --canly-light: #F5F7FB;
+    --canly-border: #E0E5EE;
+    --canly-red: #C62828;
+    --canly-green: #1B5E20;
+    --gold: #B8860B;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Calibri", sans-serif;
+    color: var(--canly-text);
+    line-height: 1.65;
+    background: #F0F2F8;
+    padding: 32px 16px;
+    min-height: 100vh;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, var(--canly-navy-deep) 0%, var(--canly-blue) 55%, var(--sierra-green) 130%);
+    color: white;
+    padding: 40px 48px;
+    border-radius: 12px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before, header::after {
+    content: ""; position: absolute; border-radius: 50%; background: rgba(255,255,255,0.06);
+  }
+  header::before { right: -80px; top: -80px; width: 320px; height: 320px; }
+  header::after { right: -180px; bottom: -150px; width: 460px; height: 460px; background: rgba(255,255,255,0.04); }
+  .badge-top {
+    display: inline-block; background: var(--canly-cyan); color: var(--canly-navy-deep);
+    padding: 4px 12px; font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    border-radius: 3px; margin-bottom: 14px;
+  }
+  header h1 { font-size: 32px; margin-bottom: 10px; position: relative; z-index: 1; }
+  header .sub { font-size: 15px; opacity: 0.92; position: relative; z-index: 1; }
+  header .meta {
+    margin-top: 22px; display: flex; gap: 28px; font-size: 12px;
+    opacity: 0.88; flex-wrap: wrap; position: relative; z-index: 1;
+  }
+  header .meta b { color: white; margin-right: 6px; }
+  .confidential {
+    position: absolute; top: 18px; right: 22px; background: var(--canly-red);
+    color: white; font-size: 10px; font-weight: 700; padding: 4px 10px;
+    letter-spacing: 1px; border-radius: 3px; z-index: 2;
+  }
+
+  /* Section */
+  .section-title {
+    font-size: 20px; font-weight: 700; color: var(--canly-navy-deep);
+    margin: 36px 0 16px; padding-left: 14px;
+    border-left: 5px solid var(--canly-blue);
+  }
+  .section-title .num {
+    display: inline-block; background: var(--canly-navy-deep); color: white;
+    font-size: 11px; padding: 3px 8px; border-radius: 3px;
+    margin-right: 10px; vertical-align: middle; letter-spacing: 1px;
+  }
+  .section-sub { font-size: 13px; color: var(--canly-gray); margin: -8px 0 18px 19px; }
+
+  /* Card */
+  .card {
+    background: white; border: 1px solid var(--canly-border);
+    border-radius: 10px; padding: 22px 26px; margin-bottom: 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .card h3 {
+    font-size: 16px; color: var(--canly-navy-deep);
+    margin-bottom: 10px; display: flex; align-items: center; gap: 10px;
+  }
+
+  /* Pattern card (6 types) */
+  .pattern-grid {
+    display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 14px;
+  }
+  .pattern-card {
+    background: white; border-radius: 10px; padding: 20px 24px;
+    border-left: 5px solid var(--sierra-green);
+    display: grid; grid-template-columns: 220px 1fr 280px; gap: 20px;
+    align-items: start;
+  }
+  .pattern-card .left {
+    border-right: 1px solid var(--canly-border); padding-right: 18px;
+  }
+  .pattern-card .type-num {
+    display: inline-block; background: var(--sierra-green); color: white;
+    padding: 3px 9px; font-size: 10px; font-weight: 700;
+    border-radius: 3px; letter-spacing: 1px; margin-bottom: 8px;
+  }
+  .pattern-card h3 {
+    font-size: 18px; color: var(--canly-navy-deep); margin-bottom: 6px;
+  }
+  .pattern-card .ref {
+    font-size: 11.5px; color: var(--canly-blue); font-weight: 600; margin-bottom: 10px;
+  }
+  .pattern-card .badge-us {
+    background: var(--canly-light); padding: 6px 9px; border-radius: 4px;
+    font-size: 11px; color: var(--canly-gray);
+  }
+  .pattern-card .badge-us b { color: var(--canly-navy-deep); }
+  .pattern-card .middle h4 {
+    font-size: 13px; color: var(--canly-navy-deep); margin-bottom: 6px;
+    border-bottom: 1px solid var(--canly-border); padding-bottom: 4px;
+  }
+  .pattern-card .middle p { font-size: 12.5px; line-height: 1.7; color: var(--canly-text); }
+  .pattern-card .middle .results {
+    margin-top: 10px; padding: 8px 12px; background: var(--sierra-green-light);
+    border-radius: 5px; font-size: 11.5px; line-height: 1.6;
+  }
+  .pattern-card .middle .results b { color: var(--sierra-green); }
+  .pattern-card .right {
+    background: var(--canly-light); border-radius: 6px; padding: 12px 14px;
+    font-size: 11.5px;
+  }
+  .pattern-card .right h4 {
+    font-size: 12px; color: var(--canly-navy-deep);
+    margin-bottom: 8px; padding-bottom: 4px;
+    border-bottom: 1px solid var(--canly-border);
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .pattern-card .right ul { margin-left: 16px; }
+  .pattern-card .right li { margin-bottom: 5px; line-height: 1.55; }
+  .pattern-card .right .star { color: var(--canly-red); font-weight: 700; }
+
+  /* Cross matrix */
+  table.cross {
+    width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 11.5px;
+  }
+  table.cross th, table.cross td {
+    padding: 9px 11px; border: 1px solid var(--canly-border);
+    text-align: center; vertical-align: middle;
+  }
+  table.cross th {
+    background: var(--canly-navy-deep); color: white; font-size: 11.5px;
+  }
+  table.cross th.row-th, table.cross td.row-th {
+    background: var(--canly-light); color: var(--canly-navy-deep);
+    text-align: left; font-weight: 600;
+  }
+  table.cross .fit-3 { background: #FFE9E9; color: var(--canly-red); font-weight: 700; }
+  table.cross .fit-2 { background: #FFF7EE; color: var(--canly-orange); font-weight: 600; }
+  table.cross .fit-1 { background: var(--canly-light); color: var(--canly-gray); }
+  table.cross .fit-0 { background: white; color: #CCC; }
+
+  /* Stack diagram */
+  .stack-diagram {
+    background: white; border: 1px solid var(--canly-border);
+    border-radius: 10px; padding: 22px 26px; margin: 14px 0;
+  }
+  .stack-row {
+    display: grid; grid-template-columns: 140px 1fr 200px;
+    gap: 14px; align-items: center;
+    padding: 12px 16px; margin-bottom: 6px;
+    border-radius: 6px;
+  }
+  .stack-row.layer-4 { background: linear-gradient(90deg, var(--sierra-green) 0%, #1A8A5A 100%); color: white; }
+  .stack-row.layer-3 { background: var(--canly-cyan-light); color: var(--canly-navy-deep); }
+  .stack-row.layer-2 { background: var(--canly-light); color: var(--canly-text); }
+  .stack-row.layer-1 { background: #F0F0F0; color: var(--canly-gray); }
+  .stack-row .layer-name { font-weight: 700; font-size: 13px; }
+  .stack-row .layer-desc { font-size: 12px; }
+  .stack-row .layer-actor { font-size: 11px; text-align: right; }
+
+  /* Callouts */
+  .callout {
+    background: var(--sierra-green-light); border-left: 4px solid var(--sierra-green);
+    padding: 12px 16px; border-radius: 4px; font-size: 13px; margin: 10px 0;
+  }
+  .critical-note {
+    background: #FFF4F4; border-left: 4px solid var(--canly-red);
+    padding: 12px 16px; border-radius: 4px; font-size: 12.5px; margin: 10px 0;
+  }
+
+  /* KPI tiles */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 12px 0;
+  }
+  .kpi-tile {
+    background: white; border: 1px solid var(--canly-border);
+    border-radius: 8px; padding: 14px 16px; text-align: center;
+  }
+  .kpi-tile .label { font-size: 11px; color: var(--canly-gray); margin-bottom: 6px; }
+  .kpi-tile .value { font-size: 22px; color: var(--sierra-green); font-weight: 700; }
+  .kpi-tile .unit { font-size: 11px; color: var(--canly-gray); }
+
+  /* Footer */
+  footer {
+    margin-top: 36px; padding: 22px 26px; background: var(--canly-light);
+    border-radius: 8px; font-size: 12px; color: var(--canly-gray);
+  }
+  footer b { color: var(--canly-navy-deep); }
+  footer .links a { color: var(--canly-blue); text-decoration: none; margin-right: 16px; }
+  footer .links a:hover { text-decoration: underline; }
+
+  @media (max-width: 900px) {
+    .pattern-card { grid-template-columns: 1fr; }
+    .pattern-card .left { border-right: none; padding-right: 0; border-bottom: 1px solid var(--canly-border); padding-bottom: 12px; }
+    .stack-row { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    header { padding: 28px 22px; }
+    header h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <span class="confidential">CONFIDENTIAL</span>
+    <span class="badge-top">GTM-D · SPARKLY PROGRAMS</span>
+    <h1>Sparkly事例 × ICPプログラム別タブ</h1>
+    <div class="sub">米国Sparky/Sierra 6パターン × 国内既存顧客 × カンリーローカル在庫実装スタック</div>
+    <div class="meta">
+      <span><b>VERSION</b>v0.1</span>
+      <span><b>LAST UPDATED</b>2026-06-03</span>
+      <span><b>OWNER</b>宮本 × 藤林さん</span>
+      <span><b>PARENT</b>GTM-D ICP Living Doc v0.2</span>
+    </div>
+  </header>
+
+  <!-- 0. Why this tab -->
+  <div class="card">
+    <h3>📌 このタブの位置付け</h3>
+    <p><b>「シエラエージェント＝米国Sparkly事例の単純移植」ではない。</b>米国6型を国内既存顧客の業態・課題にマッピングし、シエラβ提案として何をどの企業にどう投入するかを決める。
+    <b>ICP Living Doc v0.2 §8 マトリクスの詳細版</b>。</p>
+    <div class="callout">
+      📚 <b>関連</b>：<a href="Canly_Sierra_ICP_LivingDoc_v0.1.html">GTM-D ICP Living Doc v0.2 →</a>
+    </div>
+  </div>
+
+  <!-- 1. 全体スタック -->
+  <h2 class="section-title"><span class="num">01</span>EC × 在庫 リアルタイム連携スタック</h2>
+  <p class="section-sub">既存「日次連携」と「シエラ専用リアルタイム層」の役割分担</p>
+
+  <div class="stack-diagram">
+    <div class="stack-row layer-4">
+      <div class="layer-name">LAYER 4 ★ シエラ</div>
+      <div class="layer-desc">会話実行レイヤー（Planner→Executor→Validator）／チャットUI／バスケット同期／決済</div>
+      <div class="layer-actor">★ カンリー版Sparkly内製</div>
+    </div>
+    <div class="stack-row layer-3">
+      <div class="layer-name">LAYER 3 リアルタイム同期</div>
+      <div class="layer-desc">秒間100API以内で在庫差分同期／カゴ落ち防止／取り置き予約</div>
+      <div class="layer-actor">★ 新規開発</div>
+    </div>
+    <div class="stack-row layer-2">
+      <div class="layer-name">LAYER 2 日次連携</div>
+      <div class="layer-desc">API or SFTP / 1ファイル5GB / 5カラム（storeCode/offerId/price/availability/quantity）</div>
+      <div class="layer-actor">既存 ベンダー/カンリー</div>
+    </div>
+    <div class="stack-row layer-1">
+      <div class="layer-name">LAYER 1 基盤</div>
+      <div class="layer-desc">GMC×GBP連携 / LFP認定 / Universal Commerce Protocol接続性</div>
+      <div class="layer-actor">既存 カンリー稼働中</div>
+    </div>
+  </div>
+
+  <div class="critical-note">
+    <b>核心の論点（Open Q4）：</b>LAYER 3「リアルタイム同期」は新規開発が必要。
+    既存ベンダー（CSV日次バッチ）の上にシエラ専用の差分同期APIを載せる設計。
+    Walmart Sparky型「バスケット同期＋まとめ取り置き」を実現するためには LAYER 3 が不可欠。
+  </div>
+
+  <!-- 2. Sparky 6型 詳細 -->
+  <h2 class="section-title"><span class="num">02</span>Sparky / Sierra 6型 詳細 × 国内適用</h2>
+  <p class="section-sub">米国実績データ × 国内既存顧客マッピング</p>
+
+  <div class="pattern-grid">
+
+    <!-- Pattern 1: Sparky型 -->
+    <div class="pattern-card">
+      <div class="left">
+        <span class="type-num">TYPE 01</span>
+        <h3>Sparky型</h3>
+        <div class="ref">バスケット同期＋まとめ取り置き</div>
+        <div class="badge-us">
+          <b>US Ref：</b>Walmart Sparky<br>
+          $649B年商 / Aug 2025 launch
+        </div>
+      </div>
+      <div class="middle">
+        <h4>解決軸</h4>
+        <p><b>マルチチャネル統合購買</b>：アプリ／Web／ChatGPT／Geminiのバスケットを横断同期。「日替わりに複数商品を追加→最終的にまとめてチェックアウト」という実購買行動に対応。Walmart Instant Checkout（2025/9）の単品ごとCheckout失敗（CVR 1/3）の反省から設計。</p>
+        <div class="results">
+          🎯 <b>Sparky 実装後：</b>AOV +35% ／ ChatGPT流入は検索の2倍ペース ／ Universal Commerce Protocol（Google×Walmart×Target）連携
+        </div>
+      </div>
+      <div class="right">
+        <h4>国内適用（既存顧客）</h4>
+        <ul>
+          <li><span class="star">★★★</span> <b>ハードオフ／駿河屋</b><br><small>SKU16万/日 × 中古品の散在検索パターン → バスケット統合の価値最大</small></li>
+          <li><span class="star">★★★</span> <b>カインズ</b><br><small>DIY用品の「複数アイテム同時購入」（ねじ+板+塗料等）と相性◎</small></li>
+          <li><span class="star">★★</span> <b>カメラのキタムラ</b><br><small>カメラ本体+レンズ+メモリ等の同時購入</small></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Pattern 2: Sunny型 -->
+    <div class="pattern-card">
+      <div class="left">
+        <span class="type-num">TYPE 02</span>
+        <h3>Sunny型</h3>
+        <div class="ref">プリセールス相談</div>
+        <div class="badge-us">
+          <b>US Ref：</b>Sun & Ski Sports<br>
+          スポーツ用品DTC
+        </div>
+      </div>
+      <div class="middle">
+        <h4>解決軸</h4>
+        <p><b>商品選定コンシェルジュ</b>：曖昧で文脈依存の質問（「3人家族で電気代抑えたい冷蔵庫」「子供のスキー板初めて」等）に対応。顧客の購買履歴・住所・家族構成を統合理解した上で、レベル感に応じた商品の組み合わせを会話で提案。</p>
+        <div class="results">
+          🎯 <b>Sun & Ski 実績：</b>プロダクトページCVR <b>3倍</b>／CSAT +50%
+        </div>
+      </div>
+      <div class="right">
+        <h4>国内適用（既存顧客）</h4>
+        <ul>
+          <li><span class="star">★★★</span> <b>ムラサキスポーツ</b><br><small>同業態（スポーツ用品） — Sunny直接転用可能</small></li>
+          <li><span class="star">★★★</span> <b>カインズ</b><br><small>DIYコンシェルジュ「ウッドデッキ作りたい」→ 工具・木材・受取まで完結</small></li>
+          <li><span class="star">★★★</span> <b>カメラのキタムラ</b><br><small>カメラ初心者の機材選び（ボディ+レンズ+三脚等）</small></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Pattern 3: Luna 2.0型 -->
+    <div class="pattern-card">
+      <div class="left">
+        <span class="type-num">TYPE 03</span>
+        <h3>Luna 2.0型</h3>
+        <div class="ref">高単価検討商品コンサル</div>
+        <div class="badge-us">
+          <b>US Ref：</b>Casper<br>
+          マットレスD2C
+        </div>
+      </div>
+      <div class="middle">
+        <h4>解決軸</h4>
+        <p><b>高関与度商品の意思決定支援</b>：マットレス・家具・高級家電・高級カメラ・スーツ等、高単価で検討期間長い商品。プライベートな悩み（腰痛・いびき・冷え性等）を率直に相談しやすいAI特性を活かす。商品×睡眠・体型・好み等の組み合わせ提案。</p>
+        <div class="results">
+          🎯 <b>Casper Luna 2.0 実績：</b>解決率<b>74%</b>（製品質問は70%自律）／CSAT <b>95%</b>／イベント時2倍トラフィック対応
+        </div>
+      </div>
+      <div class="right">
+        <h4>国内適用（既存顧客）</h4>
+        <ul>
+          <li><span class="star">★★★</span> <b>アーバンリサーチ</b><br><small>高単価コーデ（ジャケット+パンツ+靴 同時提案）</small></li>
+          <li><span class="star">★★★</span> <b>キタムラ 高級機</b><br><small>新宿北村写真機店等の高級カメラ・レンズコンサル</small></li>
+          <li><span class="star">★★★</span> <b>ビジョナリーHD</b><br><small>メガネ・コンタクトの度数・フィット相談</small></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Pattern 4: Aloha型 -->
+    <div class="pattern-card">
+      <div class="left">
+        <span class="type-num">TYPE 04</span>
+        <h3>Aloha型</h3>
+        <div class="ref">グレーゾーン判断</div>
+        <div class="badge-us">
+          <b>US Ref：</b>OluKai<br>
+          プレミアムフットウェアDTC
+        </div>
+      </div>
+      <div class="middle">
+        <h4>解決軸</h4>
+        <p><b>ポリシー柔軟運用＋ブランド体験</b>：「30日返品ポリシーだが34日目の常連客」のようなグレーゾーンをAIが自律判断。「ポリシーの背後にあるポリシー（なぜそのルールか）」を理解し、例外を含めてバックエンドAPIと連携実行。マーケ部とサポート部を統合する思想（「Day Maker」=お客様の1日を素晴らしくする人）。</p>
+        <div class="results">
+          🎯 <b>OluKai 実績：</b>チケット自律解決<b>70%</b>／CSAT <b>4.6/5</b>／繁忙期応答待ち実質ゼロ
+        </div>
+      </div>
+      <div class="right">
+        <h4>国内適用（既存顧客）</h4>
+        <ul>
+          <li><span class="star">★★★</span> <b>カインズ PickUp</b><br><small>「ロッカー満杯」→ 3km圏内の代替店舗を即提案＆変更実行</small></li>
+          <li><span class="star">★★★</span> <b>キタムラ修理対応</b><br><small>保証期間外でも常連顧客の修理を柔軟判断</small></li>
+          <li><span class="star">★★</span> <b>ハードオフ買取判断</b><br><small>状態評価とブランド体験のバランス</small></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Pattern 5: Time-to-Music型 -->
+    <div class="pattern-card">
+      <div class="left">
+        <span class="type-num">TYPE 05</span>
+        <h3>Time-to-Music型</h3>
+        <div class="ref">セットアップ最大化</div>
+        <div class="badge-us">
+          <b>US Ref：</b>Sonos<br>
+          ワイヤレスオーディオ
+        </div>
+      </div>
+      <div class="middle">
+        <h4>解決軸</h4>
+        <p><b>購入後初期体験の質的転換</b>：購入後「最初の30日」を最重要視（F30プログラム）。家庭内通信インフラ等の技術的トラブルを段階的にガイド。AHT（平均処理時間）削減＋有人エージェントのバーンアウト解消。トラブル解消後にクロスセル提案も自律実行。</p>
+        <div class="results">
+          🎯 <b>Sonos 実績：</b>解決率<b>74%</b>／CSAT +20%／<b>CVR 3倍</b>（クロスセル提案効果）
+        </div>
+      </div>
+      <div class="right">
+        <h4>国内適用（既存顧客）</h4>
+        <ul>
+          <li><span class="star">★★</span> <b>上新電機（保留）</b><br><small>設置工事込み家電 — まごころサービスとの相性◎</small></li>
+          <li><span class="star">★★</span> <b>カインズ DIY組立</b><br><small>家具・ウッドデッキ等の組立支援</small></li>
+          <li><span class="star">★</span> <b>キタムラ</b><br><small>カメラ初期設定・現像方法ガイド</small></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Pattern 6: Madi型 -->
+    <div class="pattern-card">
+      <div class="left">
+        <span class="type-num">TYPE 06</span>
+        <h3>Madi型</h3>
+        <div class="ref">解約抑止＋会員エンゲージ</div>
+        <div class="badge-us">
+          <b>US Ref：</b>Madison Reed<br>
+          ヘアカラーD2Cサブスク
+        </div>
+      </div>
+      <div class="middle">
+        <h4>解決軸</h4>
+        <p><b>サブスク/リピートLTV最大化</b>：解約意向の顧客に「代替案・スキップ・割引」を会話で提案。LTVを引き上げながら離脱を防ぐ。サブスクだけでなく、リピート購買頻度の高い小売（アパレル・コスメ等）でも応用可能。アプリ会員のリテンション施策と統合。</p>
+        <div class="results">
+          🎯 <b>Madison Reed 実績：</b>解約率<b>1/5</b>（5倍削減）／コンバージョン<b>+33%</b>
+        </div>
+      </div>
+      <div class="right">
+        <h4>国内適用（既存顧客）</h4>
+        <ul>
+          <li><span class="star">★★★</span> <b>アーバンリサーチ会員</b><br><small>シーズン購入のリピーター離脱抑止</small></li>
+          <li><span class="star">★★★</span> <b>カインズアプリ会員</b><br><small>573万人 ─ レジ通過の40%カバー、休眠予兆検知→会話介入</small></li>
+          <li><span class="star">★★</span> <b>キタムラ会員カード</b><br><small>スタジオマリオ会員のライフイベント別提案</small></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 3. クロスマトリクス -->
+  <h2 class="section-title"><span class="num">03</span>クロスマトリクス：6型 × 既存顧客 × Tier</h2>
+  <p class="section-sub">どの企業にどの型を投入するか — 一覧化</p>
+
+  <div class="card">
+    <table class="cross">
+      <thead>
+        <tr>
+          <th class="row-th">既存顧客 / Tier</th>
+          <th>Sparky<br>バスケット同期</th>
+          <th>Sunny<br>プリセールス</th>
+          <th>Luna 2.0<br>高単価コンサル</th>
+          <th>Aloha<br>グレーゾーン</th>
+          <th>Time-to-Music<br>セットアップ</th>
+          <th>Madi<br>リテンション</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-th">カインズ（Tier 1）</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-1">★</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-3">★★★</td>
+        </tr>
+        <tr>
+          <td class="row-th">カメラのキタムラ（Tier 1）</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-1">★</td>
+          <td class="fit-2">★★</td>
+        </tr>
+        <tr>
+          <td class="row-th">ハードオフ／駿河屋（Tier 1）</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-1">★</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-0">-</td>
+          <td class="fit-1">★</td>
+        </tr>
+        <tr>
+          <td class="row-th">アーバンリサーチ（Tier 1）</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-1">★</td>
+          <td class="fit-0">-</td>
+          <td class="fit-3">★★★</td>
+        </tr>
+        <tr>
+          <td class="row-th">嘉穂無線HD/グッデイ（Tier 1）</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-1">★</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-2">★★</td>
+        </tr>
+        <tr>
+          <td class="row-th">ビジョナリーHD（Tier 1）</td>
+          <td class="fit-1">★</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-1">★</td>
+          <td class="fit-2">★★</td>
+        </tr>
+        <tr>
+          <td class="row-th">ムラサキスポーツ（Tier 1）</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-1">★</td>
+          <td class="fit-1">★</td>
+          <td class="fit-2">★★</td>
+        </tr>
+        <tr>
+          <td class="row-th">上新電機（HOLD）</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-2">★★</td>
+          <td class="fit-1">★</td>
+          <td class="fit-3">★★★</td>
+          <td class="fit-1">★</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4. β投入優先順位 -->
+  <h2 class="section-title"><span class="num">04</span>シエラβ投入優先順位</h2>
+  <p class="section-sub">既存顧客 × 投入難易度 × インパクト で並べた優先順位</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-tile">
+      <div class="label">優先#1</div>
+      <div class="value">キタムラ</div>
+      <div class="unit">月次CS稼働中／Sunny+Luna+Aloha同時</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="label">優先#2</div>
+      <div class="value">カインズ</div>
+      <div class="unit">PickUp33%基盤／Sparky+Sunny+Aloha</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="label">優先#3</div>
+      <div class="value">アーバン</div>
+      <div class="unit">Agentic既組込／Luna+Madi</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="label">優先#4以降</div>
+      <div class="value">ハードオフ</div>
+      <div class="unit">Sparky実装難度高だがインパクト最大</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📐 投入順序の根拠</h3>
+    <ul style="margin-left:22px;line-height:1.8;">
+      <li><b>#1 キタムラ：</b>月次レポート運用が既に稼働＝CS信頼関係MAX。30店→500店拡張の延長線上にシエラβを置きやすい。Sunny（カメラ選定）／Luna（高級機）／Aloha（修理）の3型を同時投入可能</li>
+      <li><b>#2 カインズ：</b>PickUp 33%（EC注文の3分の1）の巨大基盤＋アプリ573万人＝Sparky（バスケット同期）の効果最大化。DIYコンシェルジュ（Sunny）も既存資産（DIY Square 10万人）と直結</li>
+      <li><b>#3 アーバンリサーチ：</b>アーバンリサーチ向け提案資料 slide 34-37 で <b>Agentic Commerce既組込</b>＝シエラ提案の社内売りやすさMAX。Luna（高単価コーデ）+Madi（リテンション）</li>
+      <li><b>#4 ハードオフ／駿河屋：</b>Sparky型「バスケット同期」最大級効果だが、リユース特有の散在SKU管理の複雑性で実装難度高。Phase 2以降推奨</li>
+    </ul>
+  </div>
+
+  <!-- 5. 米国Sparky 学習ポイント -->
+  <h2 class="section-title"><span class="num">05</span>米国Sparky からの学習ポイント（失敗教訓含む）</h2>
+  <p class="section-sub">Walmart Instant Checkout 失敗 → Sparky 再構築の経緯</p>
+
+  <div class="card">
+    <h3>🚨 教訓1：単品Checkoutは失敗する</h3>
+    <p>2025/9 OpenAI×Walmart Instant Checkout は「単一商品ごとのチェックアウト」モデルで <b>CVRが既存サイト1/3</b> に低下。
+    Daniel Danker（Walmart）：「消費者はアプリで日替わりに複数商品を追加し、最終的にまとめてチェックアウトする」。<br>
+    → カンリー版Sparklyは <b>初手から「バスケット同期＋まとめ取り置き」を必須要件として設計</b> すべき（LAYER 3 リアルタイム同期層の必然性）。</p>
+  </div>
+
+  <div class="card">
+    <h3>🌐 教訓2：Universal Commerce Protocol への準拠</h3>
+    <p>Walmart×Target×Google が共同開発した <b>Universal Commerce Protocol</b>（REST/JSON-RPC）で、AIエージェントと小売在庫・価格・チェックアウトを標準化接続。
+    Mastercard×Google の <b>Verifiable Intent</b>（暗号学的購入認可証明）も登場。<br>
+    → カンリーは Google認定パートナー（LFP）として、この標準化の最前線に既にいる。シエラはこのプロトコル上に乗る設計が将来の選択肢を広げる。</p>
+  </div>
+
+  <div class="card">
+    <h3>💰 教訓3：成果報酬型 (Outcome-based) 課金で稟議が通る</h3>
+    <p>Sierra標準は「解決した分だけ課金、未解決は基本無償」。SaaS座席課金（使われないライセンス料）への対案として、CFOにも説明しやすい構造。<br>
+    → カンリー版Sparkly も <b>「成果連動課金」設計</b> を初手から組み込む。既存顧客の月次レポートに「シエラ自律解決件数」を追加して連動。</p>
+  </div>
+
+  <footer>
+    <div><b>このタブの位置付け：</b>GTM-D ICP Living Doc v0.2 §8 の詳細版／6型×既存顧客のクロスマトリクスで投入順位を可視化</div>
+    <div style="margin-top: 10px;" class="links">
+      <b>関連リンク：</b>
+      <a href="Canly_Sierra_ICP_LivingDoc_v0.1.html">← GTM-D ICP Living Doc v0.2</a>
+      <a href="Canly_LocalInventory_GTM_Audit_Living_v0.1.html">GTM-B ローカル在庫 →</a>
+      <a href="index.html">インデックスに戻る →</a>
+    </div>
+    <div style="margin-top: 10px; opacity: 0.7;">© Canly PMM 伴走 internal / v0.1 / 2026-06-03 / 藤林さん × 宮本</div>
+  </footer>
+
+</div>
+</body>
+</html>
